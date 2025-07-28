@@ -9,13 +9,7 @@ import io.prometheus.metrics.exporter.pushgateway.HttpConnectionFactory;
 import io.prometheus.metrics.exporter.pushgateway.PushGateway;
 import io.prometheus.metrics.model.snapshots.Unit;
 import java.io.IOException;
-import java.security.KeyManagementException;
-import java.security.NoSuchAlgorithmException;
-import java.security.cert.X509Certificate;
 import javax.net.ssl.HttpsURLConnection;
-import javax.net.ssl.SSLContext;
-import javax.net.ssl.TrustManager;
-import javax.net.ssl.X509TrustManager;
 
 /** Example application using the {@link PushGateway}. */
 class PushGatewayTestApp {
@@ -77,33 +71,11 @@ class PushGatewayTestApp {
     System.out.println("Push successful.");
   }
 
-  static TrustManager insecureTrustManager =
-      new X509TrustManager() {
-        @Override
-        public java.security.cert.X509Certificate[] getAcceptedIssuers() {
-          return null;
-        }
-
-        @Override
-        public void checkClientTrusted(X509Certificate[] chain, String authType) {}
-
-        @Override
-        public void checkServerTrusted(X509Certificate[] chain, String authType) {}
-      };
-
   static HttpConnectionFactory insecureConnectionFactory =
       url -> {
-        try {
-          SSLContext sslContext = SSLContext.getInstance("TLS");
-          sslContext.init(null, new TrustManager[] {insecureTrustManager}, null);
-          SSLContext.setDefault(sslContext);
-
-          HttpsURLConnection connection = (HttpsURLConnection) url.openConnection();
-          connection.setHostnameVerifier((hostname, session) -> true);
-          return connection;
-        } catch (NoSuchAlgorithmException | KeyManagementException e) {
-          throw new RuntimeException(e);
-        }
+        HttpsURLConnection connection = (HttpsURLConnection) url.openConnection();
+        connection.setHostnameVerifier(HttpsURLConnection.getDefaultHostnameVerifier());
+        return connection;
       };
 
   private static void makeMetrics() {
