@@ -95,6 +95,8 @@ public class CacheMetricsCollector implements MultiCollector {
    *
    * <p>Note that the {@link #builder()} API has different default values than this deprecated
    * constructor.
+   *
+   * @deprecated Use {@link #builder()} instead.
    */
   @Deprecated
   public CacheMetricsCollector() {
