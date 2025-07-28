@@ -87,6 +87,8 @@ public class TextFormatUtil {
           writer.write("\\n");
           newlineIndex = s.indexOf('\n', start);
           break;
+        default:
+          break;
       }
 
       allEscapesIndex = backslashIndex & quoteIndex & newlineIndex;
