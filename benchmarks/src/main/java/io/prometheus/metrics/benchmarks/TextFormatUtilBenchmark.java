@@ -105,18 +105,28 @@ public class TextFormatUtilBenchmark {
     }
 
     @Override
-    public void write(int b) {}
+    public void write(int b) {
+      // No-op: this output stream does nothing
+    }
 
     @Override
-    public void write(byte[] b) {}
+    public void write(byte[] b) {
+      // No-op: this output stream does nothing
+    }
 
     @Override
-    public void write(byte[] b, int off, int len) {}
+    public void write(byte[] b, int off, int len) {
+      // No-op: this output stream does nothing
+    }
 
     @Override
-    public void flush() {}
+    public void flush() {
+      // No-op: this output stream does nothing
+    }
 
     @Override
-    public void close() {}
+    public void close() {
+      // No-op: this output stream does nothing
+    }
   }
 }
