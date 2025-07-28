@@ -79,7 +79,7 @@ public class SampleMultiCollector implements MultiCollector {
 
   @Override
   public List<String> getPrometheusNames() {
-    List<String> names = new ArrayList<String>();
+    List<String> names = new ArrayList<>();
     names.add("x_calls_total");
     names.add("x_load");
     return names;
