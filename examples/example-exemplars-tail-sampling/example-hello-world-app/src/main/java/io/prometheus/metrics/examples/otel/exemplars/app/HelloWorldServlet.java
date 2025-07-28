@@ -48,6 +48,8 @@ public class HelloWorldServlet extends HttpServlet {
       resp.getWriter().print(greeting);
     } catch (Exception e) {
       throw new ServletException(e);
+    } catch (ThreadDeath td) {
+      throw td;
     } finally {
       histogram.labelValues("200").observe(nanosToSeconds(System.nanoTime() - start));
     }
