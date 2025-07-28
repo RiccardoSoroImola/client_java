@@ -4,12 +4,14 @@ import io.prometheus.metrics.core.metrics.Counter;
 import io.prometheus.metrics.exporter.opentelemetry.OpenTelemetryExporter;
 import io.prometheus.metrics.instrumentation.jvm.JvmMetrics;
 import io.prometheus.metrics.model.snapshots.Unit;
+import java.util.logging.Logger;
 
 /** Simple example of an application exposing metrics pushing metrics via OTLP. */
 public class Main {
 
   public static void main(String[] args) throws Exception {
-    System.out.println("Starting example application");
+    Logger logger = Logger.getLogger(Main.class.getName());
+    logger.info("Starting example application");
 
     // Note: Some JVM metrics are also defined as OpenTelemetry's semantic conventions.
     // We have plans to implement a configuration option for JvmMetrics to use OpenTelemetry
@@ -35,7 +37,7 @@ public class Main {
 
     while (true) {
       Thread.sleep(1000);
-      System.out.println("Incrementing counter");
+      logger.info("Incrementing counter");
       counter.inc();
     }
   }
