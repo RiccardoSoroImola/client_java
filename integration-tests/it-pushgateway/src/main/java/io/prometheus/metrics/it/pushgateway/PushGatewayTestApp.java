@@ -9,11 +9,8 @@ import io.prometheus.metrics.exporter.pushgateway.HttpConnectionFactory;
 import io.prometheus.metrics.exporter.pushgateway.PushGateway;
 import io.prometheus.metrics.model.snapshots.Unit;
 import java.io.IOException;
-import java.security.KeyManagementException;
-import java.security.NoSuchAlgorithmException;
 import java.security.cert.X509Certificate;
 import javax.net.ssl.HttpsURLConnection;
-import javax.net.ssl.SSLContext;
 import javax.net.ssl.TrustManager;
 import javax.net.ssl.X509TrustManager;
 
@@ -94,14 +91,9 @@ class PushGatewayTestApp {
   static HttpConnectionFactory insecureConnectionFactory =
       url -> {
         try {
-          SSLContext sslContext = SSLContext.getInstance("TLS");
-          sslContext.init(null, new TrustManager[] {insecureTrustManager}, null);
-          SSLContext.setDefault(sslContext);
-
           HttpsURLConnection connection = (HttpsURLConnection) url.openConnection();
-          connection.setHostnameVerifier((hostname, session) -> true);
           return connection;
-        } catch (NoSuchAlgorithmException | KeyManagementException e) {
+        } catch (IOException e) {
           throw new RuntimeException(e);
         }
       };
