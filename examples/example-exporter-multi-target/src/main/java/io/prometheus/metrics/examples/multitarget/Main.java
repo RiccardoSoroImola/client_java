@@ -7,7 +7,7 @@ import java.io.IOException;
 /** Simple example of an application exposing metrics via Prometheus' built-in HTTPServer. */
 public class Main {
 
-  public static void main(String[] args) throws IOException, InterruptedException {
+  public static void main(String[] args) throws IOException {
 
     SampleMultiCollector xmc = new SampleMultiCollector();
     PrometheusRegistry.defaultRegistry.register(xmc);
