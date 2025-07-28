@@ -49,6 +49,7 @@ public class HelloWorldServlet extends HttpServlet {
       resp.setContentType("text/plain");
       resp.getWriter().println("Hello, World!");
     } catch (InterruptedException e) {
+      Thread.currentThread().interrupt();
       throw new RuntimeException(e);
     } finally {
       counter.labelValues("200").inc();
