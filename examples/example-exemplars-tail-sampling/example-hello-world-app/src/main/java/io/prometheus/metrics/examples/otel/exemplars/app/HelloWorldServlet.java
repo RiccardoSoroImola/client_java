@@ -22,9 +22,9 @@ public class HelloWorldServlet extends HttpServlet {
 
   private static final long serialVersionUID = 0L;
 
-  private final Random random = new Random(0);
+  private final transient Random random = new Random(0);
 
-  private final Histogram histogram;
+  private final transient Histogram histogram;
 
   public HelloWorldServlet() {
     histogram =
