@@ -5,6 +5,7 @@ import io.prometheus.metrics.exporter.httpserver.HTTPServer;
 import io.prometheus.metrics.instrumentation.jvm.JvmMetrics;
 import io.prometheus.metrics.model.snapshots.Unit;
 import java.io.IOException;
+import java.util.logging.Logger;
 
 /** Simple example of an application exposing metrics via Prometheus' built-in HTTPServer. */
 public class Main {
@@ -28,8 +29,8 @@ public class Main {
 
     HTTPServer server = HTTPServer.builder().port(9400).buildAndStart();
 
-    System.out.println(
-        "HTTPServer listening on port http://localhost:" + server.getPort() + "/metrics");
+    Logger logger = Logger.getLogger(Main.class.getName());
+    logger.info("HTTPServer listening on port http://localhost:" + server.getPort() + "/metrics");
 
     while (true) {
       Thread.sleep(1000);
