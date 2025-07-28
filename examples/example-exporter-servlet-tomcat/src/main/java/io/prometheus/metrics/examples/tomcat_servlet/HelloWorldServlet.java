@@ -41,7 +41,7 @@ public class HelloWorldServlet extends HttpServlet {
   }
 
   @Override
-  protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws IOException {
+  protected void doGet(HttpServletRequest req, HttpServletResponse resp) {
     long start = System.nanoTime();
     try {
       Thread.sleep((long) Math.abs((random.nextGaussian() + 1.0) * 100.0));
@@ -50,6 +50,8 @@ public class HelloWorldServlet extends HttpServlet {
       resp.getWriter().println("Hello, World!");
     } catch (InterruptedException e) {
       throw new RuntimeException(e);
+    } catch (IOException e) {
+      // Handle IOException that may be thrown by getWriter()
     } finally {
       counter.labelValues("200").inc();
       histogram.labelValues("200").observe(nanosToSeconds(System.nanoTime() - start));
