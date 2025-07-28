@@ -31,7 +31,7 @@ public class Main {
     System.out.println(
         "HTTPServer listening on port http://localhost:" + server.getPort() + "/metrics");
 
-    while (true) {
+    while (!Thread.currentThread().isInterrupted()) {
       Thread.sleep(1000);
       counter.inc();
     }
