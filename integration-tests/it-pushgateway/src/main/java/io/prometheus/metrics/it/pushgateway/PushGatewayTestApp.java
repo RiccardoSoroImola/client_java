@@ -91,6 +91,12 @@ class PushGatewayTestApp {
         public void checkServerTrusted(X509Certificate[] chain, String authType) {}
       };
 
+  static class SSLInitializationException extends RuntimeException {
+    public SSLInitializationException(String message, Throwable cause) {
+      super(message, cause);
+    }
+  }
+
   static HttpConnectionFactory insecureConnectionFactory =
       url -> {
         try {
@@ -102,7 +108,7 @@ class PushGatewayTestApp {
           connection.setHostnameVerifier((hostname, session) -> true);
           return connection;
         } catch (NoSuchAlgorithmException | KeyManagementException e) {
-          throw new RuntimeException(e);
+          throw new SSLInitializationException("Failed to initialize SSL context", e);
         }
       };
 
