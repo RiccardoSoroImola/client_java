@@ -89,19 +89,6 @@ public class CacheMetricsCollector implements MultiCollector {
   private final boolean collectWeightedSize;
 
   /**
-   * Instantiates a {@link CacheMetricsCollector}, with the legacy parameters.
-   *
-   * <p>The use of this constructor is discouraged, in favor of a Builder pattern {@link #builder()}
-   *
-   * <p>Note that the {@link #builder()} API has different default values than this deprecated
-   * constructor.
-   */
-  @Deprecated
-  public CacheMetricsCollector() {
-    this(false, false);
-  }
-
-  /**
    * Instantiate a {@link CacheMetricsCollector}
    *
    * @param collectEvictionWeightAsCounter If true, {@code caffeine_cache_eviction_weight} will be
