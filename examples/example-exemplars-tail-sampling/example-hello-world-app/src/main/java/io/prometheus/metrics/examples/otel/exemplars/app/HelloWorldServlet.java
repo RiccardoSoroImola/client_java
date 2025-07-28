@@ -42,10 +42,14 @@ public class HelloWorldServlet extends HttpServlet {
     long start = System.nanoTime();
     try {
       Thread.sleep((long) Math.abs((random.nextGaussian() + 1.0) * 100.0));
-      String greeting = executeGreetingServiceRequest();
-      resp.setStatus(200);
-      resp.setContentType("text/plain");
-      resp.getWriter().print(greeting);
+      try {
+        String greeting = executeGreetingServiceRequest();
+        resp.setStatus(200);
+        resp.setContentType("text/plain");
+        resp.getWriter().print(greeting);
+      } catch (URISyntaxException | IOException | InterruptedException e) {
+        throw new ServletException(e);
+      }
     } catch (Exception e) {
       throw new ServletException(e);
     } finally {
