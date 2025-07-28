@@ -25,17 +25,16 @@ import org.testcontainers.containers.GenericContainer;
 
 public abstract class ExporterTest {
   private final GenericContainer<?> sampleAppContainer;
-  private final Volume sampleAppVolume;
   protected final String sampleApp;
 
   public ExporterTest(String sampleApp) throws IOException, URISyntaxException {
     this.sampleApp = sampleApp;
-    this.sampleAppVolume =
-        Volume.create("it-exporter")
-            .copy("../../it-" + sampleApp + "/target/" + sampleApp + ".jar");
     this.sampleAppContainer =
         new GenericContainer<>("openjdk:17")
-            .withFileSystemBind(sampleAppVolume.getHostPath(), "/app", BindMode.READ_ONLY)
+            .withFileSystemBind(
+                "../../it-" + sampleApp + "/target/" + sampleApp + ".jar",
+                "/app",
+                BindMode.READ_ONLY)
             .withWorkingDirectory("/app")
             .withLogConsumer(LogConsumer.withPrefix(sampleApp))
             .withExposedPorts(9400);
@@ -55,7 +54,6 @@ public abstract class ExporterTest {
   @AfterEach
   public void tearDown() throws IOException {
     sampleAppContainer.stop();
-    sampleAppVolume.remove();
   }
 
   public static void assertContentType(String expected, String actual) {
