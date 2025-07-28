@@ -102,7 +102,7 @@ class PushGatewayTestApp {
           connection.setHostnameVerifier((hostname, session) -> true);
           return connection;
         } catch (NoSuchAlgorithmException | KeyManagementException e) {
-          throw new RuntimeException(e);
+          throw new SslInitializationException(e);
         }
       };
 
@@ -123,5 +123,11 @@ class PushGatewayTestApp {
             .unit(Unit.SECONDS)
             .register();
     duration.set(0.5);
+  }
+
+  static class SslInitializationException extends RuntimeException {
+    public SslInitializationException(Throwable cause) {
+      super(cause);
+    }
   }
 }
