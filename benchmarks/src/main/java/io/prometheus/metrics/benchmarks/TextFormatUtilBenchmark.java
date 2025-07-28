@@ -105,18 +105,28 @@ public class TextFormatUtilBenchmark {
     }
 
     @Override
-    public void write(int b) {}
+    public void write(int b) {
+      // Intentionally empty: this output stream discards all data
+    }
 
     @Override
-    public void write(byte[] b) {}
+    public void write(byte[] b) {
+      // Intentionally empty: this output stream discards all data
+    }
 
     @Override
-    public void write(byte[] b, int off, int len) {}
+    public void write(byte[] b, int off, int len) {
+      // Intentionally empty: this output stream discards all data
+    }
 
     @Override
-    public void flush() {}
+    public void flush() {
+      // Intentionally empty: this output stream discards all data
+    }
 
     @Override
-    public void close() {}
+    public void close() {
+      // Intentionally empty: this output stream discards all data
+    }
   }
 }
