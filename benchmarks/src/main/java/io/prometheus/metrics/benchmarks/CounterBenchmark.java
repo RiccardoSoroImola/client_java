@@ -41,6 +41,12 @@ import org.openjdk.jmh.annotations.Threads;
  */
 public class CounterBenchmark {
 
+  private static final String COUNTER_HELP = "help";
+  private static final String PATH_KEY = "path";
+  private static final String STATUS_KEY = "status";
+  private static final String PATH = "/";
+  private static final String STATUS_200 = "200";
+
   @State(Scope.Benchmark)
   public static class PrometheusCounter {
 
@@ -48,11 +54,15 @@ public class CounterBenchmark {
     final CounterDataPoint dataPoint;
 
     public PrometheusCounter() {
-      noLabels = Counter.builder().name("test").help("help").build();
+      noLabels = Counter.builder().name("test").help(COUNTER_HELP).build();
 
       Counter labels =
-          Counter.builder().name("test").help("help").labelNames("path", "status").build();
-      this.dataPoint = labels.labelValues("/", "200");
+          Counter.builder()
+              .name("test")
+              .help(COUNTER_HELP)
+              .labelNames(PATH_KEY, STATUS_KEY)
+              .build();
+      this.dataPoint = labels.labelValues(PATH, STATUS_200);
     }
   }
 
@@ -63,16 +73,16 @@ public class CounterBenchmark {
     final io.prometheus.client.Counter.Child dataPoint;
 
     public SimpleclientCounter() {
-      noLabels = io.prometheus.client.Counter.build().name("name").help("help").create();
+      noLabels = io.prometheus.client.Counter.build().name("name").help(COUNTER_HELP).create();
 
       io.prometheus.client.Counter counter =
           io.prometheus.client.Counter.build()
               .name("name")
-              .help("help")
-              .labelNames("path", "status")
+              .help(COUNTER_HELP)
+              .labelNames(PATH_KEY, STATUS_KEY)
               .create();
 
-      this.dataPoint = counter.labels("/", "200");
+      this.dataPoint = counter.labels(PATH, STATUS_200);
     }
   }
 
@@ -107,8 +117,8 @@ public class CounterBenchmark {
       this.doubleCounter = meter.counterBuilder("test2").ofDoubles().setDescription("test").build();
       this.attributes =
           Attributes.of(
-              AttributeKey.stringKey("path"), "/",
-              AttributeKey.stringKey("status"), "200");
+              AttributeKey.stringKey(PATH_KEY), PATH,
+              AttributeKey.stringKey(STATUS_KEY), STATUS_200);
     }
   }
 
