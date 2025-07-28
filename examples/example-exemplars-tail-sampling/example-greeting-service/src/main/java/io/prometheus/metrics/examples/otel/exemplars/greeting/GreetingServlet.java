@@ -11,13 +11,13 @@ import java.io.IOException;
 import java.util.Random;
 
 /** Hello World REST servlet, with an example counter and an example histogram. */
-public class GreetingServlet extends HttpServlet {
+public class GreetingServlet extends HttpServlet implements java.io.Serializable {
 
   private static final long serialVersionUID = 0L;
 
-  private final Random random = new Random(0);
+  private final transient Random random = new Random(0);
 
-  private final Histogram histogram;
+  private final transient Histogram histogram;
 
   public GreetingServlet() {
     histogram =
