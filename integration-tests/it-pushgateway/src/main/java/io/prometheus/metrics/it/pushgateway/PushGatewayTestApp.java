@@ -12,6 +12,7 @@ import java.io.IOException;
 import java.security.KeyManagementException;
 import java.security.NoSuchAlgorithmException;
 import java.security.cert.X509Certificate;
+import java.util.logging.Logger;
 import javax.net.ssl.HttpsURLConnection;
 import javax.net.ssl.SSLContext;
 import javax.net.ssl.TrustManager;
@@ -20,9 +21,11 @@ import javax.net.ssl.X509TrustManager;
 /** Example application using the {@link PushGateway}. */
 class PushGatewayTestApp {
 
+  private static final Logger logger = Logger.getLogger(PushGatewayTestApp.class.getName());
+
   public static void main(String[] args) throws IOException {
     if (args.length != 1) {
-      System.err.println("Usage: java -jar pushgateway-test-app.jar <test>");
+      logger.severe("Usage: java -jar pushgateway-test-app.jar <test>");
       System.exit(-1);
     }
     switch (args[0]) {
@@ -39,7 +42,7 @@ class PushGatewayTestApp {
         runSslTest();
         break;
       default:
-        System.err.println(args[0] + ": Not implemented.");
+        logger.severe(args[0] + ": Not implemented.");
         System.exit(-1);
     }
   }
@@ -47,34 +50,34 @@ class PushGatewayTestApp {
   private static void runSimpleTest() throws IOException {
     makeMetrics();
     PushGateway pg = PushGateway.builder().build();
-    System.out.println("Pushing metrics...");
+    logger.info("Pushing metrics...");
     pg.push();
-    System.out.println("Push successful.");
+    logger.info("Push successful.");
   }
 
   private static void runTextFormatTest() throws IOException {
     makeMetrics();
     PushGateway pg = PushGateway.builder().format(Format.PROMETHEUS_TEXT).build();
-    System.out.println("Pushing metrics...");
+    logger.info("Pushing metrics...");
     pg.push();
-    System.out.println("Push successful.");
+    logger.info("Push successful.");
   }
 
   private static void runBasicAuthTest() throws IOException {
     makeMetrics();
     PushGateway pg = PushGateway.builder().basicAuth("my_user", "secret_password").build();
-    System.out.println("Pushing metrics...");
+    logger.info("Pushing metrics...");
     pg.push();
-    System.out.println("Push successful.");
+    logger.info("Push successful.");
   }
 
   private static void runSslTest() throws IOException {
     makeMetrics();
     PushGateway pg =
         PushGateway.builder().scheme(HTTPS).connectionFactory(insecureConnectionFactory).build();
-    System.out.println("Pushing metrics...");
+    logger.info("Pushing metrics...");
     pg.push();
-    System.out.println("Push successful.");
+    logger.info("Push successful.");
   }
 
   static TrustManager insecureTrustManager =
