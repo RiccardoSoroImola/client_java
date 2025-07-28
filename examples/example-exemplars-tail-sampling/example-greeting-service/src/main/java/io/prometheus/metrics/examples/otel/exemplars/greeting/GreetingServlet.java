@@ -39,6 +39,7 @@ public class GreetingServlet extends HttpServlet {
       resp.setContentType("text/plain");
       resp.getWriter().println("Hello, World!");
     } catch (InterruptedException e) {
+      Thread.currentThread().interrupt();
       throw new RuntimeException(e);
     } finally {
       histogram.labelValues("200").observe(nanosToSeconds(System.nanoTime() - start));
