@@ -46,6 +46,9 @@ public class HelloWorldServlet extends HttpServlet {
       resp.setStatus(200);
       resp.setContentType("text/plain");
       resp.getWriter().print(greeting);
+    } catch (InterruptedException e) {
+      Thread.currentThread().interrupt();
+      throw new ServletException(e);
     } catch (Exception e) {
       throw new ServletException(e);
     } finally {
