@@ -17,7 +17,7 @@ public class GreetingServlet extends HttpServlet {
 
   private final Random random = new Random(0);
 
-  private final Histogram histogram;
+  private final transient Histogram histogram;
 
   public GreetingServlet() {
     histogram =
