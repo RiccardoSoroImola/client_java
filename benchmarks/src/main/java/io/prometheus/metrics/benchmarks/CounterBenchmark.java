@@ -41,6 +41,11 @@ import org.openjdk.jmh.annotations.Threads;
  */
 public class CounterBenchmark {
 
+  private static final String PATH = "path";
+  private static final String STATUS = "status";
+  private static final String SLASH = "/";
+  private static final String TWO_HUNDRED = "200";
+
   @State(Scope.Benchmark)
   public static class PrometheusCounter {
 
@@ -50,9 +55,8 @@ public class CounterBenchmark {
     public PrometheusCounter() {
       noLabels = Counter.builder().name("test").help("help").build();
 
-      Counter labels =
-          Counter.builder().name("test").help("help").labelNames("path", "status").build();
-      this.dataPoint = labels.labelValues("/", "200");
+      Counter labels = Counter.builder().name("test").help("help").labelNames(PATH, STATUS).build();
+      this.dataPoint = labels.labelValues(SLASH, TWO_HUNDRED);
     }
   }
 
@@ -69,10 +73,10 @@ public class CounterBenchmark {
           io.prometheus.client.Counter.build()
               .name("name")
               .help("help")
-              .labelNames("path", "status")
+              .labelNames(PATH, STATUS)
               .create();
 
-      this.dataPoint = counter.labels("/", "200");
+      this.dataPoint = counter.labels(SLASH, TWO_HUNDRED);
     }
   }
 
@@ -107,8 +111,8 @@ public class CounterBenchmark {
       this.doubleCounter = meter.counterBuilder("test2").ofDoubles().setDescription("test").build();
       this.attributes =
           Attributes.of(
-              AttributeKey.stringKey("path"), "/",
-              AttributeKey.stringKey("status"), "200");
+              AttributeKey.stringKey(PATH), SLASH,
+              AttributeKey.stringKey(STATUS), TWO_HUNDRED);
     }
   }
 
