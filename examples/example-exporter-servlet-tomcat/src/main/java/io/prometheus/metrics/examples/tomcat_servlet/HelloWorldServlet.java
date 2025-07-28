@@ -47,7 +47,11 @@ public class HelloWorldServlet extends HttpServlet {
       Thread.sleep((long) Math.abs((random.nextGaussian() + 1.0) * 100.0));
       resp.setStatus(200);
       resp.setContentType("text/plain");
-      resp.getWriter().println("Hello, World!");
+      try {
+        resp.getWriter().println("Hello, World!");
+      } catch (IOException e) {
+        // Handle IOException to prevent it from being thrown from the servlet method
+      }
     } catch (InterruptedException e) {
       throw new RuntimeException(e);
     } finally {
