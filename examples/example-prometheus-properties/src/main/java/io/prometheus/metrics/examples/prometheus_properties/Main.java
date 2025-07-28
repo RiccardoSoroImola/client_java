@@ -33,6 +33,7 @@ public class Main {
         "HTTPServer listening on port http://localhost:" + server.getPort() + "/metrics");
 
     Random random = new Random(0);
+    int iteration = 0;
 
     while (true) {
       double duration = Math.abs(random.nextGaussian() / 10.0 + 0.2);
@@ -40,6 +41,10 @@ public class Main {
       requestDuration.observe(duration);
       requestSize.observe(size);
       Thread.sleep(1000);
+      iteration++;
+      if (iteration >= 1000) {
+        break;
+      }
     }
   }
 }
