@@ -46,7 +46,7 @@ class CacheMetricsCollectorTest {
 
   @ParameterizedTest
   @EnumSource
-  public void cacheExposesMetricsForHitMissAndEviction(Options options) {
+  void cacheExposesMetricsForHitMissAndEviction(Options options) {
     // Run cleanup in same thread, to remove async behavior with evictions
     final Cache<String, String> cache =
         Caffeine.newBuilder().maximumSize(2).recordStats().executor(Runnable::run).build();
@@ -119,7 +119,7 @@ caffeine_cache_eviction_weight{cache="users"} 2.0
 
   @ParameterizedTest
   @EnumSource
-  public void weightedCacheExposesMetricsForHitMissAndEvictionWeightedSize(Options options) {
+  void weightedCacheExposesMetricsForHitMissAndEvictionWeightedSize(Options options) {
     // Run cleanup in same thread, to remove async behavior with evictions
     final Cache<String, String> cache =
         Caffeine.newBuilder()
@@ -209,7 +209,7 @@ caffeine_cache_eviction_weight{cache="users"} 31.0
 
   @SuppressWarnings("unchecked")
   @Test
-  public void loadingCacheExposesMetricsForLoadsAndExceptions() throws Exception {
+  void loadingCacheExposesMetricsForLoadsAndExceptions() throws Exception {
     final CacheLoader<String, String> loader = mock(CacheLoader.class);
     when(loader.load(anyString()))
         .thenReturn("First User")
@@ -249,7 +249,7 @@ caffeine_cache_eviction_weight{cache="users"} 31.0
 
   @ParameterizedTest
   @EnumSource
-  public void getPrometheusNamesHasSameSizeAsMetricSizeWhenScraping(Options options) {
+  void getPrometheusNamesHasSameSizeAsMetricSizeWhenScraping(Options options) {
     final CacheMetricsCollector collector =
         CacheMetricsCollector.builder()
             .collectEvictionWeightAsCounter(options.collectEvictionWeightAsCounter)
@@ -267,7 +267,7 @@ caffeine_cache_eviction_weight{cache="users"} 31.0
 
   @ParameterizedTest
   @EnumSource
-  public void collectedMetricNamesAreKnownPrometheusNames(Options options) {
+  void collectedMetricNamesAreKnownPrometheusNames(Options options) {
     final CacheMetricsCollector collector =
         CacheMetricsCollector.builder()
             .collectEvictionWeightAsCounter(options.collectEvictionWeightAsCounter)
