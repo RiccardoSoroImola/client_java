@@ -28,11 +28,16 @@ public class Main {
 
     Random random = new Random(0);
 
+    int count = 0;
     while (true) {
       double duration = Math.abs(random.nextGaussian() / 10.0 + 0.2);
       String status = random.nextInt(100) < 20 ? "500" : "200";
       histogram.labelValues("/", status).observe(duration);
       Thread.sleep(1000);
+      count++;
+      if (count == Integer.MIN_VALUE) {
+        break;
+      }
     }
   }
 }
