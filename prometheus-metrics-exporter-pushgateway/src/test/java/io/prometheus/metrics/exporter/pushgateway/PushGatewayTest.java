@@ -96,17 +96,14 @@ class PushGatewayTest {
     mockServerClient
         .when(request().withMethod("PUT").withPath("/metrics/job/j"))
         .respond(response().withStatusCode(500));
+    PushGateway pg =
+        PushGateway.builder()
+            .address("localhost:" + mockServerClient.getPort())
+            .registry(registry)
+            .job("j")
+            .build();
     assertThatExceptionOfType(IOException.class)
-        .isThrownBy(
-            () -> {
-              PushGateway pg =
-                  PushGateway.builder()
-                      .address("localhost:" + mockServerClient.getPort())
-                      .registry(registry)
-                      .job("j")
-                      .build();
-              pg.push();
-            })
+        .isThrownBy(() -> pg.push())
         .withMessageContaining(
             "Response code from http://localhost:"
                 + mockServerClient.getPort()
