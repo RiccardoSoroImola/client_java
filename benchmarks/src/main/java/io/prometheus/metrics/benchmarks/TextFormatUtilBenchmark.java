@@ -105,18 +105,28 @@ public class TextFormatUtilBenchmark {
     }
 
     @Override
-    public void write(int b) {}
+    public void write(int b) {
+      // This method is intentionally empty as it represents a null output stream.
+    }
 
     @Override
-    public void write(byte[] b) {}
+    public void write(byte[] b) {
+      // This method is intentionally empty as it represents a null output stream.
+    }
 
     @Override
-    public void write(byte[] b, int off, int len) {}
+    public void write(byte[] b, int off, int len) {
+      // This method is intentionally empty as it represents a null output stream.
+    }
 
     @Override
-    public void flush() {}
+    public void flush() {
+      // This method is intentionally empty as it represents a null output stream.
+    }
 
     @Override
-    public void close() {}
+    public void close() {
+      // This method is intentionally empty as it represents a null output stream.
+    }
   }
 }
