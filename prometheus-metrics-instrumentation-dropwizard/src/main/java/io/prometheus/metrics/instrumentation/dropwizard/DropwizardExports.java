@@ -130,12 +130,14 @@ public class DropwizardExports implements MultiCollector {
     } else if (obj instanceof Boolean) {
       value = ((Boolean) obj) ? 1 : 0;
     } else {
-      logger.log(
-          Level.FINE,
-          String.format(
-              "Invalid type for Gauge %s: %s",
-              PrometheusNaming.sanitizeMetricName(dropwizardName),
-              obj == null ? "null" : obj.getClass().getName()));
+      if (logger.isLoggable(Level.FINE)) {
+        logger.log(
+            Level.FINE,
+            String.format(
+                "Invalid type for Gauge %s: %s",
+                PrometheusNaming.sanitizeMetricName(dropwizardName),
+                obj == null ? "null" : obj.getClass().getName()));
+      }
       return null;
     }
     MetricMetadata metadata = getMetricMetaData(dropwizardName, gauge);
