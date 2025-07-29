@@ -10,38 +10,41 @@ class CallbackMetricTest {
   void makeLabels() {
     assertThatExceptionOfType(IllegalArgumentException.class)
         .isThrownBy(
-            () ->
-                CounterWithCallback.builder()
-                    .name("c")
-                    .callback(callback -> {})
-                    .labelNames("label1", "label2")
-                    .build()
-                    .makeLabels("foo"))
+            () -> {
+              CounterWithCallback obj =
+                  CounterWithCallback.builder()
+                      .name("c")
+                      .callback(callback -> {})
+                      .labelNames("label1", "label2")
+                      .build();
+              obj.makeLabels("foo");
+            })
         .withMessage(
             "CounterWithCallback was created with 2 label names, but the callback was called with 1"
                 + " label values.");
 
     assertThatExceptionOfType(IllegalArgumentException.class)
         .isThrownBy(
-            () ->
-                CounterWithCallback.builder()
-                    .name("c")
-                    .callback(callback -> {})
-                    .labelNames("label1", "label2")
-                    .build()
-                    .makeLabels((String[]) null))
+            () -> {
+              CounterWithCallback obj =
+                  CounterWithCallback.builder()
+                      .name("c")
+                      .callback(callback -> {})
+                      .labelNames("label1", "label2")
+                      .build();
+              obj.makeLabels((String[]) null);
+            })
         .withMessage(
             "CounterWithCallback was created with label names, but the callback was called without"
                 + " label values.");
 
     assertThatExceptionOfType(IllegalArgumentException.class)
         .isThrownBy(
-            () ->
-                CounterWithCallback.builder()
-                    .name("c")
-                    .callback(callback -> {})
-                    .build()
-                    .makeLabels("foo"))
+            () -> {
+              CounterWithCallback obj =
+                  CounterWithCallback.builder().name("c").callback(callback -> {}).build();
+              obj.makeLabels("foo");
+            })
         .withMessage(
             "Cannot pass label values to a CounterWithCallback that was created without label"
                 + " names.");
