@@ -22,6 +22,8 @@ import javax.net.ssl.X509TrustManager;
 class PushGatewayTestApp {
 
   private static final Logger logger = Logger.getLogger(PushGatewayTestApp.class.getName());
+  private static final String PUSHING_METRICS = "Pushing metrics...";
+  private static final String PUSH_SUCCESSFUL = "Push successful.";
 
   public static void main(String[] args) throws IOException {
     if (args.length != 1) {
@@ -50,34 +52,34 @@ class PushGatewayTestApp {
   private static void runSimpleTest() throws IOException {
     makeMetrics();
     PushGateway pg = PushGateway.builder().build();
-    logger.info("Pushing metrics...");
+    logger.info(PUSHING_METRICS);
     pg.push();
-    logger.info("Push successful.");
+    logger.info(PUSH_SUCCESSFUL);
   }
 
   private static void runTextFormatTest() throws IOException {
     makeMetrics();
     PushGateway pg = PushGateway.builder().format(Format.PROMETHEUS_TEXT).build();
-    logger.info("Pushing metrics...");
+    logger.info(PUSHING_METRICS);
     pg.push();
-    logger.info("Push successful.");
+    logger.info(PUSH_SUCCESSFUL);
   }
 
   private static void runBasicAuthTest() throws IOException {
     makeMetrics();
     PushGateway pg = PushGateway.builder().basicAuth("my_user", "secret_password").build();
-    logger.info("Pushing metrics...");
+    logger.info(PUSHING_METRICS);
     pg.push();
-    logger.info("Push successful.");
+    logger.info(PUSH_SUCCESSFUL);
   }
 
   private static void runSslTest() throws IOException {
     makeMetrics();
     PushGateway pg =
         PushGateway.builder().scheme(HTTPS).connectionFactory(insecureConnectionFactory).build();
-    logger.info("Pushing metrics...");
+    logger.info(PUSHING_METRICS);
     pg.push();
-    logger.info("Push successful.");
+    logger.info(PUSH_SUCCESSFUL);
   }
 
   static TrustManager insecureTrustManager =
