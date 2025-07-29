@@ -21,6 +21,7 @@ class GraphiteNamePatternTest {
             "1org",
             "1org.",
             "org.",
+            "org.",
             "org.**",
             "org.**",
             "org.company-",
