@@ -29,9 +29,7 @@ class PrometheusPropertiesLoaderTest {
   @SetSystemProperty(key = "prometheus.config", value = "nonexistent.properties")
   void cantLoadPropertiesFile() {
     PrometheusPropertiesException exception =
-        assertThrows(
-            PrometheusPropertiesException.class,
-            () -> PrometheusPropertiesLoader.load(new Properties()));
+        assertThrows(PrometheusPropertiesException.class, () -> PrometheusPropertiesLoader.load());
     assertEquals(
         "Failed to read Prometheus properties from nonexistent.properties: nonexistent.properties",
         exception.getMessage());
