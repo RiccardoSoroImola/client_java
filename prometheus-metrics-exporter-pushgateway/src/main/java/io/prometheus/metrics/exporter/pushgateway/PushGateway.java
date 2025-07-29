@@ -132,9 +132,9 @@ public class PushGateway {
    * <p>This uses the PUT HTTP method.
    */
   public void push(Collector collector) throws IOException {
-    PrometheusRegistry registry = new PrometheusRegistry();
-    registry.register(collector);
-    doRequest(registry, "PUT");
+    PrometheusRegistry localRegistry = new PrometheusRegistry();
+    localRegistry.register(collector);
+    doRequest(localRegistry, "PUT");
   }
 
   /**
@@ -143,9 +143,9 @@ public class PushGateway {
    * <p>This uses the PUT HTTP method.
    */
   public void push(MultiCollector collector) throws IOException {
-    PrometheusRegistry registry = new PrometheusRegistry();
-    registry.register(collector);
-    doRequest(registry, "PUT");
+    PrometheusRegistry localRegistry = new PrometheusRegistry();
+    localRegistry.register(collector);
+    doRequest(localRegistry, "PUT");
   }
 
   /**
@@ -164,9 +164,9 @@ public class PushGateway {
    * <p>This uses the POST HTTP method.
    */
   public void pushAdd(Collector collector) throws IOException {
-    PrometheusRegistry registry = new PrometheusRegistry();
-    registry.register(collector);
-    doRequest(registry, "POST");
+    PrometheusRegistry localRegistry = new PrometheusRegistry();
+    localRegistry.register(collector);
+    doRequest(localRegistry, "POST");
   }
 
   /**
@@ -175,9 +175,9 @@ public class PushGateway {
    * <p>This uses the POST HTTP method.
    */
   public void pushAdd(MultiCollector collector) throws IOException {
-    PrometheusRegistry registry = new PrometheusRegistry();
-    registry.register(collector);
-    doRequest(registry, "POST");
+    PrometheusRegistry localRegistry = new PrometheusRegistry();
+    localRegistry.register(collector);
+    doRequest(localRegistry, "POST");
   }
 
   /**
