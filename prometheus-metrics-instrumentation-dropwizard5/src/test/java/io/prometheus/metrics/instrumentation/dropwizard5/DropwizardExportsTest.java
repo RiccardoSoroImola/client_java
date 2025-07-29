@@ -131,11 +131,11 @@ long_gauge 1234.0
   @Test
   void testHistogram() {
     // just test the standard mapper
-    final MetricRegistry metricRegistry = new MetricRegistry();
+    final MetricRegistry testMetricRegistry = new MetricRegistry();
     PrometheusRegistry pmRegistry = new PrometheusRegistry();
-    DropwizardExports.builder().dropwizardRegistry(metricRegistry).register(pmRegistry);
+    DropwizardExports.builder().dropwizardRegistry(testMetricRegistry).register(pmRegistry);
 
-    Histogram hist = metricRegistry.histogram("hist");
+    Histogram hist = testMetricRegistry.histogram("hist");
     int i = 0;
     while (i < 100) {
       hist.update(i);
@@ -220,9 +220,9 @@ meter_total 2.0
 
   @Test
   void testTimer() throws InterruptedException {
-    final MetricRegistry metricRegistry = new MetricRegistry();
-    DropwizardExports exports = new DropwizardExports(metricRegistry);
-    Timer t = metricRegistry.timer("timer");
+    final MetricRegistry testMetricRegistry = new MetricRegistry();
+    DropwizardExports exports = new DropwizardExports(testMetricRegistry);
+    Timer t = testMetricRegistry.timer("timer");
     Timer.Context time = t.time();
     Thread.sleep(100L);
     long timeSpentNanos = time.stop();
@@ -290,9 +290,9 @@ my_application_namedTimer1_count 0
 
   @Test
   void responseWhenRegistryIsEmpty() {
-    var registry = new PrometheusRegistry();
-    registry.register(DropwizardExports.builder().dropwizardRegistry(metricRegistry).build());
-    assertThat(convertToOpenMetricsFormat(registry))
+    var localRegistry = new PrometheusRegistry();
+    localRegistry.register(DropwizardExports.builder().dropwizardRegistry(metricRegistry).build());
+    assertThat(convertToOpenMetricsFormat(localRegistry))
         .isEqualTo(
             """
 # EOF
@@ -303,9 +303,9 @@ my_application_namedTimer1_count 0
   void collectInvalidMetricFails() {
     metricRegistry.counter("my.application.namedCounter1").inc(-10);
     metricRegistry.counter("my.application.namedCounter2").inc(10);
-    var registry = new PrometheusRegistry();
-    DropwizardExports.builder().dropwizardRegistry(metricRegistry).register(registry);
-    assertThatThrownBy(() -> convertToOpenMetricsFormat(registry))
+    var localRegistry = new PrometheusRegistry();
+    DropwizardExports.builder().dropwizardRegistry(metricRegistry).register(localRegistry);
+    assertThatThrownBy(() -> convertToOpenMetricsFormat(localRegistry))
         .isInstanceOf(IllegalArgumentException.class);
   }
 
@@ -313,7 +313,7 @@ my_application_namedTimer1_count 0
   void collectInvalidMetricPassesWhenExceptionIsIgnored() {
     metricRegistry.counter("my.application.namedCounter1").inc(-10);
     metricRegistry.counter("my.application.namedCounter2").inc(10);
-    var registry = new PrometheusRegistry();
+    var localRegistry = new PrometheusRegistry();
 
     final StringBuilder buf = new StringBuilder();
     InvalidMetricHandler invalidMetricHandler =
@@ -325,8 +325,8 @@ my_application_namedTimer1_count 0
     DropwizardExports.builder()
         .dropwizardRegistry(metricRegistry)
         .invalidMetricHandler(invalidMetricHandler)
-        .register(registry);
-    assertThat(convertToOpenMetricsFormat(registry))
+        .register(localRegistry);
+    assertThat(convertToOpenMetricsFormat(localRegistry))
         .isEqualTo(
             """
 # TYPE my_application_namedCounter2 counter
