@@ -22,17 +22,29 @@ class ExemplarsPropertiesTest {
     assertThat(properties.getSampleIntervalMilliseconds()).isEqualTo(3);
 
     assertThatExceptionOfType(PrometheusPropertiesException.class)
-        .isThrownBy(() -> load(Map.of("io.prometheus.exemplars.minRetentionPeriodSeconds", "-1")))
+        .isThrownBy(
+            () ->
+                ExemplarsProperties.load(
+                    new HashMap<>(
+                        Map.of("io.prometheus.exemplars.minRetentionPeriodSeconds", "-1"))))
         .withMessage(
             "io.prometheus.exemplars.minRetentionPeriodSeconds: Expecting value > 0. Found: -1");
 
     assertThatExceptionOfType(PrometheusPropertiesException.class)
-        .isThrownBy(() -> load(Map.of("io.prometheus.exemplars.maxRetentionPeriodSeconds", "0")))
+        .isThrownBy(
+            () ->
+                ExemplarsProperties.load(
+                    new HashMap<>(
+                        Map.of("io.prometheus.exemplars.maxRetentionPeriodSeconds", "0"))))
         .withMessage(
             "io.prometheus.exemplars.maxRetentionPeriodSeconds: Expecting value > 0. Found: 0");
 
     assertThatExceptionOfType(PrometheusPropertiesException.class)
-        .isThrownBy(() -> load(Map.of("io.prometheus.exemplars.sampleIntervalMilliseconds", "-1")))
+        .isThrownBy(
+            () ->
+                ExemplarsProperties.load(
+                    new HashMap<>(
+                        Map.of("io.prometheus.exemplars.sampleIntervalMilliseconds", "-1"))))
         .withMessage(
             "io.prometheus.exemplars.sampleIntervalMilliseconds: Expecting value > 0. Found: -1");
   }
