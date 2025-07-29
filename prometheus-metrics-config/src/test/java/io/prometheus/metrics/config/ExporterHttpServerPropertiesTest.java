@@ -15,7 +15,10 @@ class ExporterHttpServerPropertiesTest {
     assertThat(properties.getPort()).isOne();
 
     assertThatExceptionOfType(PrometheusPropertiesException.class)
-        .isThrownBy(() -> load(Map.of("io.prometheus.exporter.httpServer.port", "0")))
+        .isThrownBy(
+            () ->
+                ExporterHttpServerProperties.load(
+                    new HashMap<>(Map.of("io.prometheus.exporter.httpServer.port", "0"))))
         .withMessage("io.prometheus.exporter.httpServer.port: Expecting value > 0. Found: 0");
   }
 
