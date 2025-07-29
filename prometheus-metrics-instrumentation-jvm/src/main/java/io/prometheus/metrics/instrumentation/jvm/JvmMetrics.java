@@ -16,6 +16,10 @@ public class JvmMetrics {
 
   private static final Set<PrometheusRegistry> REGISTERED = ConcurrentHashMap.newKeySet();
 
+  private JvmMetrics() {
+    throw new IllegalStateException("Utility class");
+  }
+
   public static Builder builder() {
     return new Builder(PrometheusProperties.get());
   }
