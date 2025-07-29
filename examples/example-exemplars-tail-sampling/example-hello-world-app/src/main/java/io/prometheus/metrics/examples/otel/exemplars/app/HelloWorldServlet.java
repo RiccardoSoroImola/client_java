@@ -5,7 +5,6 @@ import static java.net.http.HttpResponse.BodyHandlers.ofString;
 
 import io.prometheus.metrics.core.metrics.Histogram;
 import io.prometheus.metrics.model.snapshots.Unit;
-import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
@@ -38,7 +37,7 @@ public class HelloWorldServlet extends HttpServlet {
   }
 
   @Override
-  protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException {
+  protected void doGet(HttpServletRequest req, HttpServletResponse resp) {
     long start = System.nanoTime();
     try {
       Thread.sleep((long) Math.abs((random.nextGaussian() + 1.0) * 100.0));
@@ -48,9 +47,9 @@ public class HelloWorldServlet extends HttpServlet {
       resp.getWriter().print(greeting);
     } catch (InterruptedException e) {
       Thread.currentThread().interrupt();
-      throw new ServletException(e);
+      resp.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
     } catch (Exception e) {
-      throw new ServletException(e);
+      resp.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
     } finally {
       histogram.labelValues("200").observe(nanosToSeconds(System.nanoTime() - start));
     }
