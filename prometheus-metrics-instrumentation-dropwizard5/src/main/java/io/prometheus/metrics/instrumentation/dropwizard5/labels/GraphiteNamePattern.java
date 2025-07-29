@@ -61,7 +61,7 @@ class GraphiteNamePattern {
    */
   Map<String, String> extractParameters(final String metricName) {
     final Matcher matcher = this.pattern.matcher(metricName);
-    final Map<String, String> params = new HashMap<String, String>();
+    final Map<String, String> params = new HashMap<>();
     if (matcher.find()) {
       for (int i = 1; i <= matcher.groupCount(); i++) {
         params.put(String.format("${%d}", i - 1), matcher.group(i));
