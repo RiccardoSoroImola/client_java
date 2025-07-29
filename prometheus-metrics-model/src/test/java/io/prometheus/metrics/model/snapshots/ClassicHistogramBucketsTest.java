@@ -11,7 +11,7 @@ import org.junit.jupiter.api.Test;
 class ClassicHistogramBucketsTest {
 
   @Test
-  public void testGoodCase() {
+  void testGoodCase() {
     ClassicHistogramBuckets buckets =
         ClassicHistogramBuckets.builder()
             .bucket(Double.NEGATIVE_INFINITY, 0)
@@ -23,7 +23,7 @@ class ClassicHistogramBucketsTest {
   }
 
   @Test
-  public void testSort() {
+  void testSort() {
     ClassicHistogramBuckets buckets =
         ClassicHistogramBuckets.builder()
             .bucket(7, 2)
@@ -40,48 +40,48 @@ class ClassicHistogramBucketsTest {
   }
 
   @Test
-  public void testMinimalBuckets() {
+  void testMinimalBuckets() {
     ClassicHistogramBuckets buckets =
         ClassicHistogramBuckets.builder().bucket(Double.POSITIVE_INFINITY, 0).build();
     assertThat(buckets.size()).isOne();
   }
 
   @Test
-  public void testInfBucketMissing() {
+  void testInfBucketMissing() {
     ClassicHistogramBuckets.Builder builder = ClassicHistogramBuckets.builder();
     builder.bucket(Double.NEGATIVE_INFINITY, 0);
     assertThatExceptionOfType(IllegalArgumentException.class).isThrownBy(builder::build);
   }
 
   @Test
-  public void testNegativeCount() {
+  void testNegativeCount() {
     ClassicHistogramBuckets.Builder builder = ClassicHistogramBuckets.builder();
     builder.bucket(0.0, 10).bucket(Double.POSITIVE_INFINITY, -1);
     assertThatExceptionOfType(IllegalArgumentException.class).isThrownBy(builder::build);
   }
 
   @Test
-  public void testNaNBoundary() {
+  void testNaNBoundary() {
     ClassicHistogramBuckets.Builder builder = ClassicHistogramBuckets.builder();
     builder.bucket(0.0, 1).bucket(Double.NaN, 2).bucket(Double.POSITIVE_INFINITY, 0);
     assertThatExceptionOfType(IllegalArgumentException.class).isThrownBy(builder::build);
   }
 
   @Test
-  public void testDuplicateBoundary() {
+  void testDuplicateBoundary() {
     ClassicHistogramBuckets.Builder builder = ClassicHistogramBuckets.builder();
     builder.bucket(1.0, 1).bucket(2.0, 2).bucket(1.0, 2).bucket(Double.POSITIVE_INFINITY, 0);
     assertThatExceptionOfType(IllegalArgumentException.class).isThrownBy(builder::build);
   }
 
   @Test
-  public void testEmptyBuckets() {
+  void testEmptyBuckets() {
     ClassicHistogramBuckets.Builder builder = ClassicHistogramBuckets.builder();
     assertThatExceptionOfType(IllegalArgumentException.class).isThrownBy(builder::build);
   }
 
   @Test
-  public void testDifferentLength() {
+  void testDifferentLength() {
     double[] upperBounds = new double[] {0.7, 1.3, Double.POSITIVE_INFINITY};
     long[] counts = new long[] {13, 178, 1024, 3000};
     assertThatExceptionOfType(IllegalArgumentException.class)
@@ -89,7 +89,7 @@ class ClassicHistogramBucketsTest {
   }
 
   @Test
-  public void testImmutable() {
+  void testImmutable() {
     ClassicHistogramBuckets buckets =
         ClassicHistogramBuckets.builder()
             .bucket(1.0, 7)
@@ -102,7 +102,7 @@ class ClassicHistogramBucketsTest {
   }
 
   @Test
-  public void compare() {
+  void compare() {
     ClassicHistogramBuckets buckets =
         ClassicHistogramBuckets.builder()
             .bucket(1.0, 7)
