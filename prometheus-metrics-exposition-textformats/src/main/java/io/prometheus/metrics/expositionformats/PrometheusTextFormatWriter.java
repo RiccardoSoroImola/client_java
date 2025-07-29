@@ -127,19 +127,24 @@ public class PrometheusTextFormatWriter implements ExpositionFormatWriter {
       }
     }
     if (writeCreatedTimestamps) {
-      for (MetricSnapshot snapshot : metricSnapshots) {
-        if (!snapshot.getDataPoints().isEmpty()) {
-          if (snapshot instanceof CounterSnapshot) {
-            writeCreated(writer, snapshot);
-          } else if (snapshot instanceof HistogramSnapshot) {
-            writeCreated(writer, snapshot);
-          } else if (snapshot instanceof SummarySnapshot) {
-            writeCreated(writer, snapshot);
-          }
+      writeCreatedTimestamps(writer, metricSnapshots);
+    }
+    writer.flush();
+  }
+
+  private void writeCreatedTimestamps(Writer writer, MetricSnapshots metricSnapshots)
+      throws IOException {
+    for (MetricSnapshot snapshot : metricSnapshots) {
+      if (!snapshot.getDataPoints().isEmpty()) {
+        if (snapshot instanceof CounterSnapshot) {
+          writeCreated(writer, snapshot);
+        } else if (snapshot instanceof HistogramSnapshot) {
+          writeCreated(writer, snapshot);
+        } else if (snapshot instanceof SummarySnapshot) {
+          writeCreated(writer, snapshot);
         }
       }
     }
-    writer.flush();
   }
 
   public void writeCreated(Writer writer, MetricSnapshot snapshot) throws IOException {
@@ -228,8 +233,12 @@ public class PrometheusTextFormatWriter implements ExpositionFormatWriter {
 
   private void writeGaugeCountSum(
       Writer writer, HistogramSnapshot snapshot, MetricMetadata metadata) throws IOException {
-    // Prometheus text format does not support gaugehistogram's _gcount and _gsum.
-    // So we append _gcount and _gsum as gauge metrics.
+    writeGaugeCount(writer, snapshot, metadata);
+    writeGaugeSum(writer, snapshot, metadata);
+  }
+
+  private void writeGaugeCount(Writer writer, HistogramSnapshot snapshot, MetricMetadata metadata)
+      throws IOException {
     boolean metadataWritten = false;
     for (HistogramSnapshot.HistogramDataPointSnapshot data : snapshot.getDataPoints()) {
       if (data.hasCount()) {
@@ -242,7 +251,11 @@ public class PrometheusTextFormatWriter implements ExpositionFormatWriter {
         writeScrapeTimestampAndNewline(writer, data);
       }
     }
-    metadataWritten = false;
+  }
+
+  private void writeGaugeSum(Writer writer, HistogramSnapshot snapshot, MetricMetadata metadata)
+      throws IOException {
+    boolean metadataWritten = false;
     for (HistogramSnapshot.HistogramDataPointSnapshot data : snapshot.getDataPoints()) {
       if (data.hasSum()) {
         if (!metadataWritten) {
