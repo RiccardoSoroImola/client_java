@@ -101,8 +101,10 @@ class PushGatewayTestApp {
           HttpsURLConnection connection = (HttpsURLConnection) url.openConnection();
           connection.setHostnameVerifier((hostname, session) -> true);
           return connection;
-        } catch (NoSuchAlgorithmException | KeyManagementException e) {
-          throw new RuntimeException(e);
+        } catch (NoSuchAlgorithmException e) {
+          throw new IllegalArgumentException("Algorithm not found: " + e.getMessage(), e);
+        } catch (KeyManagementException e) {
+          throw new IllegalArgumentException("Key management error: " + e.getMessage(), e);
         }
       };
 
