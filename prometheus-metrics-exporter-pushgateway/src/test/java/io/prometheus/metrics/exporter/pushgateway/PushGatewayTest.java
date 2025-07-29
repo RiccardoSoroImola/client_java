@@ -115,17 +115,7 @@ class PushGatewayTest {
 
   @Test
   void testPushCollector() throws IOException {
-    mockServerClient
-        .when(request().withMethod("PUT").withPath("/metrics/job/j"))
-        .respond(response().withStatusCode(202));
-    PushGateway pg =
-        PushGateway.builder()
-            .address("localhost:" + mockServerClient.getPort())
-            .registry(registry)
-            .job("j")
-            .build();
-    pg.push();
-    assertThat(true).isTrue(); // Added assertion
+    testPush();
   }
 
   @Test
