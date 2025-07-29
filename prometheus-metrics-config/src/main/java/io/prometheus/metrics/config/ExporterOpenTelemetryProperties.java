@@ -21,16 +21,16 @@ public class ExporterOpenTelemetryProperties {
       "resourceAttributes"; // otel.resource.attributes
   private static final String PREFIX = "io.prometheus.exporter.opentelemetry";
 
-  private final String protocol;
-  private final String endpoint;
-  private final Map<String, String> headers;
-  private final String interval;
-  private final String timeout;
-  private final String serviceName;
-  private final String serviceNamespace;
-  private final String serviceInstanceId;
-  private final String serviceVersion;
-  private final Map<String, String> resourceAttributes;
+  private final String protocolValue;
+  private final String endpointValue;
+  private final Map<String, String> headersMap;
+  private final String intervalValue;
+  private final String timeoutValue;
+  private final String serviceNameValue;
+  private final String serviceNamespaceValue;
+  private final String serviceInstanceIdValue;
+  private final String serviceVersionValue;
+  private final Map<String, String> resourceAttributesMap;
 
   private ExporterOpenTelemetryProperties(
       String protocol,
@@ -43,56 +43,56 @@ public class ExporterOpenTelemetryProperties {
       String serviceInstanceId,
       String serviceVersion,
       Map<String, String> resourceAttributes) {
-    this.protocol = protocol;
-    this.endpoint = endpoint;
-    this.headers = headers;
-    this.interval = interval;
-    this.timeout = timeout;
-    this.serviceName = serviceName;
-    this.serviceNamespace = serviceNamespace;
-    this.serviceInstanceId = serviceInstanceId;
-    this.serviceVersion = serviceVersion;
-    this.resourceAttributes = resourceAttributes;
+    this.protocolValue = protocol;
+    this.endpointValue = endpoint;
+    this.headersMap = headers;
+    this.intervalValue = interval;
+    this.timeoutValue = timeout;
+    this.serviceNameValue = serviceName;
+    this.serviceNamespaceValue = serviceNamespace;
+    this.serviceInstanceIdValue = serviceInstanceId;
+    this.serviceVersionValue = serviceVersion;
+    this.resourceAttributesMap = resourceAttributes;
   }
 
   public String getProtocol() {
-    return protocol;
+    return protocolValue;
   }
 
   public String getEndpoint() {
-    return endpoint;
+    return endpointValue;
   }
 
   public Map<String, String> getHeaders() {
-    return headers;
+    return headersMap;
   }
 
   public String getInterval() {
-    return interval;
+    return intervalValue;
   }
 
   public String getTimeout() {
-    return timeout;
+    return timeoutValue;
   }
 
   public String getServiceName() {
-    return serviceName;
+    return serviceNameValue;
   }
 
   public String getServiceNamespace() {
-    return serviceNamespace;
+    return serviceNamespaceValue;
   }
 
   public String getServiceInstanceId() {
-    return serviceInstanceId;
+    return serviceInstanceIdValue;
   }
 
   public String getServiceVersion() {
-    return serviceVersion;
+    return serviceVersionValue;
   }
 
   public Map<String, String> getResourceAttributes() {
-    return resourceAttributes;
+    return resourceAttributesMap;
   }
 
   /**
@@ -131,16 +131,16 @@ public class ExporterOpenTelemetryProperties {
 
   public static class Builder {
 
-    private String protocol;
-    private String endpoint;
-    private final Map<String, String> headers = new HashMap<>();
-    private String interval;
-    private String timeout;
-    private String serviceName;
-    private String serviceNamespace;
-    private String serviceInstanceId;
-    private String serviceVersion;
-    private final Map<String, String> resourceAttributes = new HashMap<>();
+    private String protocolValue;
+    private String endpointValue;
+    private final Map<String, String> headersMap = new HashMap<>();
+    private String intervalValue;
+    private String timeoutValue;
+    private String serviceNameValue;
+    private String serviceNamespaceValue;
+    private String serviceInstanceIdValue;
+    private String serviceVersionValue;
+    private final Map<String, String> resourceAttributesMap = new HashMap<>();
 
     private Builder() {}
 
@@ -149,18 +149,18 @@ public class ExporterOpenTelemetryProperties {
         throw new IllegalArgumentException(
             protocol + ": Unsupported protocol. Expecting grpc or http/protobuf");
       }
-      this.protocol = protocol;
+      this.protocolValue = protocol;
       return this;
     }
 
     public Builder endpoint(String endpoint) {
-      this.endpoint = endpoint;
+      this.endpointValue = endpoint;
       return this;
     }
 
     /** Add a request header. Call multiple times to add multiple headers. */
     public Builder header(String name, String value) {
-      this.headers.put(name, value);
+      this.headersMap.put(name, value);
       return this;
     }
 
@@ -168,7 +168,7 @@ public class ExporterOpenTelemetryProperties {
       if (intervalSeconds <= 0) {
         throw new IllegalArgumentException(intervalSeconds + ": Expecting intervalSeconds > 0");
       }
-      this.interval = intervalSeconds + "s";
+      this.intervalValue = intervalSeconds + "s";
       return this;
     }
 
@@ -176,47 +176,47 @@ public class ExporterOpenTelemetryProperties {
       if (timeoutSeconds <= 0) {
         throw new IllegalArgumentException(timeoutSeconds + ": Expecting timeoutSeconds > 0");
       }
-      this.timeout = timeoutSeconds + "s";
+      this.timeoutValue = timeoutSeconds + "s";
       return this;
     }
 
     public Builder serviceName(String serviceName) {
-      this.serviceName = serviceName;
+      this.serviceNameValue = serviceName;
       return this;
     }
 
     public Builder serviceNamespace(String serviceNamespace) {
-      this.serviceNamespace = serviceNamespace;
+      this.serviceNamespaceValue = serviceNamespace;
       return this;
     }
 
     public Builder serviceInstanceId(String serviceInstanceId) {
-      this.serviceInstanceId = serviceInstanceId;
+      this.serviceInstanceIdValue = serviceInstanceId;
       return this;
     }
 
     public Builder serviceVersion(String serviceVersion) {
-      this.serviceVersion = serviceVersion;
+      this.serviceVersionValue = serviceVersion;
       return this;
     }
 
     public Builder resourceAttribute(String name, String value) {
-      this.resourceAttributes.put(name, value);
+      this.resourceAttributesMap.put(name, value);
       return this;
     }
 
     public ExporterOpenTelemetryProperties build() {
       return new ExporterOpenTelemetryProperties(
-          protocol,
-          endpoint,
-          headers,
-          interval,
-          timeout,
-          serviceName,
-          serviceNamespace,
-          serviceInstanceId,
-          serviceVersion,
-          resourceAttributes);
+          protocolValue,
+          endpointValue,
+          headersMap,
+          intervalValue,
+          timeoutValue,
+          serviceNameValue,
+          serviceNamespaceValue,
+          serviceInstanceIdValue,
+          serviceVersionValue,
+          resourceAttributesMap);
     }
   }
 }
