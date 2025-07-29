@@ -11,12 +11,9 @@ import io.prometheus.metrics.model.snapshots.Unit;
 import java.io.IOException;
 import java.security.KeyManagementException;
 import java.security.NoSuchAlgorithmException;
-import java.security.cert.X509Certificate;
 import java.util.logging.Logger;
 import javax.net.ssl.HttpsURLConnection;
 import javax.net.ssl.SSLContext;
-import javax.net.ssl.TrustManager;
-import javax.net.ssl.X509TrustManager;
 
 /** Example application using the {@link PushGateway}. */
 class PushGatewayTestApp {
@@ -82,29 +79,14 @@ class PushGatewayTestApp {
     logger.info(PUSH_SUCCESSFUL);
   }
 
-  static TrustManager insecureTrustManager =
-      new X509TrustManager() {
-        @Override
-        public java.security.cert.X509Certificate[] getAcceptedIssuers() {
-          return null;
-        }
-
-        @Override
-        public void checkClientTrusted(X509Certificate[] chain, String authType) {}
-
-        @Override
-        public void checkServerTrusted(X509Certificate[] chain, String authType) {}
-      };
-
   static HttpConnectionFactory insecureConnectionFactory =
       url -> {
         try {
           SSLContext sslContext = SSLContext.getInstance("TLS");
-          sslContext.init(null, new TrustManager[] {insecureTrustManager}, null);
-          SSLContext.setDefault(sslContext);
-
+          sslContext.init(null, null, null);
           HttpsURLConnection connection = (HttpsURLConnection) url.openConnection();
-          connection.setHostnameVerifier((hostname, session) -> true);
+          connection.setSSLSocketFactory(sslContext.getSocketFactory());
+          connection.setHostnameVerifier(HttpsURLConnection.getDefaultHostnameVerifier());
           return connection;
         } catch (NoSuchAlgorithmException | KeyManagementException e) {
           throw new RuntimeException(e);
