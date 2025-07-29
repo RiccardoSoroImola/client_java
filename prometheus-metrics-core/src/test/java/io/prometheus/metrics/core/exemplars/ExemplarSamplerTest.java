@@ -198,22 +198,22 @@ class ExemplarSamplerTest {
 
   private void print(Exemplars exemplars) {
     System.out.print("[");
-    boolean farst = true;
+    boolean first = true;
     for (Exemplar exemplar : exemplars) {
-      if (!farst) {
+      if (!first) {
         System.out.print(",");
       }
-      farst = false;
+      first = false;
       System.out.print(exemplar.getValue() + "{");
-      boolean first = true;
+      boolean labelFirst = true;
       for (Label label : exemplar.getLabels()) {
-        if (!first) {
+        if (!labelFirst) {
           System.out.print(",");
         }
         System.out.print(label.getName() + "=" + label.getValue());
-        first = false;
+        labelFirst = false;
       }
-      if (!first) {
+      if (!labelFirst) {
         System.out.print(",");
       }
       System.out.print("age=" + (System.currentTimeMillis() - exemplar.getTimestampMillis()));
