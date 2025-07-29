@@ -66,7 +66,7 @@ public class ExemplarSampler {
     for (int i = 0; i < customExemplars.length; i++) {
       Exemplar exemplar = customExemplars[i];
       if (exemplar != null) {
-        if (now - exemplar.getTimestampMillis() > config.getMaxRetentionPeriodMillis()) {
+        if (isExemplarExpired(exemplar, now, config.getMaxRetentionPeriodMillis())) {
           customExemplars[i] = null;
         } else {
           result.add(exemplar);
@@ -76,7 +76,7 @@ public class ExemplarSampler {
     for (int i = 0; i < exemplars.length && result.size() < exemplars.length; i++) {
       Exemplar exemplar = exemplars[i];
       if (exemplar != null) {
-        if (now - exemplar.getTimestampMillis() > config.getMaxRetentionPeriodMillis()) {
+        if (isExemplarExpired(exemplar, now, config.getMaxRetentionPeriodMillis())) {
           exemplars[i] = null;
         } else {
           result.add(exemplar);
@@ -84,6 +84,10 @@ public class ExemplarSampler {
       }
     }
     return Exemplars.of(result);
+  }
+
+  private boolean isExemplarExpired(Exemplar exemplar, long now, long maxRetention) {
+    return now - exemplar.getTimestampMillis() > maxRetention;
   }
 
   public void reset() {
