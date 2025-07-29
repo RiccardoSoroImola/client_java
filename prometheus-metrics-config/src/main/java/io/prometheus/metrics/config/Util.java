@@ -9,6 +9,10 @@ import java.util.function.Predicate;
 
 class Util {
 
+  private Util() {
+    throw new IllegalStateException("Utility class");
+  }
+
   static String getProperty(String name, Map<Object, Object> properties) {
     Object object = properties.remove(name);
     if (object != null) {
