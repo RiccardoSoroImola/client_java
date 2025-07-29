@@ -46,10 +46,10 @@ public class GaugeWithCallback extends CallbackMetric {
   public GaugeSnapshot collect() {
     List<GaugeSnapshot.GaugeDataPointSnapshot> dataPoints = new ArrayList<>();
     callback.accept(
-        (value, labelValues) -> {
-          dataPoints.add(
-              new GaugeSnapshot.GaugeDataPointSnapshot(value, makeLabels(labelValues), null, 0L));
-        });
+        (value, labelValues) ->
+            dataPoints.add(
+                new GaugeSnapshot.GaugeDataPointSnapshot(
+                    value, makeLabels(labelValues), null, 0L)));
     return new GaugeSnapshot(getMetadata(), dataPoints);
   }
 
