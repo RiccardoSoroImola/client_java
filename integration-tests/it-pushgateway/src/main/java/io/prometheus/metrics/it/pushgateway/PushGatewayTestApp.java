@@ -102,7 +102,7 @@ class PushGatewayTestApp {
           connection.setHostnameVerifier((hostname, session) -> true);
           return connection;
         } catch (NoSuchAlgorithmException | KeyManagementException e) {
-          throw new RuntimeException(e);
+          throw new IOException("SSL error: " + e.getMessage(), e);
         }
       };
 
