@@ -131,7 +131,7 @@ class PushGatewayIT {
   }
 
   @Test
-  void testSsl() throws InterruptedException, IOException {
+  void testSsl() throws IOException, InterruptedException {
     pushGatewayContainer
         .withCopyFileToContainer(
             MountableFile.forClasspathResource("/pushgateway-ssl.yaml"),
