@@ -53,12 +53,12 @@ class HistogramTest {
   private SpanContext origSpanContext;
 
   @BeforeEach
-  public void setUp() {
+  void setUp() {
     origSpanContext = SpanContextSupplier.getSpanContext();
   }
 
   @AfterEach
-  public void tearDown() {
+  void tearDown() {
     SpanContextSupplier.setSpanContext(origSpanContext);
   }
 
@@ -100,7 +100,7 @@ class HistogramTest {
 
   /** Test cases copied from histogram_test.go in client_golang. */
   @Test
-  public void testGolangTests() throws NoSuchFieldException, IllegalAccessException {
+  void testGolangTests() throws NoSuchFieldException, IllegalAccessException {
     GolangTestCase[] testCases =
         new GolangTestCase[] {
           new GolangTestCase(
@@ -741,7 +741,7 @@ class HistogramTest {
 
   /** Additional tests that are not part of client_golang's test suite. */
   @Test
-  public void testAdditional() throws NoSuchFieldException, IllegalAccessException {
+  void testAdditional() throws NoSuchFieldException, IllegalAccessException {
     GolangTestCase[] testCases =
         new GolangTestCase[] {
           new GolangTestCase(
@@ -775,7 +775,7 @@ class HistogramTest {
    * <p>This test is ported from client_golang's TestGetLe().
    */
   @Test
-  public void testNativeBucketIndexToUpperBound()
+  void testNativeBucketIndexToUpperBound()
       throws NoSuchMethodException, InvocationTargetException, IllegalAccessException {
     int[] indexes = new int[] {-1, 0, 1, 512, 513, -1, 0, 1, 1024, 1025, -1, 0, 1, 4096, 4097};
     int[] schemas = new int[] {-1, -1, -1, -1, -1, 0, 0, 0, 0, 0, 2, 2, 2, 2, 2};
@@ -817,7 +817,7 @@ class HistogramTest {
    * findBucketIndex()
    */
   @Test
-  public void testFindBucketIndex()
+  void testFindBucketIndex()
       throws NoSuchMethodException, InvocationTargetException, IllegalAccessException {
     Random rand = new Random();
     Method findBucketIndex =
@@ -862,7 +862,7 @@ class HistogramTest {
   }
 
   @Test
-  public void testDefaults() throws IOException {
+  void testDefaults() throws IOException {
     Histogram histogram = Histogram.builder().name("test").build();
     histogram.observe(0.5);
     HistogramSnapshot snapshot = histogram.collect();
@@ -932,7 +932,7 @@ class HistogramTest {
   }
 
   @Test
-  public void testExemplarsClassicHistogram() throws Exception {
+  void testExemplarsClassicHistogram() throws Exception {
     SpanContext spanContext =
         new SpanContext() {
           int callCount = 0;
@@ -1076,7 +1076,7 @@ class HistogramTest {
   }
 
   @Test
-  public void testCustomExemplarsClassicHistogram()
+  void testCustomExemplarsClassicHistogram()
       throws InterruptedException, NoSuchFieldException, IllegalAccessException {
 
     // TODO: This was copied from the old simpleclient, can probably be refactored.
@@ -1144,7 +1144,7 @@ class HistogramTest {
   }
 
   @Test
-  public void testExemplarsNativeHistogram() throws NoSuchFieldException, IllegalAccessException {
+  void testExemplarsNativeHistogram() throws NoSuchFieldException, IllegalAccessException {
 
     SpanContext spanContext =
         new SpanContext() {
@@ -1213,13 +1213,13 @@ class HistogramTest {
   }
 
   @Test
-  public void testIllegalLabelName() {
+  void testIllegalLabelName() {
     assertThatExceptionOfType(IllegalArgumentException.class)
         .isThrownBy(() -> Histogram.builder().name("test").labelNames("label", "le"));
   }
 
   @Test
-  public void testIllegalLabelNameConstLabels() {
+  void testIllegalLabelNameConstLabels() {
     assertThatExceptionOfType(IllegalArgumentException.class)
         .isThrownBy(
             () ->
@@ -1229,31 +1229,31 @@ class HistogramTest {
   }
 
   @Test
-  public void testIllegalLabelNamePrefix() {
+  void testIllegalLabelNamePrefix() {
     assertThatExceptionOfType(IllegalArgumentException.class)
         .isThrownBy(() -> Histogram.builder().name("test").labelNames("__hello"));
   }
 
   @Test
-  public void testIllegalName() {
+  void testIllegalName() {
     assertThatExceptionOfType(IllegalArgumentException.class)
         .isThrownBy(() -> Histogram.builder().name("my_namespace/server.durations"));
   }
 
   @Test
-  public void testNoName() {
+  void testNoName() {
     assertThatExceptionOfType(IllegalArgumentException.class)
         .isThrownBy(() -> Histogram.builder().build());
   }
 
   @Test
-  public void testNullName() {
+  void testNullName() {
     assertThatExceptionOfType(NullPointerException.class)
         .isThrownBy(() -> Histogram.builder().name(null));
   }
 
   @Test
-  public void testDuplicateClassicBuckets() {
+  void testDuplicateClassicBuckets() {
     Histogram histogram =
         Histogram.builder().name("test").classicUpperBounds(0, 3, 17, 3, 21).build();
     List<Double> upperBounds =
@@ -1265,7 +1265,7 @@ class HistogramTest {
   }
 
   @Test
-  public void testUnsortedBuckets() {
+  void testUnsortedBuckets() {
     Histogram histogram = Histogram.builder().name("test").classicUpperBounds(0.2, 0.1).build();
     List<Double> upperBounds =
         getData(histogram).getClassicBuckets().stream()
@@ -1275,7 +1275,7 @@ class HistogramTest {
   }
 
   @Test
-  public void testEmptyBuckets() {
+  void testEmptyBuckets() {
     Histogram histogram = Histogram.builder().name("test").classicUpperBounds().build();
     List<Double> upperBounds =
         getData(histogram).getClassicBuckets().stream()
@@ -1285,7 +1285,7 @@ class HistogramTest {
   }
 
   @Test
-  public void testBucketsIncludePositiveInfinity() {
+  void testBucketsIncludePositiveInfinity() {
     Histogram histogram =
         Histogram.builder()
             .name("test")
@@ -1299,7 +1299,7 @@ class HistogramTest {
   }
 
   @Test
-  public void testLinearBuckets() {
+  void testLinearBuckets() {
     Histogram histogram =
         Histogram.builder().name("test").classicLinearUpperBounds(0.1, 0.1, 10).build();
     List<Double> upperBounds =
@@ -1313,7 +1313,7 @@ class HistogramTest {
   }
 
   @Test
-  public void testExponentialBuckets() {
+  void testExponentialBuckets() {
     Histogram histogram =
         Histogram.builder().classicExponentialUpperBounds(2, 2.5, 3).name("test").build();
     List<Double> upperBounds =
@@ -1324,14 +1324,14 @@ class HistogramTest {
   }
 
   @Test
-  public void testBucketsIncludeNaN() {
+  void testBucketsIncludeNaN() {
     assertThatExceptionOfType(RuntimeException.class)
         .isThrownBy(
             () -> Histogram.builder().name("test").classicUpperBounds(0.01, 0.1, 1.0, Double.NaN));
   }
 
   @Test
-  public void testNoLabelsDefaultZeroValue() {
+  void testNoLabelsDefaultZeroValue() {
     Histogram noLabels = Histogram.builder().name("test").build();
     assertThat(getBucket(noLabels, 0.005).getCount()).isZero();
     assertThat(getData(noLabels).getCount()).isZero();
@@ -1346,7 +1346,7 @@ class HistogramTest {
   }
 
   @Test
-  public void testObserve() {
+  void testObserve() {
     Histogram noLabels = Histogram.builder().name("test").build();
     noLabels.observe(2);
     assertThat(getData(noLabels).getCount()).isOne();
@@ -1365,7 +1365,7 @@ class HistogramTest {
 
   @Test
   // See https://github.com/prometheus/client_java/issues/646
-  public void testNegativeAmount() {
+  void testNegativeAmount() {
     Histogram histogram =
         Histogram.builder()
             .name("histogram")
@@ -1391,7 +1391,7 @@ class HistogramTest {
   }
 
   @Test
-  public void testBoundaryConditions() {
+  void testBoundaryConditions() {
     Histogram histogram = Histogram.builder().name("test").build();
     histogram.observe(2.5);
     assertThat(getBucket(histogram, 1).getCount()).isZero();
@@ -1406,7 +1406,7 @@ class HistogramTest {
   }
 
   @Test
-  public void testObserveWithLabels() {
+  void testObserveWithLabels() {
     Histogram histogram =
         Histogram.builder()
             .name("test")
@@ -1434,7 +1434,7 @@ class HistogramTest {
   }
 
   @Test
-  public void testObserveMultithreaded()
+  void testObserveMultithreaded()
       throws InterruptedException, ExecutionException, TimeoutException {
     // Hard to test concurrency, but let's run a couple of observations in parallel and assert none
     // gets lost.
