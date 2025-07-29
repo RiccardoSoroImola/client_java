@@ -241,7 +241,6 @@ class PushGatewayIT {
         // {"status":"success","data":{"resultType":"vector","result":[]}}
         return body;
       }
-      Thread.sleep(250);
       timeRemaining -= 250;
     }
     fail("timeout while scraping " + url);
@@ -261,7 +260,6 @@ class PushGatewayIT {
                 + unit
                 + ".");
       }
-      Thread.sleep(20);
       waitTimeMillis += 20;
     }
   }
