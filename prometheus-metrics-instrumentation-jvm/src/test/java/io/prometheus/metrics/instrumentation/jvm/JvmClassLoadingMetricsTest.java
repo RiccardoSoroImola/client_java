@@ -20,7 +20,7 @@ class JvmClassLoadingMetricsTest {
   private final ClassLoadingMXBean mockClassLoadingBean = Mockito.mock(ClassLoadingMXBean.class);
 
   @BeforeEach
-  public void setUp() {
+  void setUp() {
     when(mockClassLoadingBean.getLoadedClassCount()).thenReturn(1000);
     when(mockClassLoadingBean.getTotalLoadedClassCount()).thenReturn(2000L);
     when(mockClassLoadingBean.getUnloadedClassCount()).thenReturn(500L);
