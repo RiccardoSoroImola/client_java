@@ -54,7 +54,7 @@ public interface PrometheusHttpRequest extends PrometheusScrapeRequest {
       }
       if (result.isEmpty()) {
         // Servlet API: getParameterValues() returns null if the parameter does not exist.
-        return null;
+        return new String[0];
       } else {
         return result.toArray(new String[0]);
       }
