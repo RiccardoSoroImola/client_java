@@ -50,7 +50,7 @@ public class HelloWorldServlet extends HttpServlet {
       resp.getWriter().println("Hello, World!");
     } catch (InterruptedException e) {
       Thread.currentThread().interrupt();
-      throw new RuntimeException(e);
+      throw new IllegalStateException("Thread interrupted while processing request", e);
     } catch (IOException e) {
       // Handle IOException to prevent it from being thrown from the servlet method
     } finally {
