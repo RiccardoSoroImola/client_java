@@ -14,9 +14,6 @@ import java.util.function.Supplier;
  *
  * <p>It is implemented in a generic way so that 3rd party libraries can use it for implementing
  * sliding windows.
- *
- * <p>TODO: The current implementation is {@code synchronized}. There is likely room for
- * optimization.
  */
 public class SlidingWindow<T> {
 
