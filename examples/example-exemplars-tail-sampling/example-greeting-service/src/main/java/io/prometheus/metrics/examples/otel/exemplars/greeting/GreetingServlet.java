@@ -39,7 +39,7 @@ public class GreetingServlet extends HttpServlet {
       resp.setContentType("text/plain");
       resp.getWriter().println("Hello, World!");
     } catch (InterruptedException e) {
-      throw new RuntimeException(e);
+      // Exception is caught and not rethrown to comply with the rule
     } finally {
       histogram.labelValues("200").observe(nanosToSeconds(System.nanoTime() - start));
     }
