@@ -47,6 +47,9 @@ public class HelloWorldServlet extends HttpServlet {
       resp.setContentType("text/plain");
       resp.getWriter().print(greeting);
     } catch (Exception e) {
+      if (e instanceof InterruptedException) {
+        Thread.currentThread().interrupt();
+      }
       throw new ServletException(e);
     } finally {
       histogram.labelValues("200").observe(nanosToSeconds(System.nanoTime() - start));
