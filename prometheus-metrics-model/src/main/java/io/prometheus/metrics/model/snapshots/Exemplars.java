@@ -93,21 +93,24 @@ public class Exemplars implements Iterable<Exemplar> {
       if (candidate == null) {
         continue;
       }
-      if (latest == null) {
+      if (isBetterCandidate(candidate, latest)) {
         latest = candidate;
-        continue;
-      }
-      if (!latest.hasTimestamp()) {
-        latest = candidate;
-        continue;
-      }
-      if (candidate.hasTimestamp()) {
-        if (latest.getTimestampMillis() < candidate.getTimestampMillis()) {
-          latest = candidate;
-        }
       }
     }
     return latest;
+  }
+
+  private boolean isBetterCandidate(Exemplar candidate, Exemplar latest) {
+    if (latest == null) {
+      return true;
+    }
+    if (!latest.hasTimestamp()) {
+      return true;
+    }
+    if (!candidate.hasTimestamp()) {
+      return false;
+    }
+    return candidate.getTimestampMillis() > latest.getTimestampMillis();
   }
 
   public static Builder builder() {
