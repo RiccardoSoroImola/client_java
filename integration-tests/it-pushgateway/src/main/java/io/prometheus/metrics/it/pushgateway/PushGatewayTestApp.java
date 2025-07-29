@@ -85,10 +85,14 @@ class PushGatewayTestApp {
         }
 
         @Override
-        public void checkClientTrusted(X509Certificate[] chain, String authType) {}
+        public void checkClientTrusted(X509Certificate[] chain, String authType) {
+          // Intentionally empty to bypass client certificate validation for testing purposes.
+        }
 
         @Override
-        public void checkServerTrusted(X509Certificate[] chain, String authType) {}
+        public void checkServerTrusted(X509Certificate[] chain, String authType) {
+          // Intentionally empty to bypass server certificate validation for testing purposes.
+        }
       };
 
   static HttpConnectionFactory insecureConnectionFactory =
