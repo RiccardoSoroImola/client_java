@@ -185,11 +185,13 @@ public class ExemplarSampler {
     if (nullIndex >= 0) {
       return updateExemplar(nullIndex, value, now);
     }
-    if (now - smallest.getTimestampMillis() > config.getMinRetentionPeriodMillis()
+    if (smallest != null
+        && now - smallest.getTimestampMillis() > config.getMinRetentionPeriodMillis()
         && value < smallest.getValue()) {
       return updateExemplar(smallestIndex, value, now);
     }
-    if (now - largest.getTimestampMillis() > config.getMinRetentionPeriodMillis()
+    if (largest != null
+        && now - largest.getTimestampMillis() > config.getMinRetentionPeriodMillis()
         && value > largest.getValue()) {
       return updateExemplar(largestIndex, value, now);
     }
@@ -260,7 +262,8 @@ public class ExemplarSampler {
     }
     if (nullPos != -1) {
       return updateCustomExemplar(nullPos, amount, labels, now);
-    } else if (now - oldest.getTimestampMillis() > config.getMinRetentionPeriodMillis()) {
+    } else if (oldest != null
+        && now - oldest.getTimestampMillis() > config.getMinRetentionPeriodMillis()) {
       return updateCustomExemplar(oldestPos, amount, labels, now);
     } else {
       return 0;
