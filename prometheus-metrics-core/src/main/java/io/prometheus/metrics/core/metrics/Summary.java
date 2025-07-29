@@ -61,16 +61,18 @@ public class Summary extends StatefulMetric<DistributionDataPoint, Summary.DataP
 
   private List<CKMSQuantiles.Quantile> makeQuantiles(MetricsProperties[] properties) {
     List<CKMSQuantiles.Quantile> result = new ArrayList<>();
-    List<Double> quantiles = getConfigProperty(properties, MetricsProperties::getSummaryQuantiles);
+    List<Double> quantileList =
+        getConfigProperty(properties, MetricsProperties::getSummaryQuantiles);
     List<Double> quantileErrors =
         getConfigProperty(properties, MetricsProperties::getSummaryQuantileErrors);
-    if (quantiles != null) {
-      for (int i = 0; i < quantiles.size(); i++) {
+    if (quantileList != null) {
+      for (int i = 0; i < quantileList.size(); i++) {
         if (quantileErrors.size() > 0) {
-          result.add(new CKMSQuantiles.Quantile(quantiles.get(i), quantileErrors.get(i)));
+          result.add(new CKMSQuantiles.Quantile(quantileList.get(i), quantileErrors.get(i)));
         } else {
           result.add(
-              new CKMSQuantiles.Quantile(quantiles.get(i), Builder.defaultError(quantiles.get(i))));
+              new CKMSQuantiles.Quantile(
+                  quantileList.get(i), Builder.defaultError(quantileList.get(i))));
         }
       }
     }
@@ -197,13 +199,13 @@ public class Summary extends StatefulMetric<DistributionDataPoint, Summary.DataP
     }
 
     private Quantiles makeQuantiles() {
-      Quantile[] quantiles = new Quantile[getQuantiles().size()];
+      Quantile[] quantileArray = new Quantile[getQuantiles().size()];
       for (int i = 0; i < getQuantiles().size(); i++) {
         CKMSQuantiles.Quantile quantile = getQuantiles().get(i);
-        quantiles[i] =
+        quantileArray[i] =
             new Quantile(quantile.quantile, quantileValues.current().get(quantile.quantile));
       }
-      return Quantiles.of(quantiles);
+      return Quantiles.of(quantileArray);
     }
   }
 
