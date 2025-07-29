@@ -105,18 +105,28 @@ public class TextFormatUtilBenchmark {
     }
 
     @Override
-    public void write(int b) {}
+    public void write(int b) {
+      // No-op: discards data as per NullOutputStream purpose
+    }
 
     @Override
-    public void write(byte[] b) {}
+    public void write(byte[] b) {
+      // No-op: discards data as per NullOutputStream purpose
+    }
 
     @Override
-    public void write(byte[] b, int off, int len) {}
+    public void write(byte[] b, int off, int len) {
+      // No-op: discards data as per NullOutputStream purpose
+    }
 
     @Override
-    public void flush() {}
+    public void flush() {
+      // No-op: discards data as per NullOutputStream purpose
+    }
 
     @Override
-    public void close() {}
+    public void close() {
+      // No-op: discards data as per NullOutputStream purpose
+    }
   }
 }
