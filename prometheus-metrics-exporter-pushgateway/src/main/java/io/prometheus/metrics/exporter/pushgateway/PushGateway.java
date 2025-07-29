@@ -77,6 +77,9 @@ import java.util.TreeMap;
 public class PushGateway {
 
   private static final int MILLISECONDS_PER_SECOND = 1000;
+  private static final String RESPONSE_CODE_MESSAGE = "Response code from ";
+  private static final String FAILED_TO_PUSH_MESSAGE =
+      "Failed to push metrics to the Prometheus Pushgateway on ";
 
   private final URL url;
   private final ExpositionFormatWriter writer;
@@ -218,9 +221,9 @@ public class PushGateway {
           if (errorStream != null) {
             String errBody = readFromStream(errorStream);
             errorMessage =
-                "Response code from " + url + " was " + response + ", response body: " + errBody;
+                RESPONSE_CODE_MESSAGE + url + " was " + response + ", response body: " + errBody;
           } else {
-            errorMessage = "Response code from " + url + " was " + response;
+            errorMessage = RESPONSE_CODE_MESSAGE + url + " was " + response;
           }
           throw new IOException(errorMessage);
         }
@@ -233,12 +236,7 @@ public class PushGateway {
       if (url.getPort() != -1) {
         baseUrl += ":" + url.getPort();
       }
-      throw new IOException(
-          "Failed to push metrics to the Prometheus Pushgateway on "
-              + baseUrl
-              + ": "
-              + e.getMessage(),
-          e);
+      throw new IOException(FAILED_TO_PUSH_MESSAGE + baseUrl + ": " + e.getMessage(), e);
     }
   }
 
