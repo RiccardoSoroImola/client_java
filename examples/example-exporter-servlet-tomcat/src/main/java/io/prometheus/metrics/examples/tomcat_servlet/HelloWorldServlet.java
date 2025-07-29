@@ -50,6 +50,8 @@ public class HelloWorldServlet extends HttpServlet {
       resp.getWriter().println("Hello, World!");
     } catch (InterruptedException e) {
       throw new RuntimeException(e);
+    } catch (IOException e) {
+      throw new RuntimeException(e);
     } finally {
       counter.labelValues("200").inc();
       histogram.labelValues("200").observe(nanosToSeconds(System.nanoTime() - start));
