@@ -54,7 +54,7 @@ public final class MapperConfig {
    *
    * <p>Label names have to match the regex ^[a-zA-Z_][a-zA-Z0-9_]+$
    */
-  private Map<String, String> labels = new HashMap<String, String>();
+  private Map<String, String> labels = new HashMap<>();
 
   public MapperConfig() {
     // empty constructor
