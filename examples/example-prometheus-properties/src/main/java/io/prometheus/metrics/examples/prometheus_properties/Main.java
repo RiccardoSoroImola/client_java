@@ -36,7 +36,7 @@ public class Main {
 
     while (true) {
       double duration = Math.abs(random.nextGaussian() / 10.0 + 0.2);
-      double size = random.nextInt(1000) + 256;
+      double size = (long) random.nextInt(1000) + 256;
       requestDuration.observe(duration);
       requestSize.observe(size);
       Thread.sleep(1000);
