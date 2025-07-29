@@ -41,6 +41,13 @@ import org.openjdk.jmh.annotations.Threads;
  */
 public class CounterBenchmark {
 
+  private static final String HELP = "help";
+  private static final String TEST = "test";
+  private static final String PATH = "path";
+  private static final String STATUS = "status";
+  private static final String PATH_VALUE = "/";
+  private static final String STATUS_VALUE = "200";
+
   @State(Scope.Benchmark)
   public static class PrometheusCounter {
 
@@ -48,11 +55,10 @@ public class CounterBenchmark {
     final CounterDataPoint dataPoint;
 
     public PrometheusCounter() {
-      noLabels = Counter.builder().name("test").help("help").build();
+      noLabels = Counter.builder().name(TEST).help(HELP).build();
 
-      Counter labels =
-          Counter.builder().name("test").help("help").labelNames("path", "status").build();
-      this.dataPoint = labels.labelValues("/", "200");
+      Counter labels = Counter.builder().name(TEST).help(HELP).labelNames(PATH, STATUS).build();
+      this.dataPoint = labels.labelValues(PATH_VALUE, STATUS_VALUE);
     }
   }
 
@@ -63,16 +69,16 @@ public class CounterBenchmark {
     final io.prometheus.client.Counter.Child dataPoint;
 
     public SimpleclientCounter() {
-      noLabels = io.prometheus.client.Counter.build().name("name").help("help").create();
+      noLabels = io.prometheus.client.Counter.build().name("name").help(HELP).create();
 
       io.prometheus.client.Counter counter =
           io.prometheus.client.Counter.build()
               .name("name")
-              .help("help")
-              .labelNames("path", "status")
+              .help(HELP)
+              .labelNames(PATH, STATUS)
               .create();
 
-      this.dataPoint = counter.labels("/", "200");
+      this.dataPoint = counter.labels(PATH_VALUE, STATUS_VALUE);
     }
   }
 
@@ -103,12 +109,12 @@ public class CounterBenchmark {
               .meterBuilder("instrumentation-library-name")
               .setInstrumentationVersion("1.0.0")
               .build();
-      this.longCounter = meter.counterBuilder("test1").setDescription("test").build();
-      this.doubleCounter = meter.counterBuilder("test2").ofDoubles().setDescription("test").build();
+      this.longCounter = meter.counterBuilder("test1").setDescription(TEST).build();
+      this.doubleCounter = meter.counterBuilder("test2").ofDoubles().setDescription(TEST).build();
       this.attributes =
           Attributes.of(
-              AttributeKey.stringKey("path"), "/",
-              AttributeKey.stringKey("status"), "200");
+              AttributeKey.stringKey(PATH), PATH_VALUE,
+              AttributeKey.stringKey(STATUS), STATUS_VALUE);
     }
   }
 
