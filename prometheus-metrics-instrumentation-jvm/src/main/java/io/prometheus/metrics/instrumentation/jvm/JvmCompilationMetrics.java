@@ -87,11 +87,11 @@ public class JvmCompilationMetrics {
     }
 
     public void register(PrometheusRegistry registry) {
-      CompilationMXBean compilationBean =
+      CompilationMXBean bean =
           this.compilationBean != null
               ? this.compilationBean
               : ManagementFactory.getCompilationMXBean();
-      new JvmCompilationMetrics(compilationBean, config).register(registry);
+      new JvmCompilationMetrics(bean, config).register(registry);
     }
   }
 }
