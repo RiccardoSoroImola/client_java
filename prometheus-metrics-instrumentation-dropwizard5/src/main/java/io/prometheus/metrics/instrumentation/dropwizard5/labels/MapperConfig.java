@@ -16,7 +16,7 @@ import java.util.regex.Pattern;
  */
 public final class MapperConfig {
   // each part of the metric name between dots
-  private static final String METRIC_PART_REGEX = "[a-zA-Z_0-9](-?[a-zA-Z0-9_])+";
+  private static final String METRIC_PART_REGEX = "\\w(-?\\w)+";
   // Simplified GLOB: we can have "*." at the beginning and "*" only at the end
   static final String METRIC_GLOB_REGEX =
       "^(\\*\\.|" + METRIC_PART_REGEX + "\\.)+(\\*|" + METRIC_PART_REGEX + ")$";
