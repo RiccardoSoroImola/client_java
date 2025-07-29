@@ -20,6 +20,9 @@ import javax.net.ssl.X509TrustManager;
 /** Example application using the {@link PushGateway}. */
 class PushGatewayTestApp {
 
+  private static final String PUSHING_METRICS = "Pushing metrics...";
+  private static final String PUSH_SUCCESSFUL = "Push successful.";
+
   public static void main(String[] args) throws IOException {
     if (args.length != 1) {
       System.err.println("Usage: java -jar pushgateway-test-app.jar <test>");
@@ -47,34 +50,34 @@ class PushGatewayTestApp {
   private static void runSimpleTest() throws IOException {
     makeMetrics();
     PushGateway pg = PushGateway.builder().build();
-    System.out.println("Pushing metrics...");
+    System.out.println(PUSHING_METRICS);
     pg.push();
-    System.out.println("Push successful.");
+    System.out.println(PUSH_SUCCESSFUL);
   }
 
   private static void runTextFormatTest() throws IOException {
     makeMetrics();
     PushGateway pg = PushGateway.builder().format(Format.PROMETHEUS_TEXT).build();
-    System.out.println("Pushing metrics...");
+    System.out.println(PUSHING_METRICS);
     pg.push();
-    System.out.println("Push successful.");
+    System.out.println(PUSH_SUCCESSFUL);
   }
 
   private static void runBasicAuthTest() throws IOException {
     makeMetrics();
     PushGateway pg = PushGateway.builder().basicAuth("my_user", "secret_password").build();
-    System.out.println("Pushing metrics...");
+    System.out.println(PUSHING_METRICS);
     pg.push();
-    System.out.println("Push successful.");
+    System.out.println(PUSH_SUCCESSFUL);
   }
 
   private static void runSslTest() throws IOException {
     makeMetrics();
     PushGateway pg =
         PushGateway.builder().scheme(HTTPS).connectionFactory(insecureConnectionFactory).build();
-    System.out.println("Pushing metrics...");
+    System.out.println(PUSHING_METRICS);
     pg.push();
-    System.out.println("Push successful.");
+    System.out.println(PUSH_SUCCESSFUL);
   }
 
   static TrustManager insecureTrustManager =
