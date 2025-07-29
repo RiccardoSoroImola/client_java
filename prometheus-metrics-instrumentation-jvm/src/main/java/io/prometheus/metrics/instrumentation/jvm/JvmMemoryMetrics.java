@@ -11,6 +11,7 @@ import java.lang.management.MemoryUsage;
 import java.util.List;
 import java.util.function.Consumer;
 import java.util.function.Function;
+import java.util.function.ToLongFunction;
 
 /**
  * JVM memory metrics. The {@link JvmMemoryMetrics} are registered as part of the {@link JvmMetrics}
@@ -265,12 +266,12 @@ public class JvmMemoryMetrics {
   private Consumer<GaugeWithCallback.Callback> makeCallback(
       List<MemoryPoolMXBean> poolBeansParam,
       Function<MemoryPoolMXBean, MemoryUsage> memoryUsageFunc,
-      Function<MemoryUsage, Long> valueFunc) {
+      ToLongFunction<MemoryUsage> valueFunc) {
     return callback -> {
       for (MemoryPoolMXBean pool : poolBeansParam) {
         MemoryUsage poolUsage = memoryUsageFunc.apply(pool);
         if (poolUsage != null) {
-          callback.call(valueFunc.apply(poolUsage), pool.getName());
+          callback.call(valueFunc.applyAsLong(poolUsage), pool.getName());
         }
       }
     };
