@@ -328,29 +328,6 @@ class HistogramTest {
               1.4,
               1.8,
               2),
-          /*
-          // See https://github.com/prometheus/client_golang/issues/1275
-          new TestCase("'NaN observation' from client_golang",
-                  "sample_count: 7 " +
-                          "sample_sum: NaN " +
-                          "schema: 2 " +
-                          "zero_threshold: 0.0 " +
-                          "zero_count: 1 " +
-                          "positive_span { offset: 0 length: 5 } " +
-                          "positive_delta: 1 " +
-                          "positive_delta: -1 " +
-                          "positive_delta: 2 " +
-                          "positive_delta: -2 " +
-                          "positive_delta: 2",
-                  Histogram.builder()
-                          .name("test")
-                          .nativeHistogram()
-                          .nativeSchema(2)
-                          .nativeMaxZeroThreshold(0)
-                          .build(),
-                  0, 1, 1.2, 1.4, 1.8, 2, Double.NaN
-          ),
-          */
           new GolangTestCase(
               "'+Inf observation' from client_golang",
               "sample_count: 7 "
