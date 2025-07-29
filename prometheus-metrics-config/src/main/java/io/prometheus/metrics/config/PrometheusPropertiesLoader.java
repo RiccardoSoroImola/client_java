@@ -22,6 +22,10 @@ import java.util.regex.Pattern;
  */
 public class PrometheusPropertiesLoader {
 
+  private PrometheusPropertiesLoader() {
+    throw new IllegalStateException("Utility class");
+  }
+
   /** See {@link PrometheusProperties#get()}. */
   public static PrometheusProperties load() throws PrometheusPropertiesException {
     return load(new Properties());
