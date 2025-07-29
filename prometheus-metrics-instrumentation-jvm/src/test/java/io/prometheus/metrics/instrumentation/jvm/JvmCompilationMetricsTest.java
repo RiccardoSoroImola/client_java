@@ -26,7 +26,7 @@ class JvmCompilationMetricsTest {
   }
 
   @Test
-  public void testGoodCase() throws IOException {
+  void testGoodCase() throws IOException {
     PrometheusRegistry registry = new PrometheusRegistry();
     JvmCompilationMetrics.builder().compilationBean(mockCompilationBean).register(registry);
     MetricSnapshots snapshots = registry.scrape();
@@ -44,7 +44,7 @@ jvm_compilation_time_seconds_total 10.0
   }
 
   @Test
-  public void testIgnoredMetricNotScraped() {
+  void testIgnoredMetricNotScraped() {
     MetricNameFilter filter =
         MetricNameFilter.builder()
             .nameMustNotBeEqualTo("jvm_compilation_time_seconds_total")
