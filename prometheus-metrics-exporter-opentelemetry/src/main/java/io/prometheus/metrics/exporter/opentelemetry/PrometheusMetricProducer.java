@@ -50,28 +50,60 @@ class PrometheusMetricProducer implements CollectionRegistration {
             scopeFromInfo != null ? scopeFromInfo : instrumentationScopeInfo,
             System.currentTimeMillis());
     for (MetricSnapshot snapshot : snapshots) {
+      MetricData data = null;
       if (snapshot instanceof CounterSnapshot) {
-        addUnlessNull(result, factory.create((CounterSnapshot) snapshot));
+        data = handleCounter((CounterSnapshot) snapshot, factory);
       } else if (snapshot instanceof GaugeSnapshot) {
-        addUnlessNull(result, factory.create((GaugeSnapshot) snapshot));
+        data = handleGauge((GaugeSnapshot) snapshot, factory);
       } else if (snapshot instanceof HistogramSnapshot) {
-        if (!((HistogramSnapshot) snapshot).isGaugeHistogram()) {
-          addUnlessNull(result, factory.create((HistogramSnapshot) snapshot));
-        }
+        data = handleHistogram((HistogramSnapshot) snapshot, factory);
       } else if (snapshot instanceof SummarySnapshot) {
-        addUnlessNull(result, factory.create((SummarySnapshot) snapshot));
+        data = handleSummary((SummarySnapshot) snapshot, factory);
       } else if (snapshot instanceof InfoSnapshot) {
-        String name = snapshot.getMetadata().getPrometheusName();
-        if (!name.equals("target") && !name.equals("otel_scope")) {
-          addUnlessNull(result, factory.create((InfoSnapshot) snapshot));
-        }
+        data = handleInfo((InfoSnapshot) snapshot, factory);
       } else if (snapshot instanceof StateSetSnapshot) {
-        addUnlessNull(result, factory.create((StateSetSnapshot) snapshot));
+        data = handleStateSet((StateSetSnapshot) snapshot, factory);
       } else if (snapshot instanceof UnknownSnapshot) {
-        addUnlessNull(result, factory.create((UnknownSnapshot) snapshot));
+        data = handleUnknown((UnknownSnapshot) snapshot, factory);
       }
+      addUnlessNull(result, data);
     }
     return result;
+  }
+
+  private MetricData handleCounter(CounterSnapshot snapshot, MetricDataFactory factory) {
+    return factory.create(snapshot);
+  }
+
+  private MetricData handleGauge(GaugeSnapshot snapshot, MetricDataFactory factory) {
+    return factory.create(snapshot);
+  }
+
+  private MetricData handleHistogram(HistogramSnapshot snapshot, MetricDataFactory factory) {
+    if (!snapshot.isGaugeHistogram()) {
+      return factory.create(snapshot);
+    }
+    return null;
+  }
+
+  private MetricData handleSummary(SummarySnapshot snapshot, MetricDataFactory factory) {
+    return factory.create(snapshot);
+  }
+
+  private MetricData handleInfo(InfoSnapshot snapshot, MetricDataFactory factory) {
+    String name = snapshot.getMetadata().getPrometheusName();
+    if (!name.equals("target") && !name.equals("otel_scope")) {
+      return factory.create(snapshot);
+    }
+    return null;
+  }
+
+  private MetricData handleStateSet(StateSetSnapshot snapshot, MetricDataFactory factory) {
+    return factory.create(snapshot);
+  }
+
+  private MetricData handleUnknown(UnknownSnapshot snapshot, MetricDataFactory factory) {
+    return factory.create(snapshot);
   }
 
   private Resource resourceFromTargetInfo(MetricSnapshots snapshots) {
