@@ -95,7 +95,17 @@ public class ProcessMetrics {
   }
 
   private void register(PrometheusRegistry registry) {
+    registerCpuTimeMetric(registry);
+    registerStartTimeMetric(registry);
+    registerOpenFdsMetric(registry);
+    registerMaxFdsMetric(registry);
+    if (linux) {
+      registerVirtualMemoryMetric(registry);
+      registerResidentMemoryMetric(registry);
+    }
+  }
 
+  private void registerCpuTimeMetric(PrometheusRegistry registry) {
     CounterWithCallback.builder(config)
         .name(PROCESS_CPU_SECONDS_TOTAL)
         .help("Total user and system CPU time spent in seconds.")
@@ -103,12 +113,6 @@ public class ProcessMetrics {
         .callback(
             callback -> {
               try {
-                // There exist at least 2 similar but unrelated UnixOperatingSystemMXBean
-                // interfaces, in
-                // com.sun.management and com.ibm.lang.management. Hence use reflection and
-                // recursively go
-                // through implemented interfaces until the method can be made accessible and
-                // invoked.
                 Long processCpuTime = callLongGetter("getProcessCpuTime", osBean);
                 if (processCpuTime != null) {
                   callback.call(Unit.nanosToSeconds(processCpuTime));
@@ -118,14 +122,18 @@ public class ProcessMetrics {
               }
             })
         .register(registry);
+  }
 
+  private void registerStartTimeMetric(PrometheusRegistry registry) {
     GaugeWithCallback.builder(config)
         .name(PROCESS_START_TIME_SECONDS)
         .help("Start time of the process since unix epoch in seconds.")
         .unit(Unit.SECONDS)
         .callback(callback -> callback.call(Unit.millisToSeconds(runtimeBean.getStartTime())))
         .register(registry);
+  }
 
+  private void registerOpenFdsMetric(PrometheusRegistry registry) {
     GaugeWithCallback.builder(config)
         .name(PROCESS_OPEN_FDS)
         .help("Number of open file descriptors.")
@@ -141,7 +149,9 @@ public class ProcessMetrics {
               }
             })
         .register(registry);
+  }
 
+  private void registerMaxFdsMetric(PrometheusRegistry registry) {
     GaugeWithCallback.builder(config)
         .name(PROCESS_MAX_FDS)
         .help("Maximum number of open file descriptors.")
@@ -157,39 +167,40 @@ public class ProcessMetrics {
               }
             })
         .register(registry);
+  }
 
-    if (linux) {
+  private void registerVirtualMemoryMetric(PrometheusRegistry registry) {
+    GaugeWithCallback.builder(config)
+        .name(PROCESS_VIRTUAL_MEMORY_BYTES)
+        .help("Virtual memory size in bytes.")
+        .unit(Unit.BYTES)
+        .callback(
+            callback -> {
+              try {
+                String line = grepper.lineStartingWith(PROC_SELF_STATUS, "VmSize:");
+                callback.call(Unit.kiloBytesToBytes(Double.parseDouble(line.split("\\s+")[1])));
+              } catch (Exception ignored) {
+                // Ignored
+              }
+            })
+        .register(registry);
+  }
 
-      GaugeWithCallback.builder(config)
-          .name(PROCESS_VIRTUAL_MEMORY_BYTES)
-          .help("Virtual memory size in bytes.")
-          .unit(Unit.BYTES)
-          .callback(
-              callback -> {
-                try {
-                  String line = grepper.lineStartingWith(PROC_SELF_STATUS, "VmSize:");
-                  callback.call(Unit.kiloBytesToBytes(Double.parseDouble(line.split("\\s+")[1])));
-                } catch (Exception ignored) {
-                  // Ignored
-                }
-              })
-          .register(registry);
-
-      GaugeWithCallback.builder(config)
-          .name(PROCESS_RESIDENT_MEMORY_BYTES)
-          .help("Resident memory size in bytes.")
-          .unit(Unit.BYTES)
-          .callback(
-              callback -> {
-                try {
-                  String line = grepper.lineStartingWith(PROC_SELF_STATUS, "VmRSS:");
-                  callback.call(Unit.kiloBytesToBytes(Double.parseDouble(line.split("\\s+")[1])));
-                } catch (Exception ignored) {
-                  // Ignored
-                }
-              })
-          .register(registry);
-    }
+  private void registerResidentMemoryMetric(PrometheusRegistry registry) {
+    GaugeWithCallback.builder(config)
+        .name(PROCESS_RESIDENT_MEMORY_BYTES)
+        .help("Resident memory size in bytes.")
+        .unit(Unit.BYTES)
+        .callback(
+            callback -> {
+              try {
+                String line = grepper.lineStartingWith(PROC_SELF_STATUS, "VmRSS:");
+                callback.call(Unit.kiloBytesToBytes(Double.parseDouble(line.split("\\s+")[1])));
+              } catch (Exception ignored) {
+                // Ignored
+              }
+            })
+        .register(registry);
   }
 
   private Long callLongGetter(String getterName, Object obj)
