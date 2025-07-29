@@ -1,7 +1,6 @@
 package io.prometheus.metrics.exporter.opentelemetry;
 
 import static org.assertj.core.api.Assertions.assertThatExceptionOfType;
-import static org.junit.jupiter.api.Assertions.*;
 
 import org.junit.jupiter.api.Test;
 
