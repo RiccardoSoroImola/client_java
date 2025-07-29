@@ -132,9 +132,18 @@ public class ClassicHistogramBuckets implements Iterable<ClassicHistogramBucket>
   }
 
   private static void validate(double[] upperBounds, long[] counts) {
-    // Preconditions:
-    // * upperBounds sorted
-    // * upperBounds and counts have the same length
+    validateUpperBounds(upperBounds);
+    for (int i = 0; i < upperBounds.length; i++) {
+      checkUpperBoundAndCount(upperBounds[i], counts[i]);
+      if (i > 0) {
+        if (upperBounds[i - 1] == upperBounds[i]) {
+          throw new IllegalArgumentException("Duplicate upper bound " + upperBounds[i]);
+        }
+      }
+    }
+  }
+
+  private static void validateUpperBounds(double[] upperBounds) {
     if (upperBounds.length == 0) {
       throw new IllegalArgumentException(
           ClassicHistogramBuckets.class.getSimpleName()
@@ -143,14 +152,6 @@ public class ClassicHistogramBuckets implements Iterable<ClassicHistogramBucket>
     if (upperBounds[upperBounds.length - 1] != Double.POSITIVE_INFINITY) {
       throw new IllegalArgumentException(
           ClassicHistogramBuckets.class.getSimpleName() + " must contain the +Inf bucket.");
-    }
-    for (int i = 0; i < upperBounds.length; i++) {
-      checkUpperBoundAndCount(upperBounds[i], counts[i]);
-      if (i > 0) {
-        if (upperBounds[i - 1] == upperBounds[i]) {
-          throw new IllegalArgumentException("Duplicate upper bound " + upperBounds[i]);
-        }
-      }
     }
   }
 
