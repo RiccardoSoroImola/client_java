@@ -33,10 +33,14 @@ public class Main {
         .intervalSeconds(5) // ridiculously short interval for demo purposes
         .buildAndStart();
 
+    int iteration = 0;
     while (true) {
       Thread.sleep(1000);
       System.out.println("Incrementing counter");
       counter.inc();
+      if (++iteration >= 10) {
+        break;
+      }
     }
   }
 }
