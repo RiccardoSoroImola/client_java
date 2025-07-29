@@ -4,9 +4,12 @@ import io.prometheus.client.Counter;
 import io.prometheus.metrics.exporter.httpserver.HTTPServer;
 import io.prometheus.metrics.simpleclient.bridge.SimpleclientCollector;
 import java.io.IOException;
+import java.util.logging.Logger;
 
 /** Simple example of the simpleclient backwards compatibility module. */
 public class Main {
+
+  private static final Logger logger = Logger.getLogger(Main.class.getName());
 
   public static void main(String[] args) throws IOException, InterruptedException {
 
@@ -28,8 +31,7 @@ public class Main {
 
     HTTPServer server = HTTPServer.builder().port(9400).buildAndStart();
 
-    System.out.println(
-        "HTTPServer listening on port http://localhost:" + server.getPort() + "/metrics");
+    logger.info("HTTPServer listening on port http://localhost:" + server.getPort() + "/metrics");
 
     Thread.currentThread().join();
   }
