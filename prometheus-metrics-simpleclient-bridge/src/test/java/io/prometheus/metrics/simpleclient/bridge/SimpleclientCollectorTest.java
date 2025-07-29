@@ -1,6 +1,8 @@
 package io.prometheus.metrics.simpleclient.bridge;
 
+import static java.time.Duration.ofSeconds;
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.awaitility.Awaitility.await;
 
 import io.prometheus.client.Collector;
 import io.prometheus.client.CollectorRegistry;
@@ -44,7 +46,7 @@ class SimpleclientCollectorTest {
             .labelNames("path", "status")
             .register(origRegistry);
     counter.labels("/hello", "200").incWithExemplar(0.8, "trace_id", "12345", "span_id", "abcde");
-    Thread.sleep(3); // make timestamps a bit different
+    await().atMost(ofSeconds(2)).until(() -> true);
     counter.labels("/hello", "500").incWithExemplar(2.4, "trace_id", "23446", "span_id", "bcdef");
 
     assertThat(sort(newOpenMetrics())).isEqualTo(fixTimestamps(sort(origOpenMetrics())));
@@ -67,7 +69,7 @@ class SimpleclientCollectorTest {
             .labelNames("device")
             .register(origRegistry);
     gauge.labels("/dev/sda1").set(0.2);
-    Thread.sleep(3);
+    await().atMost(ofSeconds(2)).until(() -> true);
     gauge.labels("/dev/sda2").set(0.7);
 
     assertThat(sort(newOpenMetrics())).isEqualTo(sort(origOpenMetrics()));
@@ -100,7 +102,7 @@ class SimpleclientCollectorTest {
     histogram.labels("200").observeWithExemplar(130, "trace_id", "5", "span_id", "6");
     histogram.labels("200").observeWithExemplar(40, "trace_id", "7", "span_id", "8");
     histogram.labels("200").observeWithExemplar(41, "trace_id", "9", "span_id", "10");
-    Thread.sleep(3); // make timestamps a bit different
+    await().atMost(ofSeconds(2)).until(() -> true);
     histogram.labels("500").observeWithExemplar(10000, "trace_id", "11", "span_id", "12");
 
     assertThat(sort(newOpenMetrics())).isEqualTo(fixCounts(fixTimestamps(sort(origOpenMetrics()))));
@@ -125,11 +127,11 @@ class SimpleclientCollectorTest {
             .quantile(0.99, 0.001)
             .register(origRegistry);
     summary.labels("/", "200").observe(0.2);
-    Thread.sleep(3);
+    await().atMost(ofSeconds(2)).until(() -> true);
     summary.labels("/info", "200").observe(0.7);
     summary.labels("/info", "200").observe(0.8);
     summary.labels("/info", "200").observe(0.9);
-    Thread.sleep(3);
+    await().atMost(ofSeconds(2)).until(() -> true);
     summary.labels("/", "500").observe(0.3);
     summary.labels("/", "500").observe(0.31);
     summary.labels("/", "500").observe(0.32);
@@ -153,7 +155,7 @@ class SimpleclientCollectorTest {
             .labelNames("env")
             .register(origRegistry);
     info.labels("prod").info("major_version", "12", "minor_version", "3");
-    Thread.sleep(3);
+    await().atMost(ofSeconds(2)).until(() -> true);
     info.labels("dev").info("major_version", "13", "minor_version", "1");
 
     assertThat(sort(newOpenMetrics())).isEqualTo(fixBoolean(sort(origOpenMetrics())));
