@@ -112,8 +112,12 @@ public class ResourceAttributesFromOtelAgent {
   private static void deleteTempDir(File tmpDir) {
     // We don't have subdirectories, so this simple implementation should work.
     for (File file : tmpDir.listFiles()) {
-      file.delete();
+      if (!file.delete()) {
+        // file delete failed; take appropriate action
+      }
     }
-    tmpDir.delete();
+    if (!tmpDir.delete()) {
+      // directory delete failed; take appropriate action
+    }
   }
 }
