@@ -7,6 +7,9 @@ import java.util.HashMap;
 import java.util.Map;
 
 final class PropertiesResourceProvider {
+  private PropertiesResourceProvider() {
+    // Prevent instantiation of utility class
+  }
 
   static Resource mergeResource(
       Map<String, String> resourceAttributes,
