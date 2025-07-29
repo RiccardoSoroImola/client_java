@@ -101,11 +101,11 @@ public class JvmClassLoadingMetrics {
     }
 
     public void register(PrometheusRegistry registry) {
-      ClassLoadingMXBean classLoadingBean =
+      ClassLoadingMXBean mxBean =
           this.classLoadingBean != null
               ? this.classLoadingBean
               : ManagementFactory.getClassLoadingMXBean();
-      new JvmClassLoadingMetrics(classLoadingBean, config).register(registry);
+      new JvmClassLoadingMetrics(mxBean, config).register(registry);
     }
   }
 }
