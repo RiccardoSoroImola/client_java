@@ -35,6 +35,21 @@ public class PrometheusTextFormatWriter implements ExpositionFormatWriter {
 
   public static final String CONTENT_TYPE = "text/plain; version=0.0.4; charset=utf-8";
 
+  private static final String SUFFIX_TOTAL = "_total";
+  private static final String SUFFIX_CREATED = "_created";
+  private static final String SUFFIX_INFO = "_info";
+  private static final String SUFFIX_BUCKET = "_bucket";
+  private static final String SUFFIX_COUNT = "_count";
+  private static final String SUFFIX_SUM = "_sum";
+  private static final String SUFFIX_GCOUNT = "_gcount";
+  private static final String SUFFIX_GSUM = "_gsum";
+
+  private static final String TYPE_GAUGE = "gauge";
+  private static final String TYPE_COUNTER = "counter";
+  private static final String TYPE_HISTOGRAM = "histogram";
+  private static final String TYPE_SUMMARY = "summary";
+  private static final String TYPE_UNTYPED = "untyped";
+
   private final boolean writeCreatedTimestamps;
   private final boolean timestampsInMs;
 
@@ -148,10 +163,10 @@ public class PrometheusTextFormatWriter implements ExpositionFormatWriter {
     for (DataPointSnapshot data : snapshot.getDataPoints()) {
       if (data.hasCreatedTimestamp()) {
         if (!metadataWritten) {
-          writeMetadata(writer, "_created", "gauge", metadata);
+          writeMetadata(writer, SUFFIX_CREATED, TYPE_GAUGE, metadata);
           metadataWritten = true;
         }
-        writeNameAndLabels(writer, metadata.getPrometheusName(), "_created", data.getLabels());
+        writeNameAndLabels(writer, metadata.getPrometheusName(), SUFFIX_CREATED, data.getLabels());
         writePrometheusTimestamp(writer, data.getCreatedTimestampMillis(), timestampsInMs);
         writeScrapeTimestampAndNewline(writer, data);
       }
@@ -161,9 +176,9 @@ public class PrometheusTextFormatWriter implements ExpositionFormatWriter {
   private void writeCounter(Writer writer, CounterSnapshot snapshot) throws IOException {
     if (!snapshot.getDataPoints().isEmpty()) {
       MetricMetadata metadata = snapshot.getMetadata();
-      writeMetadata(writer, "_total", "counter", metadata);
+      writeMetadata(writer, SUFFIX_TOTAL, TYPE_COUNTER, metadata);
       for (CounterSnapshot.CounterDataPointSnapshot data : snapshot.getDataPoints()) {
-        writeNameAndLabels(writer, metadata.getPrometheusName(), "_total", data.getLabels());
+        writeNameAndLabels(writer, metadata.getPrometheusName(), SUFFIX_TOTAL, data.getLabels());
         writeDouble(writer, data.getValue());
         writeScrapeTimestampAndNewline(writer, data);
       }
@@ -172,7 +187,7 @@ public class PrometheusTextFormatWriter implements ExpositionFormatWriter {
 
   private void writeGauge(Writer writer, GaugeSnapshot snapshot) throws IOException {
     MetricMetadata metadata = snapshot.getMetadata();
-    writeMetadata(writer, "", "gauge", metadata);
+    writeMetadata(writer, "", TYPE_GAUGE, metadata);
     for (GaugeSnapshot.GaugeDataPointSnapshot data : snapshot.getDataPoints()) {
       writeNameAndLabels(writer, metadata.getPrometheusName(), null, data.getLabels());
       writeDouble(writer, data.getValue());
@@ -182,7 +197,7 @@ public class PrometheusTextFormatWriter implements ExpositionFormatWriter {
 
   private void writeHistogram(Writer writer, HistogramSnapshot snapshot) throws IOException {
     MetricMetadata metadata = snapshot.getMetadata();
-    writeMetadata(writer, "", "histogram", metadata);
+    writeMetadata(writer, "", TYPE_HISTOGRAM, metadata);
     for (HistogramSnapshot.HistogramDataPointSnapshot data : snapshot.getDataPoints()) {
       ClassicHistogramBuckets buckets = getClassicBuckets(data);
       long cumulativeCount = 0;
@@ -191,7 +206,7 @@ public class PrometheusTextFormatWriter implements ExpositionFormatWriter {
         writeNameAndLabels(
             writer,
             metadata.getPrometheusName(),
-            "_bucket",
+            SUFFIX_BUCKET,
             data.getLabels(),
             "le",
             buckets.getUpperBound(i));
@@ -200,12 +215,12 @@ public class PrometheusTextFormatWriter implements ExpositionFormatWriter {
       }
       if (!snapshot.isGaugeHistogram()) {
         if (data.hasCount()) {
-          writeNameAndLabels(writer, metadata.getPrometheusName(), "_count", data.getLabels());
+          writeNameAndLabels(writer, metadata.getPrometheusName(), SUFFIX_COUNT, data.getLabels());
           writeLong(writer, data.getCount());
           writeScrapeTimestampAndNewline(writer, data);
         }
         if (data.hasSum()) {
-          writeNameAndLabels(writer, metadata.getPrometheusName(), "_sum", data.getLabels());
+          writeNameAndLabels(writer, metadata.getPrometheusName(), SUFFIX_SUM, data.getLabels());
           writeDouble(writer, data.getSum());
           writeScrapeTimestampAndNewline(writer, data);
         }
@@ -234,10 +249,10 @@ public class PrometheusTextFormatWriter implements ExpositionFormatWriter {
     for (HistogramSnapshot.HistogramDataPointSnapshot data : snapshot.getDataPoints()) {
       if (data.hasCount()) {
         if (!metadataWritten) {
-          writeMetadata(writer, "_gcount", "gauge", metadata);
+          writeMetadata(writer, SUFFIX_GCOUNT, TYPE_GAUGE, metadata);
           metadataWritten = true;
         }
-        writeNameAndLabels(writer, metadata.getPrometheusName(), "_gcount", data.getLabels());
+        writeNameAndLabels(writer, metadata.getPrometheusName(), SUFFIX_GCOUNT, data.getLabels());
         writeLong(writer, data.getCount());
         writeScrapeTimestampAndNewline(writer, data);
       }
@@ -246,10 +261,10 @@ public class PrometheusTextFormatWriter implements ExpositionFormatWriter {
     for (HistogramSnapshot.HistogramDataPointSnapshot data : snapshot.getDataPoints()) {
       if (data.hasSum()) {
         if (!metadataWritten) {
-          writeMetadata(writer, "_gsum", "gauge", metadata);
+          writeMetadata(writer, SUFFIX_GSUM, TYPE_GAUGE, metadata);
           metadataWritten = true;
         }
-        writeNameAndLabels(writer, metadata.getPrometheusName(), "_gsum", data.getLabels());
+        writeNameAndLabels(writer, metadata.getPrometheusName(), SUFFIX_GSUM, data.getLabels());
         writeDouble(writer, data.getSum());
         writeScrapeTimestampAndNewline(writer, data);
       }
@@ -264,7 +279,7 @@ public class PrometheusTextFormatWriter implements ExpositionFormatWriter {
         continue;
       }
       if (!metadataWritten) {
-        writeMetadata(writer, "", "summary", metadata);
+        writeMetadata(writer, "", TYPE_SUMMARY, metadata);
         metadataWritten = true;
       }
       for (Quantile quantile : data.getQuantiles()) {
@@ -279,12 +294,12 @@ public class PrometheusTextFormatWriter implements ExpositionFormatWriter {
         writeScrapeTimestampAndNewline(writer, data);
       }
       if (data.hasCount()) {
-        writeNameAndLabels(writer, metadata.getPrometheusName(), "_count", data.getLabels());
+        writeNameAndLabels(writer, metadata.getPrometheusName(), SUFFIX_COUNT, data.getLabels());
         writeLong(writer, data.getCount());
         writeScrapeTimestampAndNewline(writer, data);
       }
       if (data.hasSum()) {
-        writeNameAndLabels(writer, metadata.getPrometheusName(), "_sum", data.getLabels());
+        writeNameAndLabels(writer, metadata.getPrometheusName(), SUFFIX_SUM, data.getLabels());
         writeDouble(writer, data.getSum());
         writeScrapeTimestampAndNewline(writer, data);
       }
@@ -293,9 +308,9 @@ public class PrometheusTextFormatWriter implements ExpositionFormatWriter {
 
   private void writeInfo(Writer writer, InfoSnapshot snapshot) throws IOException {
     MetricMetadata metadata = snapshot.getMetadata();
-    writeMetadata(writer, "_info", "gauge", metadata);
+    writeMetadata(writer, SUFFIX_INFO, TYPE_GAUGE, metadata);
     for (InfoSnapshot.InfoDataPointSnapshot data : snapshot.getDataPoints()) {
-      writeNameAndLabels(writer, metadata.getPrometheusName(), "_info", data.getLabels());
+      writeNameAndLabels(writer, metadata.getPrometheusName(), SUFFIX_INFO, data.getLabels());
       writer.write("1");
       writeScrapeTimestampAndNewline(writer, data);
     }
@@ -303,7 +318,7 @@ public class PrometheusTextFormatWriter implements ExpositionFormatWriter {
 
   private void writeStateSet(Writer writer, StateSetSnapshot snapshot) throws IOException {
     MetricMetadata metadata = snapshot.getMetadata();
-    writeMetadata(writer, "", "gauge", metadata);
+    writeMetadata(writer, "", TYPE_GAUGE, metadata);
     for (StateSetSnapshot.StateSetDataPointSnapshot data : snapshot.getDataPoints()) {
       for (int i = 0; i < data.size(); i++) {
         writer.write(metadata.getPrometheusName());
@@ -336,7 +351,7 @@ public class PrometheusTextFormatWriter implements ExpositionFormatWriter {
 
   private void writeUnknown(Writer writer, UnknownSnapshot snapshot) throws IOException {
     MetricMetadata metadata = snapshot.getMetadata();
-    writeMetadata(writer, "", "untyped", metadata);
+    writeMetadata(writer, "", TYPE_UNTYPED, metadata);
     for (UnknownSnapshot.UnknownDataPointSnapshot data : snapshot.getDataPoints()) {
       writeNameAndLabels(writer, metadata.getPrometheusName(), null, data.getLabels());
       writeDouble(writer, data.getValue());
