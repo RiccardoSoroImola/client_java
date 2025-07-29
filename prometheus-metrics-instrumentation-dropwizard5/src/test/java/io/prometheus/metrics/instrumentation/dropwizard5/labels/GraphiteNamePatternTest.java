@@ -13,7 +13,7 @@ import org.junit.jupiter.api.Test;
 class GraphiteNamePatternTest {
 
   @Test
-  public void createNew_WHEN_InvalidPattern_THEN_ShouldThrowException() {
+  void createNew_WHEN_InvalidPattern_THEN_ShouldThrowException() {
     List<String> invalidPatterns =
         Arrays.asList(
             "",
@@ -40,7 +40,7 @@ class GraphiteNamePatternTest {
   }
 
   @Test
-  public void createNew_WHEN_ValidPattern_THEN_ShouldCreateThePatternSuccessfully() {
+  void createNew_WHEN_ValidPattern_THEN_ShouldCreateThePatternSuccessfully() {
     final List<String> validPatterns =
         Arrays.asList(
             "org.test.controller.gather.status.400",
@@ -55,7 +55,7 @@ class GraphiteNamePatternTest {
   }
 
   @Test
-  public void createNew_WHEN_ValidPattern_THEN_ShouldInitInternalPatternSuccessfully() {
+  void createNew_WHEN_ValidPattern_THEN_ShouldInitInternalPatternSuccessfully() {
     final Map<String, String> validPatterns = new HashMap<String, String>();
     validPatterns.put(
         "org.test.controller.gather.status.400", "^\\Qorg.test.controller.gather.status.400\\E$");
@@ -75,7 +75,7 @@ class GraphiteNamePatternTest {
   }
 
   @Test
-  public void match_WHEN_NotMatchingMetricNameProvided_THEN_ShouldNotMatch() {
+  void match_WHEN_NotMatchingMetricNameProvided_THEN_ShouldNotMatch() {
     final GraphiteNamePattern pattern = new GraphiteNamePattern("org.test.controller.*.status.*");
     final List<String> notMatchingMetricNamed =
         Arrays.asList("org.test.controller.status.400", "", null);
@@ -88,7 +88,7 @@ class GraphiteNamePatternTest {
   }
 
   @Test
-  public void match_WHEN_MatchingMetricNameProvided_THEN_ShouldMatch() {
+  void match_WHEN_MatchingMetricNameProvided_THEN_ShouldMatch() {
     final GraphiteNamePattern pattern = new GraphiteNamePattern("org.test.controller.*.status.*");
     final List<String> matchingMetricNamed =
         Arrays.asList(
@@ -106,7 +106,7 @@ class GraphiteNamePatternTest {
   }
 
   @Test
-  public void extractParameters() {
+  void extractParameters() {
     GraphiteNamePattern pattern;
     Map<String, String> expected = new HashMap<String, String>();
     expected.put("${0}", "gather");
@@ -125,7 +125,7 @@ class GraphiteNamePatternTest {
   }
 
   @Test
-  public void extractParameters_WHEN_emptyStringInDottedMetricsName_THEN_ShouldReturnEmptyString() {
+  void extractParameters_WHEN_emptyStringInDottedMetricsName_THEN_ShouldReturnEmptyString() {
     GraphiteNamePattern pattern;
     Map<String, String> expected = new HashMap<String, String>();
     expected.put("${0}", "");
@@ -136,7 +136,7 @@ class GraphiteNamePatternTest {
   }
 
   @Test
-  public void extractParameters_WHEN_moreDots_THEN_ShouldReturnNoMatches() {
+  void extractParameters_WHEN_moreDots_THEN_ShouldReturnNoMatches() {
     GraphiteNamePattern pattern;
     pattern = new GraphiteNamePattern("org.test.controller.*.status.*");
     Assertions.assertThat(pattern.extractParameters("org.test.controller...status.400"))
