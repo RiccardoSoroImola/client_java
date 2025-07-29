@@ -48,51 +48,36 @@ class ClassicHistogramBucketsTest {
 
   @Test
   public void testInfBucketMissing() {
-    assertThatExceptionOfType(IllegalArgumentException.class)
-        .isThrownBy(
-            () -> ClassicHistogramBuckets.builder().bucket(Double.NEGATIVE_INFINITY, 0).build());
+    ClassicHistogramBuckets.Builder builder = ClassicHistogramBuckets.builder();
+    builder.bucket(Double.NEGATIVE_INFINITY, 0);
+    assertThatExceptionOfType(IllegalArgumentException.class).isThrownBy(builder::build);
   }
 
   @Test
   public void testNegativeCount() {
-    assertThatExceptionOfType(IllegalArgumentException.class)
-        .isThrownBy(
-            () ->
-                ClassicHistogramBuckets.builder()
-                    .bucket(0.0, 10)
-                    .bucket(Double.POSITIVE_INFINITY, -1)
-                    .build());
+    ClassicHistogramBuckets.Builder builder = ClassicHistogramBuckets.builder();
+    builder.bucket(0.0, 10).bucket(Double.POSITIVE_INFINITY, -1);
+    assertThatExceptionOfType(IllegalArgumentException.class).isThrownBy(builder::build);
   }
 
   @Test
   public void testNaNBoundary() {
-    assertThatExceptionOfType(IllegalArgumentException.class)
-        .isThrownBy(
-            () ->
-                ClassicHistogramBuckets.builder()
-                    .bucket(0.0, 1)
-                    .bucket(Double.NaN, 2)
-                    .bucket(Double.POSITIVE_INFINITY, 0)
-                    .build());
+    ClassicHistogramBuckets.Builder builder = ClassicHistogramBuckets.builder();
+    builder.bucket(0.0, 1).bucket(Double.NaN, 2).bucket(Double.POSITIVE_INFINITY, 0);
+    assertThatExceptionOfType(IllegalArgumentException.class).isThrownBy(builder::build);
   }
 
   @Test
   public void testDuplicateBoundary() {
-    assertThatExceptionOfType(IllegalArgumentException.class)
-        .isThrownBy(
-            () ->
-                ClassicHistogramBuckets.builder()
-                    .bucket(1.0, 1)
-                    .bucket(2.0, 2)
-                    .bucket(1.0, 2)
-                    .bucket(Double.POSITIVE_INFINITY, 0)
-                    .build());
+    ClassicHistogramBuckets.Builder builder = ClassicHistogramBuckets.builder();
+    builder.bucket(1.0, 1).bucket(2.0, 2).bucket(1.0, 2).bucket(Double.POSITIVE_INFINITY, 0);
+    assertThatExceptionOfType(IllegalArgumentException.class).isThrownBy(builder::build);
   }
 
   @Test
   public void testEmptyBuckets() {
-    assertThatExceptionOfType(IllegalArgumentException.class)
-        .isThrownBy(() -> ClassicHistogramBuckets.builder().build());
+    ClassicHistogramBuckets.Builder builder = ClassicHistogramBuckets.builder();
+    assertThatExceptionOfType(IllegalArgumentException.class).isThrownBy(builder::build);
   }
 
   @Test
