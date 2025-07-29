@@ -9,6 +9,7 @@ public class ExemplarsProperties {
   private static final String MIN_RETENTION_PERIOD_SECONDS = "minRetentionPeriodSeconds";
   private static final String MAX_RETENTION_PERIOD_SECONDS = "maxRetentionPeriodSeconds";
   private static final String SAMPLE_INTERVAL_MILLISECONDS = "sampleIntervalMilliseconds";
+  private static final String EXPECTING_VALUE_GT_0 = "Expecting value > 0.";
 
   private final Integer minRetentionPeriodSeconds;
   private final Integer maxRetentionPeriodSeconds;
@@ -68,19 +69,19 @@ public class ExemplarsProperties {
     Util.assertValue(
         minRetentionPeriodSeconds,
         t -> t > 0,
-        "Expecting value > 0.",
+        EXPECTING_VALUE_GT_0,
         PREFIX,
         MIN_RETENTION_PERIOD_SECONDS);
     Util.assertValue(
         maxRetentionPeriodSeconds,
         t -> t > 0,
-        "Expecting value > 0.",
+        EXPECTING_VALUE_GT_0,
         PREFIX,
         MAX_RETENTION_PERIOD_SECONDS);
     Util.assertValue(
         sampleIntervalMilliseconds,
         t -> t > 0,
-        "Expecting value > 0.",
+        EXPECTING_VALUE_GT_0,
         PREFIX,
         SAMPLE_INTERVAL_MILLISECONDS);
 
