@@ -1,7 +1,8 @@
 package io.prometheus.metrics.config;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.api.Assertions.assertThatExceptionOfType;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 import java.util.Properties;
 import org.junit.jupiter.api.Test;
@@ -27,14 +28,13 @@ class PrometheusPropertiesLoaderTest {
   @Test
   @SetSystemProperty(key = "prometheus.config", value = "nonexistent.properties")
   void cantLoadPropertiesFile() {
-    assertThatExceptionOfType(PrometheusPropertiesException.class)
-        .isThrownBy(
-            () -> {
-              PrometheusPropertiesLoader.load(new Properties());
-            })
-        .withMessage(
-            "Failed to read Prometheus properties from nonexistent.properties:"
-                + " nonexistent.properties");
+    PrometheusPropertiesException exception =
+        assertThrows(
+            PrometheusPropertiesException.class,
+            () -> PrometheusPropertiesLoader.load(new Properties()));
+    assertEquals(
+        "Failed to read Prometheus properties from nonexistent.properties: nonexistent.properties",
+        exception.getMessage());
   }
 
   @Test
