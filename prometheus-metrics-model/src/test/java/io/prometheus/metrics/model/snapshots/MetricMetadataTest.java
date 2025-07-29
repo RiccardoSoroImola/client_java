@@ -75,7 +75,9 @@ class MetricMetadataTest {
 
   @Test
   void testUnitSuffixAdded() {
-    new MetricMetadata(sanitizeMetricName("my_counter", Unit.SECONDS), "help", Unit.SECONDS);
+    MetricMetadata metadata =
+        new MetricMetadata(sanitizeMetricName("my_counter", Unit.SECONDS), "help", Unit.SECONDS);
+    assertThat(metadata.getName()).isEqualTo("my_counter_seconds");
   }
 
   @Test
