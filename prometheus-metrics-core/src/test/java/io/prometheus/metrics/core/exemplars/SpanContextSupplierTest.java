@@ -33,7 +33,9 @@ class SpanContextSupplierTest {
       }
 
       @Override
-      public void markCurrentSpanAsExemplar() {}
+      public void markCurrentSpanAsExemplar() {
+        // No-op as this method is not used in this test context.
+      }
     };
   }
 
