@@ -5,16 +5,16 @@ import java.util.Properties;
 
 class PrometheusInstrumentationScope {
 
-  private static final String instrumentationScopePropertiesFile =
+  private static final String INSTRUMENTATION_SCOPE_PROPERTIES_FILE =
       "instrumentationScope.properties";
-  private static final String instrumentationScopeNameKey = "instrumentationScope.name";
-  private static final String instrumentationScopeVersionKey = "instrumentationScope.version";
+  private static final String INSTRUMENTATION_SCOPE_NAME_KEY = "instrumentationScope.name";
+  private static final String INSTRUMENTATION_SCOPE_VERSION_KEY = "instrumentationScope.version";
 
   public static InstrumentationScopeInfo loadInstrumentationScopeInfo() {
     return loadInstrumentationScopeInfo(
-        instrumentationScopePropertiesFile,
-        instrumentationScopeNameKey,
-        instrumentationScopeVersionKey);
+        INSTRUMENTATION_SCOPE_PROPERTIES_FILE,
+        INSTRUMENTATION_SCOPE_NAME_KEY,
+        INSTRUMENTATION_SCOPE_VERSION_KEY);
   }
 
   static InstrumentationScopeInfo loadInstrumentationScopeInfo(
