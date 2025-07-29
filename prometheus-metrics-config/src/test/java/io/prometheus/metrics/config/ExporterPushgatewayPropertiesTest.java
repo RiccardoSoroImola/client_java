@@ -22,8 +22,10 @@ class ExporterPushgatewayPropertiesTest {
     assertThat(properties.getJob()).isEqualTo("job");
     assertThat(properties.getScheme()).isEqualTo("http");
 
+    Map<String, String> invalidMap = new HashMap<>();
+    invalidMap.put("io.prometheus.exporter.pushgateway.scheme", "foo");
     assertThatExceptionOfType(PrometheusPropertiesException.class)
-        .isThrownBy(() -> load(Map.of("io.prometheus.exporter.pushgateway.scheme", "foo")))
+        .isThrownBy(() -> load(invalidMap))
         .withMessage(
             "io.prometheus.exporter.pushgateway.scheme: Illegal value. Expecting 'http' or 'https'."
                 + " Found: foo");
