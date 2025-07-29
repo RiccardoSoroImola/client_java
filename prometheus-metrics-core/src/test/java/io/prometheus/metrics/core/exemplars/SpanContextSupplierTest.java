@@ -68,8 +68,8 @@ class SpanContextSupplierTest {
   @Test
   void testConstructorInjection() {
     ExemplarsProperties properties = ExemplarsProperties.builder().build();
-    ExemplarSamplerConfig config = new ExemplarSamplerConfig(properties, 1);
-    ExemplarSampler exemplarSampler = new ExemplarSampler(config, spanContextA);
+    ExemplarSamplerConfig configLocal = new ExemplarSamplerConfig(properties, 1);
+    ExemplarSampler exemplarSampler = new ExemplarSampler(configLocal, spanContextA);
 
     SpanContextSupplier.setSpanContext(spanContextB);
     exemplarSampler.observe(1.0);
