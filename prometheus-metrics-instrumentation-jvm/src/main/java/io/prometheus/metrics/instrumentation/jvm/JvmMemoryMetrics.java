@@ -128,10 +128,12 @@ public class JvmMemoryMetrics {
   private final List<MemoryPoolMXBean> poolBeans;
 
   private JvmMemoryMetrics(
-      List<MemoryPoolMXBean> poolBeans, MemoryMXBean memoryBean, PrometheusProperties config) {
-    this.config = config;
-    this.poolBeans = poolBeans;
-    this.memoryBean = memoryBean;
+      List<MemoryPoolMXBean> poolBeansParam,
+      MemoryMXBean memoryBeanParam,
+      PrometheusProperties configParam) {
+    this.config = configParam;
+    this.poolBeans = poolBeansParam;
+    this.memoryBean = memoryBeanParam;
   }
 
   private void register(PrometheusRegistry registry) {
@@ -261,11 +263,11 @@ public class JvmMemoryMetrics {
   }
 
   private Consumer<GaugeWithCallback.Callback> makeCallback(
-      List<MemoryPoolMXBean> poolBeans,
+      List<MemoryPoolMXBean> poolBeansParam,
       Function<MemoryPoolMXBean, MemoryUsage> memoryUsageFunc,
       Function<MemoryUsage, Long> valueFunc) {
     return callback -> {
-      for (MemoryPoolMXBean pool : poolBeans) {
+      for (MemoryPoolMXBean pool : poolBeansParam) {
         MemoryUsage poolUsage = memoryUsageFunc.apply(pool);
         if (poolUsage != null) {
           callback.call(valueFunc.apply(poolUsage), pool.getName());
@@ -288,19 +290,19 @@ public class JvmMemoryMetrics {
     private MemoryMXBean memoryBean;
     private List<MemoryPoolMXBean> poolBeans;
 
-    private Builder(PrometheusProperties config) {
-      this.config = config;
+    private Builder(PrometheusProperties configParam) {
+      this.config = configParam;
     }
 
     /** Package private. For testing only. */
-    Builder withMemoryBean(MemoryMXBean memoryBean) {
-      this.memoryBean = memoryBean;
+    Builder withMemoryBean(MemoryMXBean memoryBeanParam) {
+      this.memoryBean = memoryBeanParam;
       return this;
     }
 
     /** Package private. For testing only. */
-    Builder withMemoryPoolBeans(List<MemoryPoolMXBean> memoryPoolBeans) {
-      this.poolBeans = memoryPoolBeans;
+    Builder withMemoryPoolBeans(List<MemoryPoolMXBean> memoryPoolBeansParam) {
+      this.poolBeans = memoryPoolBeansParam;
       return this;
     }
 
