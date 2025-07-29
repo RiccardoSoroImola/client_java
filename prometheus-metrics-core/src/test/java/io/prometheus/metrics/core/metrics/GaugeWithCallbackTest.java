@@ -1,8 +1,8 @@
 package io.prometheus.metrics.core.metrics;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.api.Assertions.assertThatExceptionOfType;
 import static org.assertj.core.data.Offset.offset;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 import io.prometheus.metrics.model.snapshots.GaugeSnapshot;
 import java.util.Arrays;
@@ -39,7 +39,8 @@ class GaugeWithCallbackTest {
 
   @Test
   public void testGaugeNoCallback() {
-    assertThatExceptionOfType(IllegalArgumentException.class)
-        .isThrownBy(() -> GaugeWithCallback.builder().name("gauge").labelNames("l1", "l2").build());
+    assertThrows(
+        IllegalArgumentException.class,
+        () -> GaugeWithCallback.builder().name("gauge").labelNames("l1", "l2").build());
   }
 }
