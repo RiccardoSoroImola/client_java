@@ -23,7 +23,7 @@ class ExporterPropertiesTest {
     assertThatExceptionOfType(PrometheusPropertiesException.class)
         .isThrownBy(
             () ->
-                load(
+                ExporterProperties.load(
                     new HashMap<>(
                         Map.of("io.prometheus.exporter.includeCreatedTimestamps", "invalid"))))
         .withMessage(
@@ -32,7 +32,7 @@ class ExporterPropertiesTest {
     assertThatExceptionOfType(PrometheusPropertiesException.class)
         .isThrownBy(
             () ->
-                load(
+                ExporterProperties.load(
                     new HashMap<>(
                         Map.of("io.prometheus.exporter.exemplarsOnAllMetricTypes", "invalid"))))
         .withMessage(
