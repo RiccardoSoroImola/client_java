@@ -114,11 +114,11 @@ public class PrometheusRegistry {
   }
 
   private void processCollectors(
-      List<Collector> collectors,
+      List<Collector> collectorList,
       Predicate<String> includedNames,
       PrometheusScrapeRequest scrapeRequest,
       MetricSnapshots.Builder result) {
-    for (Collector collector : collectors) {
+    for (Collector collector : collectorList) {
       String prometheusName = collector.getPrometheusName();
       if (prometheusName == null || includedNames.test(prometheusName)) {
         MetricSnapshot snapshot =
@@ -133,11 +133,11 @@ public class PrometheusRegistry {
   }
 
   private void processMultiCollectors(
-      List<MultiCollector> multiCollectors,
+      List<MultiCollector> multiCollectorList,
       Predicate<String> includedNames,
       PrometheusScrapeRequest scrapeRequest,
       MetricSnapshots.Builder result) {
-    for (MultiCollector collector : multiCollectors) {
+    for (MultiCollector collector : multiCollectorList) {
       List<String> prometheusNames = collector.getPrometheusNames();
       if (isAnyNameIncluded(prometheusNames, includedNames)) {
         MetricSnapshots snapshots =
