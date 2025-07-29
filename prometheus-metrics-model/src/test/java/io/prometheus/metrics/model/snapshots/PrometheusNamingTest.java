@@ -9,7 +9,7 @@ import org.junit.jupiter.api.Test;
 class PrometheusNamingTest {
 
   @Test
-  public void testSanitizeMetricName() {
+  void testSanitizeMetricName() {
     assertThat(prometheusName(sanitizeMetricName("0abc.def"))).isEqualTo("_abc_def");
     assertThat(prometheusName(sanitizeMetricName("___ab.:c0"))).isEqualTo("___ab__c0");
     assertThat(sanitizeMetricName("my_prefix/my_metric")).isEqualTo("my_prefix_my_metric");
@@ -23,7 +23,7 @@ class PrometheusNamingTest {
   }
 
   @Test
-  public void testSanitizeMetricNameWithUnit() {
+  void testSanitizeMetricNameWithUnit() {
     assertThat(prometheusName(sanitizeMetricName("0abc.def", Unit.RATIO)))
         .isEqualTo("_abc_def_" + Unit.RATIO);
     assertThat(prometheusName(sanitizeMetricName("___ab.:c0", Unit.RATIO)))
@@ -41,7 +41,7 @@ class PrometheusNamingTest {
   }
 
   @Test
-  public void testSanitizeLabelName() {
+  void testSanitizeLabelName() {
     assertThat(prometheusName(sanitizeLabelName("0abc.def"))).isEqualTo("_abc_def");
     assertThat(prometheusName(sanitizeLabelName("_abc"))).isEqualTo("_abc");
     assertThat(prometheusName(sanitizeLabelName("__abc"))).isEqualTo("_abc");
@@ -52,7 +52,7 @@ class PrometheusNamingTest {
   }
 
   @Test
-  public void testValidateUnitName() {
+  void testValidateUnitName() {
     assertThat(validateUnitName("secondstotal")).isNotNull();
     assertThat(validateUnitName("total")).isNotNull();
     assertThat(validateUnitName("seconds_total")).isNotNull();
@@ -64,7 +64,7 @@ class PrometheusNamingTest {
   }
 
   @Test
-  public void testSanitizeUnitName() {
+  void testSanitizeUnitName() {
     assertThat(sanitizeUnitName("seconds")).isEqualTo("seconds");
     assertThat(sanitizeUnitName("seconds_total")).isEqualTo("seconds");
     assertThat(sanitizeUnitName("seconds_total_total")).isEqualTo("seconds");
@@ -74,25 +74,25 @@ class PrometheusNamingTest {
   }
 
   @Test
-  public void testInvalidUnitName1() {
+  void testInvalidUnitName1() {
     assertThatExceptionOfType(IllegalArgumentException.class)
         .isThrownBy(() -> sanitizeUnitName("total"));
   }
 
   @Test
-  public void testInvalidUnitName2() {
+  void testInvalidUnitName2() {
     assertThatExceptionOfType(IllegalArgumentException.class)
         .isThrownBy(() -> sanitizeUnitName("_total"));
   }
 
   @Test
-  public void testInvalidUnitName3() {
+  void testInvalidUnitName3() {
     assertThatExceptionOfType(IllegalArgumentException.class)
         .isThrownBy(() -> sanitizeUnitName("%"));
   }
 
   @Test
-  public void testEmptyUnitName() {
+  void testEmptyUnitName() {
     assertThatExceptionOfType(IllegalArgumentException.class)
         .isThrownBy(() -> sanitizeUnitName(""));
   }
