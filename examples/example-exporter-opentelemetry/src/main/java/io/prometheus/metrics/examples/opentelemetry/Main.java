@@ -35,10 +35,15 @@ public class Main {
         .intervalSeconds(5) // ridiculously short interval for demo purposes
         .buildAndStart();
 
+    int iterationCount = 0;
     while (true) {
       Thread.sleep(1000);
       logger.info("Incrementing counter");
       counter.inc();
+      iterationCount++;
+      if (iterationCount >= 10) {
+        break;
+      }
     }
   }
 }
