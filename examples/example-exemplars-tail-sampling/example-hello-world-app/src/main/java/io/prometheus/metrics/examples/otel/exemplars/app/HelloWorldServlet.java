@@ -56,7 +56,10 @@ public class HelloWorldServlet extends HttpServlet {
   private String executeGreetingServiceRequest()
       throws URISyntaxException, IOException, InterruptedException {
     HttpRequest request =
-        HttpRequest.newBuilder().GET().uri(new URI("http://localhost:8081/")).build();
+        HttpRequest.newBuilder()
+            .GET()
+            .uri(new URI(System.getProperty("greeting.service.uri", "http://localhost:8081/")))
+            .build();
     HttpClient httpClient = HttpClient.newHttpClient();
     HttpResponse<String> response = httpClient.send(request, ofString());
     return response.body();
