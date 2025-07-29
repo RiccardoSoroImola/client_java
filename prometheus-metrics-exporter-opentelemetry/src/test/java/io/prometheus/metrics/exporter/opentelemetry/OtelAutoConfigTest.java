@@ -30,7 +30,7 @@ class OtelAutoConfigTest {
     Consumer<OpenTelemetryExporter.Builder> exporterBuilder;
     Consumer<ExporterOpenTelemetryProperties.Builder> propertiesBuilder;
 
-    public TestCase() {}
+    TestCase() {}
 
     public TestCase expectedProperties(Map<String, Optional<String>> expectedProperties) {
       this.expectedProperties = expectedProperties;
