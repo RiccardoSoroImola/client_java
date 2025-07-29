@@ -57,7 +57,7 @@ public class CounterBenchmark {
       noLabels = Counter.builder().name("test").help(COUNTER_HELP).build();
 
       Counter labels =
-          Counter.builder().name("test").help(COUNTER_HELP).labelNames("path", "status").build();
+          Counter.builder().name("test").help(COUNTER_HELP).labelNames(PATH, STATUS).build();
       this.dataPoint = labels.labelValues(PATH_VALUE, STATUS_VALUE);
     }
   }
@@ -75,7 +75,7 @@ public class CounterBenchmark {
           io.prometheus.client.Counter.build()
               .name("name")
               .help(COUNTER_HELP)
-              .labelNames("path", "status")
+              .labelNames(PATH, STATUS)
               .create();
 
       this.dataPoint = counter.labels(PATH_VALUE, STATUS_VALUE);
