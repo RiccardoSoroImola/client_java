@@ -16,7 +16,7 @@ public class HelloWorldServlet extends HttpServlet {
 
   private static final long serialVersionUID = 0L;
 
-  private final Random random = new Random(0);
+  private final transient Random random = new Random(0);
 
   // Note: The requests_total counter is not a great example, because the
   // request_duration_seconds histogram below also has a count with the number of requests.
