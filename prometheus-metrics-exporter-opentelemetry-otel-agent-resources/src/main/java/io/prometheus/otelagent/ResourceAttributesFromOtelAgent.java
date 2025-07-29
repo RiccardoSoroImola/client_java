@@ -77,13 +77,11 @@ public class ResourceAttributesFromOtelAgent {
 
   private static Object getField(String name, Object obj) throws Exception {
     Field field = obj.getClass().getDeclaredField(name);
-    field.setAccessible(true);
     return field.get(obj);
   }
 
   private static Object callMethod(String name, Object obj) throws Exception {
     Method method = obj.getClass().getMethod(name);
-    method.setAccessible(true);
     return method.invoke(obj);
   }
 
