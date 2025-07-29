@@ -6,6 +6,7 @@ import io.prometheus.metrics.instrumentation.jvm.JvmMetrics;
 import io.prometheus.metrics.model.snapshots.Unit;
 import java.io.IOException;
 import java.util.Random;
+import java.util.logging.Logger;
 
 public class Main {
 
@@ -23,8 +24,8 @@ public class Main {
 
     HTTPServer server = HTTPServer.builder().port(9400).buildAndStart();
 
-    System.out.println(
-        "HTTPServer listening on port http://localhost:" + server.getPort() + "/metrics");
+    Logger logger = Logger.getLogger(Main.class.getName());
+    logger.info("HTTPServer listening on port http://localhost:" + server.getPort() + "/metrics");
 
     Random random = new Random(0);
 
