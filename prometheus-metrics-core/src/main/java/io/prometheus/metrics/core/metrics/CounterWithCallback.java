@@ -41,11 +41,10 @@ public class CounterWithCallback extends CallbackMetric {
   public CounterSnapshot collect() {
     List<CounterSnapshot.CounterDataPointSnapshot> dataPoints = new ArrayList<>();
     callback.accept(
-        (value, labelValues) -> {
-          dataPoints.add(
-              new CounterSnapshot.CounterDataPointSnapshot(
-                  value, makeLabels(labelValues), null, 0L));
-        });
+        (value, labelValues) ->
+            dataPoints.add(
+                new CounterSnapshot.CounterDataPointSnapshot(
+                    value, makeLabels(labelValues), null, 0L)));
     return new CounterSnapshot(getMetadata(), dataPoints);
   }
 
