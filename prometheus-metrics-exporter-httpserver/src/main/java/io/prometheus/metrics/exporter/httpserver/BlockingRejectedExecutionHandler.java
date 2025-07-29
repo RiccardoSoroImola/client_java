@@ -11,7 +11,7 @@ class BlockingRejectedExecutionHandler implements RejectedExecutionHandler {
       try {
         threadPoolExecutor.getQueue().put(runnable);
       } catch (InterruptedException ignored) {
-        // ignore
+        Thread.currentThread().interrupt();
       }
     }
   }
