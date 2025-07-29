@@ -47,19 +47,6 @@ public final class HistogramSnapshot extends MetricSnapshot {
 
   public static final class HistogramDataPointSnapshot extends DistributionDataPointSnapshot {
 
-    // There are two types of histograms: Classic histograms and native histograms.
-    // Classic histograms have a fixed set of buckets.
-    // Native histograms have "infinitely many" buckets with exponentially growing boundaries.
-    // The OpenTelemetry terminology for native histogram is "exponential histogram".
-    // ---
-    // A histogram can be a classic histogram (indicated by nativeSchema == CLASSIC_HISTOGRAM),
-    // or a native histogram (indicated by classicBuckets == ClassicHistogramBuckets.EMPTY),
-    // or both.
-    // ---
-    // A histogram that is both classic and native is great for migrating from classic histograms
-    // to native histograms: Old Prometheus servers can still scrape the classic histogram, while
-    // new Prometheus servers can scrape the native histogram.
-
     private final ClassicHistogramBuckets
         classicBuckets; // May be ClassicHistogramBuckets.EMPTY for native histograms.
     private final int
