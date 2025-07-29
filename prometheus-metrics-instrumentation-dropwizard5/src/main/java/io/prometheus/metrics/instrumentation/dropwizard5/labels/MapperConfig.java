@@ -19,7 +19,7 @@ public final class MapperConfig {
   private static final String METRIC_PART_REGEX = "\\w(-?\\w)+";
   // Simplified GLOB: we can have "*." at the beginning and "*" only at the end
   static final String METRIC_GLOB_REGEX =
-      "^(\\*\\.|" + METRIC_PART_REGEX + "\\.)+(\\*|" + METRIC_PART_REGEX + ")$";
+      "^(\\*\\.|" + METRIC_PART_REGEX + "\\.)++(\\*|" + METRIC_PART_REGEX + ")$";
   // Labels validation.
   private static final String LABEL_REGEX = "^[a-zA-Z_][a-zA-Z0-9_]+$";
   private static final Pattern MATCH_EXPRESSION_PATTERN = Pattern.compile(METRIC_GLOB_REGEX);
