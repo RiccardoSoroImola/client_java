@@ -67,7 +67,7 @@ public class Summary extends StatefulMetric<DistributionDataPoint, Summary.DataP
         getConfigProperty(properties, MetricsProperties::getSummaryQuantileErrors);
     if (quantileList != null) {
       for (int i = 0; i < quantileList.size(); i++) {
-        if (quantileErrors.size() > 0) {
+        if (!quantileErrors.isEmpty()) { // Fixed: use isEmpty() instead of size() > 0
           result.add(new CKMSQuantiles.Quantile(quantileList.get(i), quantileErrors.get(i)));
         } else {
           result.add(
