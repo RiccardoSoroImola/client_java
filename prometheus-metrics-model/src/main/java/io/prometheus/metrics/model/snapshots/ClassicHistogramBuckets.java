@@ -145,19 +145,23 @@ public class ClassicHistogramBuckets implements Iterable<ClassicHistogramBucket>
           ClassicHistogramBuckets.class.getSimpleName() + " must contain the +Inf bucket.");
     }
     for (int i = 0; i < upperBounds.length; i++) {
-      if (Double.isNaN(upperBounds[i])) {
-        throw new IllegalArgumentException(
-            "Cannot use NaN as an upper bound in " + ClassicHistogramBuckets.class.getSimpleName());
-      }
-      if (counts[i] < 0) {
-        throw new IllegalArgumentException(
-            "Counts in " + ClassicHistogramBuckets.class.getSimpleName() + " cannot be negative.");
-      }
+      checkUpperBoundAndCount(upperBounds[i], counts[i]);
       if (i > 0) {
         if (upperBounds[i - 1] == upperBounds[i]) {
           throw new IllegalArgumentException("Duplicate upper bound " + upperBounds[i]);
         }
       }
+    }
+  }
+
+  private static void checkUpperBoundAndCount(double upperBound, long count) {
+    if (Double.isNaN(upperBound)) {
+      throw new IllegalArgumentException(
+          "Cannot use NaN as an upper bound in " + ClassicHistogramBuckets.class.getSimpleName());
+    }
+    if (count < 0) {
+      throw new IllegalArgumentException(
+          "Counts in " + ClassicHistogramBuckets.class.getSimpleName() + " cannot be negative.");
     }
   }
 
