@@ -99,7 +99,7 @@ class PushGatewayTestApp {
           SSLContext.setDefault(sslContext);
 
           HttpsURLConnection connection = (HttpsURLConnection) url.openConnection();
-          connection.setHostnameVerifier((hostname, session) -> true);
+          // Removed the insecure hostname verifier to ensure proper hostname verification
           return connection;
         } catch (NoSuchAlgorithmException | KeyManagementException e) {
           throw new RuntimeException(e);
