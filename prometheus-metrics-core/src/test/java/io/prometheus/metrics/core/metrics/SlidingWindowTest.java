@@ -57,7 +57,7 @@ class SlidingWindowTest {
   }
 
   @Test
-  public void testRotate() {
+  void testRotate() {
     for (int i = 0; i < ageBuckets; i++) {
       currentTimeMillis.addAndGet(timeBetweenRotateMillis);
       ringBuffer.observe(1.0);
@@ -76,7 +76,7 @@ class SlidingWindowTest {
   }
 
   @Test
-  public void testMultiRotate() {
+  void testMultiRotate() {
     ringBuffer.observe(1.0);
     currentTimeMillis.addAndGet(2 * timeBetweenRotateMillis); // 2/5 of max aqe
     ringBuffer.observe(2.0);
