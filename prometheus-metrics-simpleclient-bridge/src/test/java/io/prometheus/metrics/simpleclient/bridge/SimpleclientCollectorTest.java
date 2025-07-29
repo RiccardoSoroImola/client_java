@@ -29,14 +29,14 @@ class SimpleclientCollectorTest {
   private PrometheusRegistry newRegistry;
 
   @BeforeEach
-  public void setUp() {
+  void setUp() {
     origRegistry = new CollectorRegistry();
     newRegistry = new PrometheusRegistry();
     SimpleclientCollector.builder().collectorRegistry(origRegistry).register(newRegistry);
   }
 
   @Test
-  public void testCounterComplete() throws IOException, InterruptedException {
+  void testCounterComplete() throws IOException, InterruptedException {
     Counter counter =
         Counter.build()
             .name("service_time_seconds_total")
@@ -51,14 +51,14 @@ class SimpleclientCollectorTest {
   }
 
   @Test
-  public void testCounterMinimal() throws IOException {
+  void testCounterMinimal() throws IOException {
     Counter.build().name("events").help("total number of events").register(origRegistry);
 
     assertThat(sort(newOpenMetrics())).isEqualTo(fixTimestamps(sort(origOpenMetrics())));
   }
 
   @Test
-  public void testGaugeComplete() throws IOException, InterruptedException {
+  void testGaugeComplete() throws IOException, InterruptedException {
     Gauge gauge =
         Gauge.build()
             .name("disk_usage_ratio")
@@ -74,7 +74,7 @@ class SimpleclientCollectorTest {
   }
 
   @Test
-  public void testGaugeMinimal() throws IOException {
+  void testGaugeMinimal() throws IOException {
     Gauge gauge =
         Gauge.build()
             .name("temperature_centigrade")
@@ -87,7 +87,7 @@ class SimpleclientCollectorTest {
   }
 
   @Test
-  public void testHistogramComplete() throws IOException, InterruptedException {
+  void testHistogramComplete() throws IOException, InterruptedException {
     Histogram histogram =
         Histogram.build()
             .name("response_size_bytes")
@@ -107,14 +107,14 @@ class SimpleclientCollectorTest {
   }
 
   @Test
-  public void testHistogramMinimal() throws IOException {
+  void testHistogramMinimal() throws IOException {
     Histogram.build().name("request_latency").help("request latency").register(origRegistry);
 
     assertThat(sort(newOpenMetrics())).isEqualTo(fixCounts(fixTimestamps(sort(origOpenMetrics()))));
   }
 
   @Test
-  public void testSummaryComplete() throws IOException, InterruptedException {
+  void testSummaryComplete() throws IOException, InterruptedException {
     Summary summary =
         Summary.build()
             .name("http_request_duration_seconds")
@@ -138,14 +138,14 @@ class SimpleclientCollectorTest {
   }
 
   @Test
-  public void testSummaryMinimal() throws IOException {
+  void testSummaryMinimal() throws IOException {
     Summary.build().name("request_size").help("request size").register(origRegistry);
 
     assertThat(sort(newOpenMetrics())).isEqualTo(fixCounts(fixTimestamps(sort(origOpenMetrics()))));
   }
 
   @Test
-  public void testInfoComplete() throws IOException, InterruptedException {
+  void testInfoComplete() throws IOException, InterruptedException {
     Info info =
         Info.build()
             .name("version")
@@ -160,7 +160,7 @@ class SimpleclientCollectorTest {
   }
 
   @Test
-  public void testInfoMinimal() throws IOException {
+  void testInfoMinimal() throws IOException {
     Info info = Info.build().name("jvm").help("JVM info").register(origRegistry);
     info.info("version", "17");
 
@@ -168,7 +168,7 @@ class SimpleclientCollectorTest {
   }
 
   @Test
-  public void testStateSetComplete() throws IOException {
+  void testStateSetComplete() throws IOException {
     Collector stateSet =
         new Collector() {
           @Override
@@ -191,7 +191,7 @@ class SimpleclientCollectorTest {
   }
 
   @Test
-  public void testUnknownComplete() throws IOException {
+  void testUnknownComplete() throws IOException {
     Collector unknown =
         new Collector() {
           @Override
