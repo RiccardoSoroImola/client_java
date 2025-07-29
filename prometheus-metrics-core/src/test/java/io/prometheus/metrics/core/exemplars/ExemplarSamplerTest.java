@@ -48,7 +48,9 @@ class ExemplarSamplerTest {
     }
 
     @Override
-    public void markCurrentSpanAsExemplar() {}
+    public void markCurrentSpanAsExemplar() {
+      // This method is intentionally left empty as it is an override with no functionality.
+    }
   }
 
   @Test
