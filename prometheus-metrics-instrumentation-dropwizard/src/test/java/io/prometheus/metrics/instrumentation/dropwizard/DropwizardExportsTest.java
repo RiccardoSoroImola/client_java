@@ -147,11 +147,11 @@ long_gauge 1234.0
   @Test
   void testHistogram() {
     // just test the standard mapper
-    final MetricRegistry metricRegistry = new MetricRegistry();
+    final MetricRegistry testMetricRegistry = new MetricRegistry();
     PrometheusRegistry pmRegistry = new PrometheusRegistry();
-    DropwizardExports.builder().dropwizardRegistry(metricRegistry).register(pmRegistry);
+    DropwizardExports.builder().dropwizardRegistry(testMetricRegistry).register(pmRegistry);
 
-    Histogram hist = metricRegistry.histogram("hist");
+    Histogram hist = testMetricRegistry.histogram("hist");
     int i = 0;
     while (i < 100) {
       hist.update(i);
@@ -215,9 +215,9 @@ meter_total 2.0
 
   @Test
   void testTimer() throws InterruptedException {
-    final MetricRegistry metricRegistry = new MetricRegistry();
-    DropwizardExports exports = new DropwizardExports(metricRegistry);
-    Timer t = metricRegistry.timer("timer");
+    final MetricRegistry testMetricRegistry = new MetricRegistry();
+    DropwizardExports exports = new DropwizardExports(testMetricRegistry);
+    Timer t = testMetricRegistry.timer("timer");
     Timer.Context time = t.time();
     Thread.sleep(100L);
     long timeSpentNanos = time.stop();
