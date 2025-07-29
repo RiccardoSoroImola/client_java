@@ -27,12 +27,17 @@ public class Main {
         "HTTPServer listening on port http://localhost:" + server.getPort() + "/metrics");
 
     Random random = new Random(0);
+    int iterationCount = 0;
 
     while (true) {
       double duration = Math.abs(random.nextGaussian() / 10.0 + 0.2);
       String status = random.nextInt(100) < 20 ? "500" : "200";
       histogram.labelValues("/", status).observe(duration);
       Thread.sleep(1000);
+      iterationCount++;
+      if (iterationCount > 1000) {
+        break;
+      }
     }
   }
 }
