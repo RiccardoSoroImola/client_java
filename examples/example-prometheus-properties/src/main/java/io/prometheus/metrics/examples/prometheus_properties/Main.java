@@ -35,12 +35,17 @@ public class Main {
 
     Random random = new Random(0);
 
+    int iteration = 0;
     while (true) {
       double duration = Math.abs(random.nextGaussian() / 10.0 + 0.2);
       double size = random.nextInt(1000) + 256;
       requestDuration.observe(duration);
       requestSize.observe(size);
       Thread.sleep(1000);
+      iteration++;
+      if (iteration >= 1000) {
+        break;
+      }
     }
   }
 }
