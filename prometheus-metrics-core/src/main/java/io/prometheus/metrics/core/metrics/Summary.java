@@ -124,7 +124,7 @@ public class Summary extends StatefulMetric<DistributionDataPoint, Summary.DataP
     private final long createdTimeMillis = System.currentTimeMillis();
 
     private DataPoint() {
-      if (quantiles.size() > 0) {
+      if (!quantiles.isEmpty()) {
         CKMSQuantiles.Quantile[] quantilesArray = quantiles.toArray(new CKMSQuantiles.Quantile[0]);
         quantileValues =
             new SlidingWindow<>(
