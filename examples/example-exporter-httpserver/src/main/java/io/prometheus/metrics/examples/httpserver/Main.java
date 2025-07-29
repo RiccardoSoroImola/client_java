@@ -32,7 +32,7 @@ public class Main {
     Logger logger = Logger.getLogger(Main.class.getName());
     logger.info("HTTPServer listening on port http://localhost:" + server.getPort() + "/metrics");
 
-    while (true) {
+    while (!Thread.currentThread().isInterrupted()) {
       Thread.sleep(1000);
       counter.inc();
     }
