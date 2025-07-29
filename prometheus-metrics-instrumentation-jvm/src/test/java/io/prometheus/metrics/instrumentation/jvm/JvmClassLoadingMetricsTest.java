@@ -27,7 +27,7 @@ class JvmClassLoadingMetricsTest {
   }
 
   @Test
-  public void testGoodCase() throws IOException {
+  void testGoodCase() throws IOException {
     PrometheusRegistry registry = new PrometheusRegistry();
     JvmClassLoadingMetrics.builder().classLoadingBean(mockClassLoadingBean).register(registry);
     MetricSnapshots snapshots = registry.scrape();
@@ -50,7 +50,7 @@ jvm_classes_unloaded_total 500.0
   }
 
   @Test
-  public void testIgnoredMetricNotScraped() {
+  void testIgnoredMetricNotScraped() {
     MetricNameFilter filter =
         MetricNameFilter.builder().nameMustNotBeEqualTo("jvm_classes_currently_loaded").build();
 
