@@ -73,17 +73,18 @@ public class Exemplars implements Iterable<Exemplar> {
     Exemplar result = null;
     for (Exemplar exemplar : exemplars) {
       double value = exemplar.getValue();
-      if (value > lowerBound && value <= upperBound) {
-        if (result == null) {
-          result = exemplar;
-        } else if (result.hasTimestamp() && exemplar.hasTimestamp()) {
-          if (exemplar.getTimestampMillis() > result.getTimestampMillis()) {
-            result = exemplar;
-          }
-        }
+      if (value > lowerBound && value <= upperBound && shouldReplace(result, exemplar)) {
+        result = exemplar;
       }
     }
     return result;
+  }
+
+  private boolean shouldReplace(Exemplar result, Exemplar exemplar) {
+    return result == null
+        || (result.hasTimestamp()
+            && exemplar.hasTimestamp()
+            && exemplar.getTimestampMillis() > result.getTimestampMillis());
   }
 
   /** Find the Exemplar with the newest timestamp. May return {@code null}. */
