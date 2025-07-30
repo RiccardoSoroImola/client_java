@@ -27,6 +27,8 @@ public class MetricsProperties {
   private static final String SUMMARY_QUANTILE_ERRORS = "summaryQuantileErrors";
   private static final String SUMMARY_MAX_AGE_SECONDS = "summaryMaxAgeSeconds";
   private static final String SUMMARY_NUMBER_OF_AGE_BUCKETS = "summaryNumberOfAgeBuckets";
+  private static final String EXPECTING_VALUE_GE_ZERO = "Expecting value >= 0.";
+  private static final String EXPECTING_VALUE_GT_ZERO = "Expecting value > 0.";
 
   private final Boolean exemplarsEnabled;
   private final Boolean histogramNativeOnly;
@@ -111,33 +113,33 @@ public class MetricsProperties {
     Util.assertValue(
         histogramNativeMinZeroThreshold,
         t -> t >= 0,
-        "Expecting value >= 0.",
+        EXPECTING_VALUE_GE_ZERO,
         prefix,
         HISTOGRAM_NATIVE_MIN_ZERO_THRESHOLD);
     Util.assertValue(
         histogramNativeMaxZeroThreshold,
         t -> t >= 0,
-        "Expecting value >= 0.",
+        EXPECTING_VALUE_GE_ZERO,
         prefix,
         HISTOGRAM_NATIVE_MAX_ZERO_THRESHOLD);
     Util.assertValue(
         histogramNativeMaxNumberOfBuckets,
         n -> n >= 0,
-        "Expecting value >= 0.",
+        EXPECTING_VALUE_GE_ZERO,
         prefix,
         HISTOGRAM_NATIVE_MAX_NUMBER_OF_BUCKETS);
     Util.assertValue(
         histogramNativeResetDurationSeconds,
         t -> t >= 0,
-        "Expecting value >= 0.",
+        EXPECTING_VALUE_GE_ZERO,
         prefix,
         HISTOGRAM_NATIVE_RESET_DURATION_SECONDS);
     Util.assertValue(
-        summaryMaxAgeSeconds, t -> t > 0, "Expecting value > 0.", prefix, SUMMARY_MAX_AGE_SECONDS);
+        summaryMaxAgeSeconds, t -> t > 0, EXPECTING_VALUE_GT_ZERO, prefix, SUMMARY_MAX_AGE_SECONDS);
     Util.assertValue(
         summaryNumberOfAgeBuckets,
         t -> t > 0,
-        "Expecting value > 0.",
+        EXPECTING_VALUE_GT_ZERO,
         prefix,
         SUMMARY_NUMBER_OF_AGE_BUCKETS);
   }
