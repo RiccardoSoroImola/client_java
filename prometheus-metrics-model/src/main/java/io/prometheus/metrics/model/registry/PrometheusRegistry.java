@@ -66,8 +66,8 @@ public class PrometheusRegistry {
 
   public MetricSnapshots scrape(PrometheusScrapeRequest scrapeRequest) {
     MetricSnapshots.Builder result = MetricSnapshots.builder();
-    processCollectors(collectors, (name) -> true, scrapeRequest, result);
-    processMultiCollectors(multiCollectors, (name) -> true, scrapeRequest, result);
+    processCollectors(collectors, name -> true, scrapeRequest, result);
+    processMultiCollectors(multiCollectors, name -> true, scrapeRequest, result);
     return result.build();
   }
 
