@@ -135,10 +135,8 @@ public class ClassicHistogramBuckets implements Iterable<ClassicHistogramBucket>
     validateUpperBounds(upperBounds);
     for (int i = 0; i < upperBounds.length; i++) {
       checkUpperBoundAndCount(upperBounds[i], counts[i]);
-      if (i > 0) {
-        if (upperBounds[i - 1] == upperBounds[i]) {
-          throw new IllegalArgumentException("Duplicate upper bound " + upperBounds[i]);
-        }
+      if (i > 0 && upperBounds[i - 1] == upperBounds[i]) {
+        throw new IllegalArgumentException("Duplicate upper bound " + upperBounds[i]);
       }
     }
   }
