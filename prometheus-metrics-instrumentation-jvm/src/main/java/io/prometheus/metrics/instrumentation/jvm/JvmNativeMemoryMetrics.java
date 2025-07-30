@@ -129,7 +129,7 @@ public class JvmNativeMemoryMetrics {
     }
   }
 
-  private Consumer<GaugeWithCallback.Callback> makeCallback(Boolean reserved) {
+  private Consumer<GaugeWithCallback.Callback> makeCallback(boolean reserved) {
     return callback -> {
       String summary = vmNativeMemorySummaryInBytesOrEmpty();
       if (!summary.isEmpty()) {
