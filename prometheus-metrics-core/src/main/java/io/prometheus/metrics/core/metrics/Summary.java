@@ -318,19 +318,19 @@ public class Summary extends StatefulMetric<DistributionDataPoint, Summary.DataP
 
     @Override
     protected MetricsProperties toProperties() {
-      double[] quantiles = null;
+      double[] quantileValues = null;
       double[] quantileErrors = null;
       if (!this.quantiles.isEmpty()) {
-        quantiles = new double[this.quantiles.size()];
+        quantileValues = new double[this.quantiles.size()];
         quantileErrors = new double[this.quantiles.size()];
         for (int i = 0; i < this.quantiles.size(); i++) {
-          quantiles[i] = this.quantiles.get(i).quantile;
+          quantileValues[i] = this.quantiles.get(i).quantile;
           quantileErrors[i] = this.quantiles.get(i).epsilon;
         }
       }
       return MetricsProperties.builder()
           .exemplarsEnabled(exemplarsEnabled)
-          .summaryQuantiles(quantiles)
+          .summaryQuantiles(quantileValues)
           .summaryQuantileErrors(quantileErrors)
           .summaryNumberOfAgeBuckets(ageBuckets)
           .summaryMaxAgeSeconds(maxAgeSeconds)
