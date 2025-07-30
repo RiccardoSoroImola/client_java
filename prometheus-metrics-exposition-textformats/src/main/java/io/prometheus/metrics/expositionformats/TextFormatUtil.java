@@ -21,7 +21,6 @@ public class TextFormatUtil {
       writer.write("-Inf");
     } else {
       writer.write(Double.toString(d));
-      // FloatingDecimal.getBinaryToASCIIConverter(d).appendTo(writer);
     }
   }
 
