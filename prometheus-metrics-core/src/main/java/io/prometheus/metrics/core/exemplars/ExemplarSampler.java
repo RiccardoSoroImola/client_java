@@ -340,17 +340,17 @@ public class ExemplarSampler {
     // as they provide their own implementation of SpanContextSupplier.
     // If we had an import statement for SpanContextSupplier the dependency would be needed in any
     // case.
-    SpanContext spanContext =
+    SpanContext currentSpanContext =
         this.spanContext != null
             ? this.spanContext
             : io.prometheus.metrics.tracer.initializer.SpanContextSupplier.getSpanContext();
     try {
-      if (spanContext != null) {
-        if (spanContext.isCurrentSpanSampled()) {
-          String spanId = spanContext.getCurrentSpanId();
-          String traceId = spanContext.getCurrentTraceId();
+      if (currentSpanContext != null) {
+        if (currentSpanContext.isCurrentSpanSampled()) {
+          String spanId = currentSpanContext.getCurrentSpanId();
+          String traceId = currentSpanContext.getCurrentTraceId();
           if (spanId != null && traceId != null) {
-            spanContext.markCurrentSpanAsExemplar();
+            currentSpanContext.markCurrentSpanAsExemplar();
             return Labels.of(Exemplar.TRACE_ID, traceId, Exemplar.SPAN_ID, spanId);
           }
         }
