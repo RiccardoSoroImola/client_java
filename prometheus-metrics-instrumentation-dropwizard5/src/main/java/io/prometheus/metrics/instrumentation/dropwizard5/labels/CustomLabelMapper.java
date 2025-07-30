@@ -18,7 +18,7 @@ public class CustomLabelMapper {
       throw new IllegalArgumentException("CustomLabelMapper needs some mapper configs!");
     }
 
-    this.compiledMapperConfigs = new ArrayList<CompiledMapperConfig>(mapperConfigs.size());
+    this.compiledMapperConfigs = new ArrayList<>(mapperConfigs.size());
     for (MapperConfig config : mapperConfigs) {
       this.compiledMapperConfigs.add(new CompiledMapperConfig(config));
     }
@@ -76,8 +76,8 @@ public class CustomLabelMapper {
   protected NameAndLabels getNameAndLabels(
       final MapperConfig config, final Map<String, String> parameters) {
     final String metricName = formatTemplate(config.getName(), parameters);
-    final List<String> labels = new ArrayList<String>(config.getLabels().size());
-    final List<String> labelValues = new ArrayList<String>(config.getLabels().size());
+    final List<String> labels = new ArrayList<>(config.getLabels().size());
+    final List<String> labelValues = new ArrayList<>(config.getLabels().size());
     for (Map.Entry<String, String> entry : config.getLabels().entrySet()) {
       labels.add(entry.getKey());
       labelValues.add(formatTemplate(entry.getValue(), parameters));
