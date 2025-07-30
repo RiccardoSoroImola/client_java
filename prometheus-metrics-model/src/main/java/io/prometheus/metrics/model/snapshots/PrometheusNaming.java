@@ -11,6 +11,10 @@ import java.util.regex.Pattern;
  */
 public class PrometheusNaming {
 
+  private PrometheusNaming() {
+    throw new IllegalStateException("Utility class");
+  }
+
   /** Legal characters for metric names, including dot. */
   private static final Pattern METRIC_NAME_PATTERN =
       Pattern.compile("^[a-zA-Z_.:][a-zA-Z0-9_.:]*$");
