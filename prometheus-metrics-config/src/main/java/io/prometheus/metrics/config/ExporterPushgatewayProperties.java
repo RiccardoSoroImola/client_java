@@ -8,19 +8,19 @@ public class ExporterPushgatewayProperties {
   private static final String JOB = "job";
   private static final String SCHEME = "scheme";
   private static final String PREFIX = "io.prometheus.exporter.pushgateway";
-  private final String scheme;
-  private final String address;
-  private final String job;
+  private final String schemeField;
+  private final String addressField;
+  private final String jobField;
 
   private ExporterPushgatewayProperties(String address, String job, String scheme) {
-    this.address = address;
-    this.job = job;
-    this.scheme = scheme;
+    this.addressField = address;
+    this.jobField = job;
+    this.schemeField = scheme;
   }
 
   /** Address of the Pushgateway in the form {@code host:port}. Default is {@code localhost:9091} */
   public String getAddress() {
-    return address;
+    return addressField;
   }
 
   /**
@@ -28,7 +28,7 @@ public class ExporterPushgatewayProperties {
    * running.
    */
   public String getJob() {
-    return job;
+    return jobField;
   }
 
   /**
@@ -36,7 +36,7 @@ public class ExporterPushgatewayProperties {
    * is "http".
    */
   public String getScheme() {
-    return scheme;
+    return schemeField;
   }
 
   /**
