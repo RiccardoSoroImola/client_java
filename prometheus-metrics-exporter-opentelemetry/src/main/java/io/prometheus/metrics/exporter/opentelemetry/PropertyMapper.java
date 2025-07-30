@@ -11,6 +11,11 @@ class PropertyMapper {
 
   private static final String METRICS_ENDPOINT = "otel.exporter.otlp.metrics.endpoint";
   private static final String METRICS_PROTOCOL = "otel.exporter.otlp.metrics.protocol";
+  private static final String METRICS_HEADERS = "otel.exporter.otlp.metrics.headers";
+  private static final String METRICS_INTERVAL = "otel.metric.export.interval";
+  private static final String METRICS_TIMEOUT = "otel.exporter.otlp.metrics.timeout";
+  private static final String SERVICE_NAME = "otel.service.name";
+
   Map<String, String> configLowPriority = new HashMap<>();
   Map<String, String> configHighPriority = new HashMap<>();
 
@@ -23,10 +28,10 @@ class PropertyMapper {
         .addString(
             mapToOtelString(builder.headers),
             mapToOtelString(properties.getHeaders()),
-            "otel.exporter.otlp.metrics.headers")
-        .addString(builder.interval, properties.getInterval(), "otel.metric.export.interval")
-        .addString(builder.timeout, properties.getTimeout(), "otel.exporter.otlp.metrics.timeout")
-        .addString(builder.serviceName, properties.getServiceName(), "otel.service.name");
+            METRICS_HEADERS)
+        .addString(builder.interval, properties.getInterval(), METRICS_INTERVAL)
+        .addString(builder.timeout, properties.getTimeout(), METRICS_TIMEOUT)
+        .addString(builder.serviceName, properties.getServiceName(), SERVICE_NAME);
   }
 
   PropertyMapper addString(String builderValue, String propertyValue, String otelKey) {
