@@ -18,6 +18,10 @@ import java.util.concurrent.atomic.AtomicReference;
 
 public class OtelAutoConfig {
 
+  private OtelAutoConfig() {
+    throw new IllegalStateException("Utility class");
+  }
+
   private static final String SERVICE_INSTANCE_ID = "service.instance.id";
 
   static MetricReader createReader(
