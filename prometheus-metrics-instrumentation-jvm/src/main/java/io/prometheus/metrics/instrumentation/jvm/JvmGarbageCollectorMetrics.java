@@ -96,11 +96,11 @@ public class JvmGarbageCollectorMetrics {
     }
 
     public void register(PrometheusRegistry registry) {
-      List<GarbageCollectorMXBean> garbageCollectorBeans = this.garbageCollectorBeans;
-      if (garbageCollectorBeans == null) {
-        garbageCollectorBeans = ManagementFactory.getGarbageCollectorMXBeans();
+      List<GarbageCollectorMXBean> beans = this.garbageCollectorBeans;
+      if (beans == null) {
+        beans = ManagementFactory.getGarbageCollectorMXBeans();
       }
-      new JvmGarbageCollectorMetrics(garbageCollectorBeans, config).register(registry);
+      new JvmGarbageCollectorMetrics(beans, config).register(registry);
     }
   }
 }
