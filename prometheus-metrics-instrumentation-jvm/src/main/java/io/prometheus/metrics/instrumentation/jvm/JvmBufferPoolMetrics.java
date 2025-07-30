@@ -123,11 +123,11 @@ public class JvmBufferPoolMetrics {
     }
 
     public void register(PrometheusRegistry registry) {
-      List<BufferPoolMXBean> bufferPoolBeans = this.bufferPoolBeans;
-      if (bufferPoolBeans == null) {
-        bufferPoolBeans = ManagementFactory.getPlatformMXBeans(BufferPoolMXBean.class);
+      List<BufferPoolMXBean> bufferPoolBeansLocal = this.bufferPoolBeans;
+      if (bufferPoolBeansLocal == null) {
+        bufferPoolBeansLocal = ManagementFactory.getPlatformMXBeans(BufferPoolMXBean.class);
       }
-      new JvmBufferPoolMetrics(bufferPoolBeans, config).register(registry);
+      new JvmBufferPoolMetrics(bufferPoolBeansLocal, config).register(registry);
     }
   }
 }
