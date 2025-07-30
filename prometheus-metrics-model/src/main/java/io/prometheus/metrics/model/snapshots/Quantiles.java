@@ -10,21 +10,21 @@ import java.util.List;
 /** Immutable list of quantiles. */
 public class Quantiles implements Iterable<Quantile> {
 
-  private final List<Quantile> quantiles;
+  private final List<Quantile> quantileList;
   public static final Quantiles EMPTY = new Quantiles(Collections.emptyList());
 
   private Quantiles(List<Quantile> quantiles) {
     quantiles = new ArrayList<>(quantiles);
     quantiles.sort(Comparator.comparing(Quantile::getQuantile));
-    this.quantiles = Collections.unmodifiableList(quantiles);
+    this.quantileList = Collections.unmodifiableList(quantiles);
     validate();
   }
 
   private void validate() {
-    for (int i = 0; i < quantiles.size() - 1; i++) {
-      if (quantiles.get(i).getQuantile() == quantiles.get(i + 1).getQuantile()) {
+    for (int i = 0; i < quantileList.size() - 1; i++) {
+      if (quantileList.get(i).getQuantile() == quantileList.get(i + 1).getQuantile()) {
         throw new IllegalArgumentException(
-            "Duplicate " + quantiles.get(i).getQuantile() + " quantile.");
+            "Duplicate " + quantileList.get(i).getQuantile() + " quantile.");
       }
     }
   }
@@ -46,16 +46,16 @@ public class Quantiles implements Iterable<Quantile> {
   }
 
   public int size() {
-    return quantiles.size();
+    return quantileList.size();
   }
 
   public Quantile get(int i) {
-    return quantiles.get(i);
+    return quantileList.get(i);
   }
 
   @Override
   public Iterator<Quantile> iterator() {
-    return quantiles.iterator();
+    return quantileList.iterator();
   }
 
   public static Builder builder() {
@@ -64,13 +64,13 @@ public class Quantiles implements Iterable<Quantile> {
 
   public static class Builder {
 
-    private final List<Quantile> quantiles = new ArrayList<>();
+    private final List<Quantile> quantileEntries = new ArrayList<>();
 
     private Builder() {}
 
     /** Add a quantile. Call multiple times to add multiple quantiles. */
     public Builder quantile(Quantile quantile) {
-      quantiles.add(quantile);
+      quantileEntries.add(quantile);
       return this;
     }
 
@@ -81,12 +81,12 @@ public class Quantiles implements Iterable<Quantile> {
      * @param value the quantile value
      */
     public Builder quantile(double quantile, double value) {
-      quantiles.add(new Quantile(quantile, value));
+      quantileEntries.add(new Quantile(quantile, value));
       return this;
     }
 
     public Quantiles build() {
-      return new Quantiles(quantiles);
+      return new Quantiles(quantileEntries);
     }
   }
 }
