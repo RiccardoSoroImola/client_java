@@ -79,7 +79,8 @@ class PrometheusMetricProducer implements CollectionRegistration {
     return factory.create(snapshot);
   }
 
-  private MetricData handleHistogram(HistogramSnapshot snapshot, MetricDataFactory factory) {
+  private @javax.annotation.Nullable MetricData handleHistogram(
+      HistogramSnapshot snapshot, MetricDataFactory factory) {
     if (!snapshot.isGaugeHistogram()) {
       return factory.create(snapshot);
     }
@@ -90,7 +91,8 @@ class PrometheusMetricProducer implements CollectionRegistration {
     return factory.create(snapshot);
   }
 
-  private MetricData handleInfo(InfoSnapshot snapshot, MetricDataFactory factory) {
+  private @javax.annotation.Nullable MetricData handleInfo(
+      InfoSnapshot snapshot, MetricDataFactory factory) {
     String name = snapshot.getMetadata().getPrometheusName();
     if (!name.equals("target") && !name.equals("otel_scope")) {
       return factory.create(snapshot);
@@ -172,7 +174,7 @@ class PrometheusMetricProducer implements CollectionRegistration {
     return null;
   }
 
-  private void addUnlessNull(List<MetricData> result, MetricData data) {
+  private void addUnlessNull(List<MetricData> result, @javax.annotation.Nullable MetricData data) {
     if (data != null) {
       result.add(data);
     }
