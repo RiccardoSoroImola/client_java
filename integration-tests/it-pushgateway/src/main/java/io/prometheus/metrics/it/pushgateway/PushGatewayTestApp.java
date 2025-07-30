@@ -11,6 +11,7 @@ import io.prometheus.metrics.model.snapshots.Unit;
 import java.io.IOException;
 import java.security.KeyManagementException;
 import java.security.NoSuchAlgorithmException;
+import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.net.ssl.HttpsURLConnection;
 import javax.net.ssl.SSLContext;
@@ -41,7 +42,9 @@ class PushGatewayTestApp {
         runSslTest();
         break;
       default:
-        logger.severe(args[0] + ": Not implemented.");
+        if (logger.isLoggable(Level.SEVERE)) {
+          logger.severe(args[0] + ": Not implemented.");
+        }
         System.exit(-1);
     }
   }
