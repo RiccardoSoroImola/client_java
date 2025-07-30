@@ -345,11 +345,11 @@ my_application_namedCounter2_total 10.0
     }
   }
 
-  private String convertToOpenMetricsFormat(PrometheusRegistry _registry) {
+  private String convertToOpenMetricsFormat(PrometheusRegistry registry) {
     ByteArrayOutputStream out = new ByteArrayOutputStream();
     OpenMetricsTextFormatWriter writer = new OpenMetricsTextFormatWriter(true, true);
     try {
-      writer.write(out, _registry.scrape());
+      writer.write(out, registry.scrape());
       return out.toString(StandardCharsets.UTF_8.name());
     } catch (IOException e) {
       throw new RuntimeException(e);
@@ -357,6 +357,6 @@ my_application_namedCounter2_total 10.0
   }
 
   private String convertToOpenMetricsFormat() {
-    return convertToOpenMetricsFormat(registry);
+    return convertToOpenMetricsFormat(this.registry);
   }
 }
