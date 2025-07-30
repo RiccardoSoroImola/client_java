@@ -63,13 +63,13 @@ class InfoSnapshotTest {
   void testNameMustNotIncludeSuffix() {
     InfoSnapshot.Builder builder = InfoSnapshot.builder();
     builder.name("jvm_info");
-    assertThatExceptionOfType(IllegalArgumentException.class).isThrownBy(() -> builder.build());
+    assertThatExceptionOfType(IllegalArgumentException.class).isThrownBy(builder::build);
   }
 
   @Test
   void testNameMustNotIncludeSuffixDot() {
     InfoSnapshot.Builder builder = InfoSnapshot.builder();
     builder.name("jvm.info");
-    assertThatExceptionOfType(IllegalArgumentException.class).isThrownBy(() -> builder.build());
+    assertThatExceptionOfType(IllegalArgumentException.class).isThrownBy(builder::build);
   }
 }
