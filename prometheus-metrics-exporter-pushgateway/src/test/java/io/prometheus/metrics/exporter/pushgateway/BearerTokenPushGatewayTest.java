@@ -49,5 +49,10 @@ class BearerTokenPushGatewayTest {
                 .withPath("/metrics/job/j"))
         .respond(response().withStatusCode(202));
     pushGateway.push();
+    mockServerClient.verify(
+        request()
+            .withMethod("PUT")
+            .withHeader("Authorization", "Bearer xxx")
+            .withPath("/metrics/job/j"));
   }
 }
