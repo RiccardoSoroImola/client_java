@@ -39,8 +39,8 @@ class GaugeWithCallbackTest {
 
   @Test
   void testGaugeNoCallback() {
-    assertThrows(
-        IllegalArgumentException.class,
-        () -> GaugeWithCallback.builder().name("gauge").labelNames("l1", "l2").build());
+    GaugeWithCallback.Builder builder =
+        GaugeWithCallback.builder().name("gauge").labelNames("l1", "l2");
+    assertThrows(IllegalArgumentException.class, () -> builder.build());
   }
 }
