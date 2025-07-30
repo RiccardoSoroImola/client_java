@@ -48,14 +48,16 @@ public class ExporterPushgatewayProperties {
     String address = Util.loadString(PREFIX + "." + ADDRESS, properties);
     String job = Util.loadString(PREFIX + "." + JOB, properties);
     String scheme = Util.loadString(PREFIX + "." + SCHEME, properties);
-    if (scheme != null) {
-      if (!scheme.equals("http") && !scheme.equals("https")) {
-        throw new PrometheusPropertiesException(
-            String.format(
-                "%s.%s: Illegal value. Expecting 'http' or 'https'. Found: %s",
-                PREFIX, SCHEME, scheme));
-      }
+    if (scheme != null && !isValidScheme(scheme)) {
+      throw new PrometheusPropertiesException(
+          String.format(
+              "%s.%s: Illegal value. Expecting 'http' or 'https'. Found: %s",
+              PREFIX, SCHEME, scheme));
     }
     return new ExporterPushgatewayProperties(address, job, scheme);
+  }
+
+  private static boolean isValidScheme(String scheme) {
+    return scheme.equals("http") || scheme.equals("https");
   }
 }
