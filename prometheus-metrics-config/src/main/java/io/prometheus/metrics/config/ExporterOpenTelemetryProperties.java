@@ -3,7 +3,6 @@ package io.prometheus.metrics.config;
 import java.util.HashMap;
 import java.util.Map;
 
-// TODO: JavaDoc is currently only in OpenTelemetryExporter.Builder. Look there for reference.
 public class ExporterOpenTelemetryProperties {
 
   // See
