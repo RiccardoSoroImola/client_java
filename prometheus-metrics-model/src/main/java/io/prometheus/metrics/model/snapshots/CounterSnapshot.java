@@ -61,7 +61,7 @@ public class CounterSnapshot extends MetricSnapshot {
       super(labels, createdTimestampMillis, scrapeTimestampMillis);
       this.value = value;
       this.exemplar = exemplar;
-      validate();
+      validateDataPoint(); // Renamed to avoid confusion with potential private method in parent
     }
 
     public double getValue() {
@@ -73,7 +73,8 @@ public class CounterSnapshot extends MetricSnapshot {
       return exemplar;
     }
 
-    protected void validate() {
+    protected void
+        validateDataPoint() { // Renamed to avoid confusion with potential private method in parent
       if (value < 0.0) {
         throw new IllegalArgumentException(value + ": counters cannot have a negative value");
       }
