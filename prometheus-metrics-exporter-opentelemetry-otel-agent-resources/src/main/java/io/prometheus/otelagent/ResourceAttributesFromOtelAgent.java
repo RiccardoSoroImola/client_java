@@ -17,6 +17,10 @@ import java.util.Map;
 
 public class ResourceAttributesFromOtelAgent {
 
+  private ResourceAttributesFromOtelAgent() {
+    throw new IllegalStateException("Utility class");
+  }
+
   private static final String[] OTEL_JARS =
       new String[] {"opentelemetry-api-1.29.0.jar", "opentelemetry-context-1.29.0.jar"};
 
