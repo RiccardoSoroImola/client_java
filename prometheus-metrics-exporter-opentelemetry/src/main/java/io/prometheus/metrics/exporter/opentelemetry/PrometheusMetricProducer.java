@@ -108,47 +108,64 @@ class PrometheusMetricProducer implements CollectionRegistration {
 
   private Resource resourceFromTargetInfo(MetricSnapshots snapshots) {
     ResourceBuilder result = Resource.builder();
-    for (MetricSnapshot snapshot : snapshots) {
-      if (snapshot.getMetadata().getName().equals("target") && snapshot instanceof InfoSnapshot) {
-        InfoSnapshot targetInfo = (InfoSnapshot) snapshot;
-        if (!targetInfo.getDataPoints().isEmpty()) {
-          InfoSnapshot.InfoDataPointSnapshot data = targetInfo.getDataPoints().get(0);
-          Labels labels = data.getLabels();
-          for (int i = 0; i < labels.size(); i++) {
-            result.put(labels.getName(i), labels.getValue(i));
-          }
-        }
+    InfoSnapshot targetInfo = findTargetInfoSnapshot(snapshots);
+    if (targetInfo != null) {
+      InfoSnapshot.InfoDataPointSnapshot data = targetInfo.getDataPoints().get(0);
+      Labels labels = data.getLabels();
+      for (int i = 0; i < labels.size(); i++) {
+        result.put(labels.getName(i), labels.getValue(i));
       }
     }
     return result.build();
   }
 
+  private InfoSnapshot findTargetInfoSnapshot(MetricSnapshots snapshots) {
+    for (MetricSnapshot snapshot : snapshots) {
+      if (snapshot.getMetadata().getName().equals("target") && snapshot instanceof InfoSnapshot) {
+        InfoSnapshot targetInfo = (InfoSnapshot) snapshot;
+        if (!targetInfo.getDataPoints().isEmpty()) {
+          return targetInfo;
+        }
+      }
+    }
+    return null;
+  }
+
   private InstrumentationScopeInfo instrumentationScopeFromOtelScopeInfo(
       MetricSnapshots snapshots) {
+    InfoSnapshot scopeInfo = findOtelScopeInfoSnapshot(snapshots);
+    if (scopeInfo == null) {
+      return null;
+    }
+    Labels labels = scopeInfo.getDataPoints().get(0).getLabels();
+    String name = null;
+    String version = null;
+    AttributesBuilder attributesBuilder = Attributes.builder();
+    for (int i = 0; i < labels.size(); i++) {
+      if (labels.getPrometheusName(i).equals("otel_scope_name")) {
+        name = labels.getValue(i);
+      } else if (labels.getPrometheusName(i).equals("otel_scope_version")) {
+        version = labels.getValue(i);
+      } else {
+        attributesBuilder.put(labels.getName(i), labels.getValue(i));
+      }
+    }
+    if (name != null) {
+      return InstrumentationScopeInfo.builder(name)
+          .setVersion(version)
+          .setAttributes(attributesBuilder.build())
+          .build();
+    }
+    return null;
+  }
+
+  private InfoSnapshot findOtelScopeInfoSnapshot(MetricSnapshots snapshots) {
     for (MetricSnapshot snapshot : snapshots) {
       if (snapshot.getMetadata().getPrometheusName().equals("otel_scope")
           && snapshot instanceof InfoSnapshot) {
         InfoSnapshot scopeInfo = (InfoSnapshot) snapshot;
         if (!scopeInfo.getDataPoints().isEmpty()) {
-          Labels labels = scopeInfo.getDataPoints().get(0).getLabels();
-          String name = null;
-          String version = null;
-          AttributesBuilder attributesBuilder = Attributes.builder();
-          for (int i = 0; i < labels.size(); i++) {
-            if (labels.getPrometheusName(i).equals("otel_scope_name")) {
-              name = labels.getValue(i);
-            } else if (labels.getPrometheusName(i).equals("otel_scope_version")) {
-              version = labels.getValue(i);
-            } else {
-              attributesBuilder.put(labels.getName(i), labels.getValue(i));
-            }
-          }
-          if (name != null) {
-            return InstrumentationScopeInfo.builder(name)
-                .setVersion(version)
-                .setAttributes(attributesBuilder.build())
-                .build();
-          }
+          return scopeInfo;
         }
       }
     }
