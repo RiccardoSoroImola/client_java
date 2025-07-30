@@ -27,6 +27,7 @@ import io.prometheus.metrics.model.registry.PrometheusRegistry;
 public class JvmRuntimeInfoMetric {
 
   private static final String JVM_RUNTIME_INFO = "jvm_runtime_info";
+  private static final String HELP_JVM_RUNTIME_INFO = "JVM runtime info";
 
   private final PrometheusProperties config;
   private final String version;
@@ -46,7 +47,7 @@ public class JvmRuntimeInfoMetric {
     Info jvmInfo =
         Info.builder(config)
             .name(JVM_RUNTIME_INFO)
-            .help("JVM runtime info")
+            .help(HELP_JVM_RUNTIME_INFO)
             .labelNames("version", "vendor", "runtime")
             .register(registry);
 
