@@ -106,7 +106,6 @@ public class PrometheusPropertiesLoader {
         .filter(key -> key.startsWith("io.prometheus"))
         .forEach(key -> properties.put(key, System.getProperty(key)));
     properties.putAll(externalProperties); // overriding all the entries above
-    // TODO: Add environment variables like EXEMPLARS_ENABLED.
     return properties;
   }
 
