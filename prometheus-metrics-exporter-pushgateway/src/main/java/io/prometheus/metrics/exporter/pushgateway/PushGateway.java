@@ -46,7 +46,7 @@ import java.util.TreeMap;
  *     PrometheusRegistry registry = new PrometheusRegistry();
  *     Gauge duration = Gauge.builder()
  *             .name("my_batch_job_duration_seconds")
- *             .help("Duration of my batch job in seconds.")
+ *             .help("Duration of my batch_job in seconds.")
  *             .register(registry);
  *     Timer durationTimer = duration.startTimer();
  *     try {
