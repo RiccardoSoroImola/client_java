@@ -136,10 +136,14 @@ public class NativeHistogramBuckets implements Iterable<NativeHistogramBucket> {
       if (counts[i] < 0) {
         throw new IllegalArgumentException("Bucket counts cannot be negative.");
       }
-      if (i > 0) {
-        if (bucketIndexes[i - 1] == bucketIndexes[i]) {
-          throw new IllegalArgumentException("Duplicate bucket index " + bucketIndexes[i]);
-        }
+    }
+    checkDuplicateIndexes(bucketIndexes);
+  }
+
+  private static void checkDuplicateIndexes(int[] bucketIndexes) {
+    for (int i = 1; i < bucketIndexes.length; i++) {
+      if (bucketIndexes[i - 1] == bucketIndexes[i]) {
+        throw new IllegalArgumentException("Duplicate bucket index " + bucketIndexes[i]);
       }
     }
   }
