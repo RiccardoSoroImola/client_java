@@ -95,15 +95,15 @@ public class JvmRuntimeInfoMetric {
     }
 
     public void register(PrometheusRegistry registry) {
-      String version =
+      String versionStr =
           this.version != null
               ? this.version
               : System.getProperty("java.runtime.version", "unknown");
-      String vendor =
+      String vendorStr =
           this.vendor != null ? this.vendor : System.getProperty("java.vm.vendor", "unknown");
-      String runtime =
+      String runtimeStr =
           this.runtime != null ? this.runtime : System.getProperty("java.runtime.name", "unknown");
-      new JvmRuntimeInfoMetric(version, vendor, runtime, config).register(registry);
+      new JvmRuntimeInfoMetric(versionStr, vendorStr, runtimeStr, config).register(registry);
     }
   }
 }
