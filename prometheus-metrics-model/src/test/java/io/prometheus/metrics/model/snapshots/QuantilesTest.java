@@ -37,13 +37,10 @@ class QuantilesTest {
 
   @Test
   void testDuplicate() {
-    assertThatExceptionOfType(IllegalArgumentException.class)
-        .isThrownBy(
-            () ->
-                Quantiles.builder()
-                    .quantile(0.95, 0.23)
-                    .quantile(0.5, 0.2)
-                    .quantile(0.95, 0.22)
-                    .build());
+    Quantiles.Builder builder = Quantiles.builder();
+    builder.quantile(0.95, 0.23);
+    builder.quantile(0.5, 0.2);
+    builder.quantile(0.95, 0.22);
+    assertThatExceptionOfType(IllegalArgumentException.class).isThrownBy(builder::build);
   }
 }
