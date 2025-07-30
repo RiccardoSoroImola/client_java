@@ -9,27 +9,26 @@ class MetricSnapshotTest {
 
   @Test
   void testDuplicateLabels() {
-    assertThatExceptionOfType(DuplicateLabelsException.class)
-        .isThrownBy(
-            () ->
-                CounterSnapshot.builder()
-                    .name("events")
-                    .dataPoint(
-                        CounterSnapshot.CounterDataPointSnapshot.builder()
-                            .labels(Labels.of("path", "/hello", "status", "200"))
-                            .value(1.0)
-                            .build())
-                    .dataPoint(
-                        CounterSnapshot.CounterDataPointSnapshot.builder()
-                            .labels(Labels.of("path", "/world", "status", "200"))
-                            .value(2.0)
-                            .build())
-                    .dataPoint(
-                        CounterSnapshot.CounterDataPointSnapshot.builder()
-                            .labels(Labels.of("status", "200", "path", "/hello"))
-                            .value(3.0)
-                            .build())
+    CounterSnapshot.Builder builder =
+        CounterSnapshot.builder()
+            .name("events")
+            .dataPoint(
+                CounterSnapshot.CounterDataPointSnapshot.builder()
+                    .labels(Labels.of("path", "/hello", "status", "200"))
+                    .value(1.0)
                     .build())
+            .dataPoint(
+                CounterSnapshot.CounterDataPointSnapshot.builder()
+                    .labels(Labels.of("path", "/world", "status", "200"))
+                    .value(2.0)
+                    .build())
+            .dataPoint(
+                CounterSnapshot.CounterDataPointSnapshot.builder()
+                    .labels(Labels.of("status", "200", "path", "/hello"))
+                    .value(3.0)
+                    .build());
+    assertThatExceptionOfType(DuplicateLabelsException.class)
+        .isThrownBy(() -> builder.build())
         .satisfies(
             e -> {
               assertThat(e.getMetadata().getName()).isEqualTo("events");
