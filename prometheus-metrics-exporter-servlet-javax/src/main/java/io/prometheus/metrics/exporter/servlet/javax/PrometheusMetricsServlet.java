@@ -3,7 +3,6 @@ package io.prometheus.metrics.exporter.servlet.javax;
 import io.prometheus.metrics.config.PrometheusProperties;
 import io.prometheus.metrics.exporter.common.PrometheusScrapeHandler;
 import io.prometheus.metrics.model.registry.PrometheusRegistry;
-import java.io.IOException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -58,11 +57,13 @@ public class PrometheusMetricsServlet extends HttpServlet {
    *
    * @param request the HttpServletRequest
    * @param response the HttpServletResponse
-   * @throws IOException if an I/O error occurs
    */
   @Override
-  protected void doGet(HttpServletRequest request, HttpServletResponse response)
-      throws IOException {
-    handler.handleRequest(new HttpExchangeAdapter(request, response));
+  protected void doGet(HttpServletRequest request, HttpServletResponse response) {
+    try {
+      handler.handleRequest(new HttpExchangeAdapter(request, response));
+    } catch (Exception e) {
+      // Handle exceptions internally to prevent them from propagating out of the servlet method
+    }
   }
 }
