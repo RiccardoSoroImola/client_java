@@ -20,7 +20,7 @@ class PrometheusMetricData<T extends PrometheusData<?>> implements MetricData {
 
   PrometheusMetricData(
       MetricMetadata metricMetadata,
-      T data,
+      T dataParam,
       InstrumentationScopeInfo instrumentationScopeInfo,
       Resource resource) {
     this.instrumentationScopeInfo = instrumentationScopeInfo;
@@ -28,22 +28,22 @@ class PrometheusMetricData<T extends PrometheusData<?>> implements MetricData {
     this.name = getNameWithoutUnit(metricMetadata);
     this.description = metricMetadata.getHelp();
     this.unit = convertUnit(metricMetadata.getUnit());
-    this.data = data;
+    this.data = dataParam;
   }
 
   // In OpenTelemetry the unit should not be part of the metric name.
   private String getNameWithoutUnit(MetricMetadata metricMetadata) {
-    String name = metricMetadata.getName();
+    String metricName = metricMetadata.getName();
     if (metricMetadata.getUnit() != null) {
       String unit = metricMetadata.getUnit().toString();
-      if (name.endsWith(unit)) {
-        name = name.substring(0, name.length() - unit.length());
+      if (metricName.endsWith(unit)) {
+        metricName = metricName.substring(0, metricName.length() - unit.length());
       }
-      while (name.endsWith("_")) {
-        name = name.substring(0, name.length() - 1);
+      while (metricName.endsWith("_")) {
+        metricName = metricName.substring(0, metricName.length() - 1);
       }
     }
-    return name;
+    return metricName;
   }
 
   // See
