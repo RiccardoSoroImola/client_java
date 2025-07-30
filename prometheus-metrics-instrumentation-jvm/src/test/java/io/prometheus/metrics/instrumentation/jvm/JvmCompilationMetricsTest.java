@@ -20,7 +20,7 @@ class JvmCompilationMetricsTest {
   private final CompilationMXBean mockCompilationBean = Mockito.mock(CompilationMXBean.class);
 
   @BeforeEach
-  public void setUp() {
+  void setUp() {
     when(mockCompilationBean.getTotalCompilationTime()).thenReturn(10000L);
     when(mockCompilationBean.isCompilationTimeMonitoringSupported()).thenReturn(true);
   }
