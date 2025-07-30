@@ -45,36 +45,38 @@ class MetricsPropertiesTest {
                 .getSummaryNumberOfAgeBuckets())
         .isOne();
 
+    MetricsProperties.Builder builder = MetricsProperties.builder();
+    builder.summaryNumberOfAgeBuckets(0);
     assertThatExceptionOfType(PrometheusPropertiesException.class)
-        .isThrownBy(() -> MetricsProperties.builder().summaryNumberOfAgeBuckets(0).build())
+        .isThrownBy(() -> builder.build())
         .withMessage(".summaryNumberOfAgeBuckets: Expecting value > 0. Found: 0");
 
+    MetricsProperties.Builder builder1 = MetricsProperties.builder();
+    builder1.summaryQuantiles(2L);
     assertThatExceptionOfType(PrometheusPropertiesException.class)
-        .isThrownBy(() -> MetricsProperties.builder().summaryQuantiles(2L).build())
+        .isThrownBy(() -> builder1.build())
         .withMessage(".summaryQuantiles: Expecting 0.0 <= quantile <= 1.0. Found: 2.0");
 
+    MetricsProperties.Builder builder2 = MetricsProperties.builder();
+    builder2.summaryQuantileErrors(0.9);
     assertThatExceptionOfType(PrometheusPropertiesException.class)
-        .isThrownBy(() -> MetricsProperties.builder().summaryQuantileErrors(0.9).build())
+        .isThrownBy(() -> builder2.build())
         .withMessage(
             ".summaryQuantileErrors: Can't configure summaryQuantileErrors without configuring"
                 + " summaryQuantiles");
 
+    MetricsProperties.Builder builder3 = MetricsProperties.builder();
+    builder3.summaryQuantiles(0.1);
+    builder3.summaryQuantileErrors(0.1, 0.9);
     assertThatExceptionOfType(PrometheusPropertiesException.class)
-        .isThrownBy(
-            () ->
-                MetricsProperties.builder()
-                    .summaryQuantiles(0.1)
-                    .summaryQuantileErrors(0.1, 0.9)
-                    .build())
+        .isThrownBy(() -> builder3.build())
         .withMessage(".summaryQuantileErrors: must have the same length as summaryQuantiles");
 
+    MetricsProperties.Builder builder4 = MetricsProperties.builder();
+    builder4.summaryQuantiles(0.1);
+    builder4.summaryQuantileErrors(-0.9);
     assertThatExceptionOfType(PrometheusPropertiesException.class)
-        .isThrownBy(
-            () ->
-                MetricsProperties.builder()
-                    .summaryQuantiles(0.1)
-                    .summaryQuantileErrors(-0.9)
-                    .build())
+        .isThrownBy(() -> builder4.build())
         .withMessage(".summaryQuantileErrors: Expecting 0.0 <= error <= 1.0");
   }
 
@@ -111,44 +113,49 @@ class MetricsPropertiesTest {
                 .getHistogramNativeResetDurationSeconds())
         .isOne();
 
+    MetricsProperties.Builder builder = MetricsProperties.builder();
+    builder.histogramNativeInitialSchema(10);
     assertThatExceptionOfType(PrometheusPropertiesException.class)
-        .isThrownBy(() -> MetricsProperties.builder().histogramNativeInitialSchema(10).build())
+        .isThrownBy(() -> builder.build())
         .withMessage(
             ".histogramNativeInitialSchema: Expecting number between -4 and +8. Found: 10");
 
+    MetricsProperties.Builder builder1 = MetricsProperties.builder();
+    builder1.histogramNativeMinZeroThreshold(-1.0);
     assertThatExceptionOfType(PrometheusPropertiesException.class)
-        .isThrownBy(() -> MetricsProperties.builder().histogramNativeMinZeroThreshold(-1.0).build())
+        .isThrownBy(() -> builder1.build())
         .withMessage(".histogramNativeMinZeroThreshold: Expecting value >= 0. Found: -1.0");
 
+    MetricsProperties.Builder builder2 = MetricsProperties.builder();
+    builder2.histogramNativeMaxZeroThreshold(-1.0);
     assertThatExceptionOfType(PrometheusPropertiesException.class)
-        .isThrownBy(() -> MetricsProperties.builder().histogramNativeMaxZeroThreshold(-1.0).build())
+        .isThrownBy(() -> builder2.build())
         .withMessage(".histogramNativeMaxZeroThreshold: Expecting value >= 0. Found: -1.0");
 
+    MetricsProperties.Builder builder3 = MetricsProperties.builder();
+    builder3.histogramNativeMaxNumberOfBuckets(-1);
     assertThatExceptionOfType(PrometheusPropertiesException.class)
-        .isThrownBy(() -> MetricsProperties.builder().histogramNativeMaxNumberOfBuckets(-1).build())
+        .isThrownBy(() -> builder3.build())
         .withMessage(".histogramNativeMaxNumberOfBuckets: Expecting value >= 0. Found: -1");
 
+    MetricsProperties.Builder builder4 = MetricsProperties.builder();
+    builder4.histogramNativeResetDurationSeconds(-1L);
     assertThatExceptionOfType(PrometheusPropertiesException.class)
-        .isThrownBy(
-            () -> MetricsProperties.builder().histogramNativeResetDurationSeconds(-1L).build())
+        .isThrownBy(() -> builder4.build())
         .withMessage(".histogramNativeResetDurationSeconds: Expecting value >= 0. Found: -1");
 
+    MetricsProperties.Builder builder5 = MetricsProperties.builder();
+    builder5.histogramNativeOnly(true);
+    builder5.histogramClassicOnly(true);
     assertThatExceptionOfType(PrometheusPropertiesException.class)
-        .isThrownBy(
-            () ->
-                MetricsProperties.builder()
-                    .histogramNativeOnly(true)
-                    .histogramClassicOnly(true)
-                    .build())
+        .isThrownBy(() -> builder5.build())
         .withMessage(".histogramNativeOnly and .histogramClassicOnly cannot both be true");
 
+    MetricsProperties.Builder builder6 = MetricsProperties.builder();
+    builder6.histogramNativeMinZeroThreshold(0.1);
+    builder6.histogramNativeMaxZeroThreshold(0.01);
     assertThatExceptionOfType(PrometheusPropertiesException.class)
-        .isThrownBy(
-            () ->
-                MetricsProperties.builder()
-                    .histogramNativeMinZeroThreshold(0.1)
-                    .histogramNativeMaxZeroThreshold(0.01)
-                    .build())
+        .isThrownBy(() -> builder6.build())
         .withMessage(
             ".histogramNativeMinZeroThreshold cannot be greater than"
                 + " .histogramNativeMaxZeroThreshold");
