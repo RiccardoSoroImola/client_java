@@ -89,18 +89,18 @@ public class PushGateway {
   private final HttpConnectionFactory connectionFactory;
 
   private PushGateway(
-      PrometheusRegistry registry,
-      Format format,
-      URL url,
-      HttpConnectionFactory connectionFactory,
-      Map<String, String> requestHeaders,
+      PrometheusRegistry registryParam,
+      Format formatParam,
+      URL urlParam,
+      HttpConnectionFactory connectionFactoryParam,
+      Map<String, String> requestHeadersParam,
       boolean prometheusTimestampsInMs) {
-    this.registry = registry;
-    this.url = url;
-    this.requestHeaders = Collections.unmodifiableMap(new HashMap<>(requestHeaders));
-    this.connectionFactory = connectionFactory;
+    this.registry = registryParam;
+    this.url = urlParam;
+    this.requestHeaders = Collections.unmodifiableMap(new HashMap<>(requestHeadersParam));
+    this.connectionFactory = connectionFactoryParam;
     this.prometheusTimestampsInMs = prometheusTimestampsInMs;
-    writer = getWriter(format);
+    writer = getWriter(formatParam);
     if (!writer.isAvailable()) {
       throw new RuntimeException(writer.getClass() + " is not available");
     }
@@ -279,11 +279,11 @@ public class PushGateway {
     }
 
     /** Default is {@link Format#PROMETHEUS_PROTOBUF}. */
-    public Builder format(Format format) {
-      if (format == null) {
+    public Builder format(Format formatParam) {
+      if (formatParam == null) {
         throw new NullPointerException();
       }
-      this.format = format;
+      this.format = formatParam;
       return this;
     }
 
@@ -292,11 +292,11 @@ public class PushGateway {
      * Can be overwritten at runtime with the {@code io.prometheus.exporter.pushgateway.address}
      * property.
      */
-    public Builder address(String address) {
-      if (address == null) {
+    public Builder address(String addressParam) {
+      if (addressParam == null) {
         throw new NullPointerException();
       }
-      this.address = address;
+      this.address = addressParam;
       return this;
     }
 
@@ -324,11 +324,11 @@ public class PushGateway {
      * Specify if metrics should be pushed using HTTP or HTTPS. Default is HTTP. Can be overwritten
      * at runtime with the {@code io.prometheus.exporter.pushgateway.scheme} property.
      */
-    public Builder scheme(Scheme scheme) {
-      if (scheme == null) {
+    public Builder scheme(Scheme schemeParam) {
+      if (schemeParam == null) {
         throw new NullPointerException();
       }
-      this.scheme = scheme;
+      this.scheme = schemeParam;
       return this;
     }
 
@@ -338,11 +338,11 @@ public class PushGateway {
      * <p>The {@code PushGatewayTestApp} in {@code integration-tests/it-pushgateway/} has an example
      * of a custom connection factory that skips SSL certificate validation for HTTPS connections.
      */
-    public Builder connectionFactory(HttpConnectionFactory connectionFactory) {
-      if (connectionFactory == null) {
+    public Builder connectionFactory(HttpConnectionFactory connectionFactoryParam) {
+      if (connectionFactoryParam == null) {
         throw new NullPointerException();
       }
-      this.connectionFactory = connectionFactory;
+      this.connectionFactory = connectionFactoryParam;
       return this;
     }
 
@@ -351,11 +351,11 @@ public class PushGateway {
      * file will be used by default. Can be overwritten at runtime with the {@code
      * io.prometheus.exporter.pushgateway.job} property.
      */
-    public Builder job(String job) {
-      if (job == null) {
+    public Builder job(String jobParam) {
+      if (jobParam == null) {
         throw new NullPointerException();
       }
-      this.job = job;
+      this.job = jobParam;
       return this;
     }
 
@@ -377,11 +377,11 @@ public class PushGateway {
     }
 
     /** Push metrics from this registry instead of {@link PrometheusRegistry#defaultRegistry}. */
-    public Builder registry(PrometheusRegistry registry) {
-      if (registry == null) {
+    public Builder registry(PrometheusRegistry registryParam) {
+      if (registryParam == null) {
         throw new NullPointerException();
       }
-      this.registry = registry;
+      this.registry = registryParam;
       return this;
     }
 
@@ -389,8 +389,8 @@ public class PushGateway {
      * Use milliseconds for timestamps in text format? Default is {@code false}. Can be overwritten
      * at runtime with the {@code io.prometheus.exporter.timestampsInMs} property.
      */
-    public Builder prometheusTimestampsInMs(boolean prometheusTimestampsInMs) {
-      this.prometheusTimestampsInMs = prometheusTimestampsInMs;
+    public Builder prometheusTimestampsInMs(boolean prometheusTimestampsInMsParam) {
+      this.prometheusTimestampsInMs = prometheusTimestampsInMsParam;
       return this;
     }
 
