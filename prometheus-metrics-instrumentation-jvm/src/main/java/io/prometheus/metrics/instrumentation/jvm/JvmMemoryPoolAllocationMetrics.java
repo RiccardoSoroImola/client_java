@@ -28,7 +28,7 @@ import javax.management.openmbean.CompositeData;
  * directly:
  *
  * <pre>{@code
- * JvmMemoryAllocationMetrics.builder().register();
+ * JvmMemoryPoolAllocationMetrics.builder().register();
  * }</pre>
  *
  * Example metrics being exported:
