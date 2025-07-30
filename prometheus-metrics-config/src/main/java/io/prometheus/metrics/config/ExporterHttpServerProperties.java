@@ -34,17 +34,17 @@ public class ExporterHttpServerProperties {
 
   public static class Builder {
 
-    private Integer port;
+    private Integer portValue;
 
     private Builder() {}
 
     public Builder port(int port) {
-      this.port = port;
+      this.portValue = port;
       return this;
     }
 
     public ExporterHttpServerProperties build() {
-      return new ExporterHttpServerProperties(port);
+      return new ExporterHttpServerProperties(portValue);
     }
   }
 }
