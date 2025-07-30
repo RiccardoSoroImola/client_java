@@ -32,8 +32,9 @@ class DropwizardExportsTest {
 
   @Test
   void testBuilderThrowsErrorOnNullRegistry() {
-    assertThatThrownBy(
-            () -> DropwizardExports.builder().dropwizardRegistry(null).register(registry))
+    DropwizardExports.Builder builder = DropwizardExports.builder();
+    builder.dropwizardRegistry(null);
+    assertThatThrownBy(() -> builder.register(registry))
         .isInstanceOf(IllegalArgumentException.class);
   }
 
