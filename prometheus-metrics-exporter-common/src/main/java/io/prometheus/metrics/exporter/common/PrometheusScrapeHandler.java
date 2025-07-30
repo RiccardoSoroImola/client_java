@@ -145,27 +145,28 @@ public class PrometheusScrapeHandler {
     } else {
       response.setHeader("Content-Type", "text/plain; charset=utf-8");
       int responseStatus = supportedFormats.contains(debugParam) ? 200 : 500;
-      OutputStream body = response.sendHeadersAndGetBody(responseStatus, 0);
-      switch (debugParam) {
-        case "openmetrics":
-          expositionFormats.getOpenMetricsTextFormatWriter().write(body, snapshots);
-          break;
-        case "text":
-          expositionFormats.getPrometheusTextFormatWriter().write(body, snapshots);
-          break;
-        case "prometheus-protobuf":
-          String debugString =
-              expositionFormats.getPrometheusProtobufWriter().toDebugString(snapshots);
-          body.write(debugString.getBytes(StandardCharsets.UTF_8));
-          break;
-        default:
-          body.write(
-              ("debug="
-                      + debugParam
-                      + ": Unsupported query parameter. Valid values are 'openmetrics', "
-                      + "'text', and 'prometheus-protobuf'.")
-                  .getBytes(StandardCharsets.UTF_8));
-          break;
+      try (OutputStream body = response.sendHeadersAndGetBody(responseStatus, 0)) {
+        switch (debugParam) {
+          case "openmetrics":
+            expositionFormats.getOpenMetricsTextFormatWriter().write(body, snapshots);
+            break;
+          case "text":
+            expositionFormats.getPrometheusTextFormatWriter().write(body, snapshots);
+            break;
+          case "prometheus-protobuf":
+            String debugString =
+                expositionFormats.getPrometheusProtobufWriter().toDebugString(snapshots);
+            body.write(debugString.getBytes(StandardCharsets.UTF_8));
+            break;
+          default:
+            body.write(
+                ("debug="
+                        + debugParam
+                        + ": Unsupported query parameter. Valid values are 'openmetrics', "
+                        + "'text', and 'prometheus-protobuf'.")
+                    .getBytes(StandardCharsets.UTF_8));
+            break;
+        }
       }
       return true;
     }
