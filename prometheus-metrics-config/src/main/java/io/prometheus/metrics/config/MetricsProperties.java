@@ -145,6 +145,11 @@ public class MetricsProperties {
   }
 
   private void validateSummaryConfig(String prefix) throws PrometheusPropertiesException {
+    validateSummaryQuantiles(prefix);
+    validateSummaryQuantileErrors(prefix);
+  }
+
+  private void validateSummaryQuantiles(String prefix) throws PrometheusPropertiesException {
     if (summaryQuantiles != null) {
       for (double quantile : summaryQuantiles) {
         if (quantile < 0 || quantile > 1) {
@@ -157,7 +162,9 @@ public class MetricsProperties {
         }
       }
     }
+  }
 
+  private void validateSummaryQuantileErrors(String prefix) throws PrometheusPropertiesException {
     if (summaryQuantileErrors != null) {
       if (summaryQuantiles == null) {
         throw new PrometheusPropertiesException(
