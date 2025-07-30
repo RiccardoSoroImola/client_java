@@ -39,8 +39,8 @@ class CounterWithCallbackTest {
 
   @Test
   void testCounterNoCallback() {
-    assertThatExceptionOfType(IllegalArgumentException.class)
-        .isThrownBy(
-            () -> CounterWithCallback.builder().name("counter").labelNames("l1", "l2").build());
+    CounterWithCallback.Builder builder =
+        CounterWithCallback.builder().name("counter").labelNames("l1", "l2");
+    assertThatExceptionOfType(IllegalArgumentException.class).isThrownBy(() -> builder.build());
   }
 }
