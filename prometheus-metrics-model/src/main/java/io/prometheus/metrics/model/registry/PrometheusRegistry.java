@@ -136,8 +136,8 @@ public class PrometheusRegistry {
       PrometheusScrapeRequest scrapeRequest,
       MetricSnapshots.Builder result) {
     for (MultiCollector collector : multiCollectorList) {
-      List<String> prometheusNames = collector.getPrometheusNames();
-      if (isAnyNameIncluded(prometheusNames, includedNames)) {
+      List<String> names = collector.getPrometheusNames();
+      if (isAnyNameIncluded(names, includedNames)) {
         MetricSnapshots snapshots =
             scrapeRequest == null
                 ? collector.collect(includedNames)
