@@ -124,6 +124,31 @@ public class JvmMemoryMetrics {
   private static final String JVM_MEMORY_POOL_COLLECTION_INIT_BYTES =
       "jvm_memory_pool_collection_init_bytes";
 
+  private static final String HELP_JVM_MEMORY_OBJECTS_PENDING_FINALIZATION =
+      "The number of objects waiting in the finalizer queue.";
+  private static final String HELP_JVM_MEMORY_USED_BYTES = "Used bytes of a given JVM memory area.";
+  private static final String HELP_JVM_MEMORY_COMMITTED_BYTES =
+      "Committed (bytes) of a given JVM memory area.";
+  private static final String HELP_JVM_MEMORY_MAX_BYTES = "Max (bytes) of a given JVM memory area.";
+  private static final String HELP_JVM_MEMORY_INIT_BYTES =
+      "Initial bytes of a given JVM memory area.";
+  private static final String HELP_JVM_MEMORY_POOL_USED_BYTES =
+      "Used bytes of a given JVM memory pool.";
+  private static final String HELP_JVM_MEMORY_POOL_COMMITTED_BYTES =
+      "Committed bytes of a given JVM memory pool.";
+  private static final String HELP_JVM_MEMORY_POOL_MAX_BYTES =
+      "Max bytes of a given JVM memory pool.";
+  private static final String HELP_JVM_MEMORY_POOL_INIT_BYTES =
+      "Initial bytes of a given JVM memory pool.";
+  private static final String HELP_JVM_MEMORY_POOL_COLLECTION_USED_BYTES =
+      "Used bytes after last collection of a given JVM memory pool.";
+  private static final String HELP_JVM_MEMORY_POOL_COLLECTION_COMMITTED_BYTES =
+      "Committed after last collection bytes of a given JVM memory pool.";
+  private static final String HELP_JVM_MEMORY_POOL_COLLECTION_MAX_BYTES =
+      "Max bytes after last collection of a given JVM memory pool.";
+  private static final String HELP_JVM_MEMORY_POOL_COLLECTION_INIT_BYTES =
+      "Initial after last collection bytes of a given JVM memory pool.";
+
   private final PrometheusProperties config;
   private final MemoryMXBean memoryBean;
   private final List<MemoryPoolMXBean> poolBeans;
@@ -141,13 +166,13 @@ public class JvmMemoryMetrics {
 
     GaugeWithCallback.builder(config)
         .name(JVM_MEMORY_OBJECTS_PENDING_FINALIZATION)
-        .help("The number of objects waiting in the finalizer queue.")
+        .help(HELP_JVM_MEMORY_OBJECTS_PENDING_FINALIZATION)
         .callback(callback -> callback.call(memoryBean.getObjectPendingFinalizationCount()))
         .register(registry);
 
     GaugeWithCallback.builder(config)
         .name(JVM_MEMORY_USED_BYTES)
-        .help("Used bytes of a given JVM memory area.")
+        .help(HELP_JVM_MEMORY_USED_BYTES)
         .unit(Unit.BYTES)
         .labelNames("area")
         .callback(
@@ -159,7 +184,7 @@ public class JvmMemoryMetrics {
 
     GaugeWithCallback.builder(config)
         .name(JVM_MEMORY_COMMITTED_BYTES)
-        .help("Committed (bytes) of a given JVM memory area.")
+        .help(HELP_JVM_MEMORY_COMMITTED_BYTES)
         .unit(Unit.BYTES)
         .labelNames("area")
         .callback(
@@ -171,7 +196,7 @@ public class JvmMemoryMetrics {
 
     GaugeWithCallback.builder(config)
         .name(JVM_MEMORY_MAX_BYTES)
-        .help("Max (bytes) of a given JVM memory area.")
+        .help(HELP_JVM_MEMORY_MAX_BYTES)
         .unit(Unit.BYTES)
         .labelNames("area")
         .callback(
@@ -183,7 +208,7 @@ public class JvmMemoryMetrics {
 
     GaugeWithCallback.builder(config)
         .name(JVM_MEMORY_INIT_BYTES)
-        .help("Initial bytes of a given JVM memory area.")
+        .help(HELP_JVM_MEMORY_INIT_BYTES)
         .unit(Unit.BYTES)
         .labelNames("area")
         .callback(
@@ -195,7 +220,7 @@ public class JvmMemoryMetrics {
 
     GaugeWithCallback.builder(config)
         .name(JVM_MEMORY_POOL_USED_BYTES)
-        .help("Used bytes of a given JVM memory pool.")
+        .help(HELP_JVM_MEMORY_POOL_USED_BYTES)
         .unit(Unit.BYTES)
         .labelNames("pool")
         .callback(makeCallback(poolBeans, MemoryPoolMXBean::getUsage, MemoryUsage::getUsed))
@@ -203,7 +228,7 @@ public class JvmMemoryMetrics {
 
     GaugeWithCallback.builder(config)
         .name(JVM_MEMORY_POOL_COMMITTED_BYTES)
-        .help("Committed bytes of a given JVM memory pool.")
+        .help(HELP_JVM_MEMORY_POOL_COMMITTED_BYTES)
         .unit(Unit.BYTES)
         .labelNames("pool")
         .callback(makeCallback(poolBeans, MemoryPoolMXBean::getUsage, MemoryUsage::getCommitted))
@@ -211,7 +236,7 @@ public class JvmMemoryMetrics {
 
     GaugeWithCallback.builder(config)
         .name(JVM_MEMORY_POOL_MAX_BYTES)
-        .help("Max bytes of a given JVM memory pool.")
+        .help(HELP_JVM_MEMORY_POOL_MAX_BYTES)
         .unit(Unit.BYTES)
         .labelNames("pool")
         .callback(makeCallback(poolBeans, MemoryPoolMXBean::getUsage, MemoryUsage::getMax))
@@ -219,7 +244,7 @@ public class JvmMemoryMetrics {
 
     GaugeWithCallback.builder(config)
         .name(JVM_MEMORY_POOL_INIT_BYTES)
-        .help("Initial bytes of a given JVM memory pool.")
+        .help(HELP_JVM_MEMORY_POOL_INIT_BYTES)
         .unit(Unit.BYTES)
         .labelNames("pool")
         .callback(makeCallback(poolBeans, MemoryPoolMXBean::getUsage, MemoryUsage::getInit))
@@ -227,7 +252,7 @@ public class JvmMemoryMetrics {
 
     GaugeWithCallback.builder(config)
         .name(JVM_MEMORY_POOL_COLLECTION_USED_BYTES)
-        .help("Used bytes after last collection of a given JVM memory pool.")
+        .help(HELP_JVM_MEMORY_POOL_COLLECTION_USED_BYTES)
         .unit(Unit.BYTES)
         .labelNames("pool")
         .callback(
@@ -236,7 +261,7 @@ public class JvmMemoryMetrics {
 
     GaugeWithCallback.builder(config)
         .name(JVM_MEMORY_POOL_COLLECTION_COMMITTED_BYTES)
-        .help("Committed after last collection bytes of a given JVM memory pool.")
+        .help(HELP_JVM_MEMORY_POOL_COLLECTION_COMMITTED_BYTES)
         .unit(Unit.BYTES)
         .labelNames("pool")
         .callback(
@@ -246,7 +271,7 @@ public class JvmMemoryMetrics {
 
     GaugeWithCallback.builder(config)
         .name(JVM_MEMORY_POOL_COLLECTION_MAX_BYTES)
-        .help("Max bytes after last collection of a given JVM memory pool.")
+        .help(HELP_JVM_MEMORY_POOL_COLLECTION_MAX_BYTES)
         .unit(Unit.BYTES)
         .labelNames("pool")
         .callback(
@@ -255,7 +280,7 @@ public class JvmMemoryMetrics {
 
     GaugeWithCallback.builder(config)
         .name(JVM_MEMORY_POOL_COLLECTION_INIT_BYTES)
-        .help("Initial after last collection bytes of a given JVM memory pool.")
+        .help(HELP_JVM_MEMORY_POOL_COLLECTION_INIT_BYTES)
         .unit(Unit.BYTES)
         .labelNames("pool")
         .callback(
