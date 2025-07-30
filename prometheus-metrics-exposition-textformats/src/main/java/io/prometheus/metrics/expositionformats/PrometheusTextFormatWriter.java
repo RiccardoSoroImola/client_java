@@ -53,6 +53,10 @@ public class PrometheusTextFormatWriter implements ExpositionFormatWriter {
       return this;
     }
 
+    /**
+     * @deprecated Use {@link #builder()} or {@link #create()} instead. This method will be removed
+     *     in the next major version.
+     */
     @Deprecated
     public Builder setTimestampsInMs(boolean timestampsInMs) {
       this.timestampsInMs = timestampsInMs;
