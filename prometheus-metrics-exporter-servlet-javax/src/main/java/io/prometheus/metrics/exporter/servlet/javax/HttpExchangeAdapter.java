@@ -68,7 +68,7 @@ public class HttpExchangeAdapter implements PrometheusHttpExchange {
   /** This inner class adapts a HttpServletRequest to a PrometheusHttpRequest. */
   public static class Request implements PrometheusHttpRequest {
 
-    private final HttpServletRequest request;
+    private final HttpServletRequest httpRequest;
 
     /**
      * Constructs a new Request with the given HttpServletRequest.
@@ -76,36 +76,36 @@ public class HttpExchangeAdapter implements PrometheusHttpExchange {
      * @param request the HttpServletRequest to be adapted
      */
     public Request(HttpServletRequest request) {
-      this.request = request;
+      this.httpRequest = request;
     }
 
     @Override
     public String getQueryString() {
-      return request.getQueryString();
+      return httpRequest.getQueryString();
     }
 
     @Override
     public Enumeration<String> getHeaders(String name) {
-      return request.getHeaders(name);
+      return httpRequest.getHeaders(name);
     }
 
     @Override
     public String getMethod() {
-      return request.getMethod();
+      return httpRequest.getMethod();
     }
 
     @Override
     public String getRequestPath() {
       StringBuilder uri = new StringBuilder();
-      String contextPath = request.getContextPath();
+      String contextPath = httpRequest.getContextPath();
       if (contextPath.startsWith("/")) {
         uri.append(contextPath);
       }
-      String servletPath = request.getServletPath();
+      String servletPath = httpRequest.getServletPath();
       if (servletPath.startsWith("/")) {
         uri.append(servletPath);
       }
-      String pathInfo = request.getPathInfo();
+      String pathInfo = httpRequest.getPathInfo();
       if (pathInfo != null) {
         uri.append(pathInfo);
       }
@@ -116,7 +116,7 @@ public class HttpExchangeAdapter implements PrometheusHttpExchange {
   /** This inner class adapts a HttpServletResponse to a PrometheusHttpResponse. */
   public static class Response implements PrometheusHttpResponse {
 
-    private final HttpServletResponse response;
+    private final HttpServletResponse httpResponse;
 
     /**
      * Constructs a new Response with the given HttpServletResponse.
@@ -124,22 +124,22 @@ public class HttpExchangeAdapter implements PrometheusHttpExchange {
      * @param response the HttpServletResponse to be adapted
      */
     public Response(HttpServletResponse response) {
-      this.response = response;
+      this.httpResponse = response;
     }
 
     @Override
     public void setHeader(String name, String value) {
-      response.setHeader(name, value);
+      httpResponse.setHeader(name, value);
     }
 
     @Override
     public OutputStream sendHeadersAndGetBody(int statusCode, int contentLength)
         throws IOException {
-      if (response.getHeader("Content-Length") == null && contentLength > 0) {
-        response.setContentLength(contentLength);
+      if (httpResponse.getHeader("Content-Length") == null && contentLength > 0) {
+        httpResponse.setContentLength(contentLength);
       }
-      response.setStatus(statusCode);
-      return response.getOutputStream();
+      httpResponse.setStatus(statusCode);
+      return httpResponse.getOutputStream();
     }
   }
 }
