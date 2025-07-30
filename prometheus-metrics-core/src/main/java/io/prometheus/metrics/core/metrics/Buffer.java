@@ -105,6 +105,7 @@ class Buffer {
       observationBuffer = new double[0];
       bufferPos = 0;
     } catch (InterruptedException e) {
+      Thread.currentThread().interrupt();
       throw new RuntimeException(e);
     } finally {
       runLock.unlock();
