@@ -5,7 +5,7 @@ import io.prometheus.metrics.config.ExporterOpenTelemetryProperties;
 import io.prometheus.metrics.config.PrometheusPropertiesException;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.function.Function;
+import java.util.function.UnaryOperator;
 
 class PropertyMapper {
 
@@ -94,7 +94,7 @@ class PropertyMapper {
       Map<String, String> result,
       ConfigProperties c,
       String key,
-      Function<String, String> valueMapper) {
+      UnaryOperator<String> valueMapper) {
     String endpoint = c.getString(key);
     if (endpoint == null) {
       return;
