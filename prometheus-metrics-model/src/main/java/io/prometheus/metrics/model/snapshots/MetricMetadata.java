@@ -103,19 +103,17 @@ public final class MetricMetadata {
               + PrometheusNaming.class.getSimpleName()
               + ".sanitizeMetricName(name) to avoid this error.");
     }
-    if (hasUnit()) {
-      if (!isValidUnitSuffix(name, unit)) {
-        throw new IllegalArgumentException(
-            "'"
-                + name
-                + "': Illegal metric name. If the unit is non-null, "
-                + "the name must end with the unit: _"
-                + unit
-                + "."
-                + " Call "
-                + PrometheusNaming.class.getSimpleName()
-                + ".sanitizeMetricName(name, unit) to avoid this error.");
-      }
+    if (hasUnit() && !isValidUnitSuffix(name, unit)) {
+      throw new IllegalArgumentException(
+          "'"
+              + name
+              + "': Illegal metric name. If the unit is non-null, "
+              + "the name must end with the unit: _"
+              + unit
+              + "."
+              + " Call "
+              + PrometheusNaming.class.getSimpleName()
+              + ".sanitizeMetricName(name, unit) to avoid this error.");
     }
   }
 
