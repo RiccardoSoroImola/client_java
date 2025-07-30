@@ -20,13 +20,11 @@ public class PrometheusRegistry {
 
   public void register(Collector collector) {
     String prometheusName = collector.getPrometheusName();
-    if (prometheusName != null) {
-      if (!prometheusNames.add(prometheusName)) {
-        throw new IllegalStateException(
-            "Can't register "
-                + prometheusName
-                + " because a metric with that name is already registered.");
-      }
+    if (prometheusName != null && !prometheusNames.add(prometheusName)) {
+      throw new IllegalStateException(
+          "Can't register "
+              + prometheusName
+              + " because a metric with that name is already registered.");
     }
     collectors.add(collector);
   }
