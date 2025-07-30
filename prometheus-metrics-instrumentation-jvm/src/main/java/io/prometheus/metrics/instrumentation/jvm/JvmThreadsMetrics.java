@@ -138,8 +138,8 @@ public class JvmThreadsMetrics {
     }
   }
 
-  private Map<String, Integer> getThreadStateCountMap(ThreadMXBean threadBean) {
-    long[] threadIds = threadBean.getAllThreadIds();
+  private Map<String, Integer> getThreadStateCountMap(ThreadMXBean threadMXBean) {
+    long[] threadIds = threadMXBean.getAllThreadIds();
 
     // Code to remove any thread id values <= 0
     int writePos = 0;
@@ -153,7 +153,7 @@ public class JvmThreadsMetrics {
     threadIds = Arrays.copyOf(threadIds, writePos);
 
     // Get thread information without computing any stack traces
-    ThreadInfo[] allThreads = threadBean.getThreadInfo(threadIds, 0);
+    ThreadInfo[] allThreads = threadMXBean.getThreadInfo(threadIds, 0);
 
     // Initialize the map with all thread states
     Map<String, Integer> threadCounts = new HashMap<>();
@@ -198,14 +198,14 @@ public class JvmThreadsMetrics {
     }
 
     /** Package private. For testing only. */
-    Builder threadBean(ThreadMXBean threadBean) {
-      this.threadBean = threadBean;
+    Builder threadBean(ThreadMXBean newThreadBean) {
+      this.threadBean = newThreadBean;
       return this;
     }
 
     /** Package private. For testing only. */
-    Builder isNativeImage(boolean isNativeImage) {
-      this.isNativeImage = isNativeImage;
+    Builder isNativeImage(boolean newIsNativeImage) {
+      this.isNativeImage = newIsNativeImage;
       return this;
     }
 
