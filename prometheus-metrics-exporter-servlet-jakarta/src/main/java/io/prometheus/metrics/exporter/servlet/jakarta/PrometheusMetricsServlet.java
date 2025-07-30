@@ -14,11 +14,11 @@ import java.io.IOException;
  * <p>We'll add a Jakarta servlet, the built-in HTTPServer, etc. soon, and likely move common code
  * into a common module.
  */
-public class PrometheusMetricsServlet extends HttpServlet {
+public class PrometheusMetricsServlet extends HttpServlet implements java.io.Serializable {
 
   private static final long serialVersionUID = 0L;
 
-  private final PrometheusScrapeHandler handler;
+  private final transient PrometheusScrapeHandler handler;
 
   public PrometheusMetricsServlet() {
     this(PrometheusProperties.get(), PrometheusRegistry.defaultRegistry);
