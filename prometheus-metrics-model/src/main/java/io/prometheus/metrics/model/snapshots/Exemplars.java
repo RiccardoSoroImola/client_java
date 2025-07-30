@@ -18,7 +18,7 @@ public class Exemplars implements Iterable<Exemplar> {
   /** EMPTY means no Exemplars. */
   public static final Exemplars EMPTY = new Exemplars(Collections.emptyList());
 
-  private final List<Exemplar> exemplars;
+  private final List<Exemplar> exemplarList;
 
   private Exemplars(Collection<Exemplar> exemplars) {
     List<Exemplar> copy = new ArrayList<>(exemplars.size());
@@ -28,7 +28,7 @@ public class Exemplars implements Iterable<Exemplar> {
       }
       copy.add(exemplar);
     }
-    this.exemplars = Collections.unmodifiableList(copy);
+    this.exemplarList = Collections.unmodifiableList(copy);
   }
 
   /**
@@ -53,15 +53,15 @@ public class Exemplars implements Iterable<Exemplar> {
 
   @Override
   public Iterator<Exemplar> iterator() {
-    return exemplars.iterator();
+    return exemplarList.iterator();
   }
 
   public int size() {
-    return exemplars.size();
+    return exemplarList.size();
   }
 
   public Exemplar get(int index) {
-    return exemplars.get(index);
+    return exemplarList.get(index);
   }
 
   /**
@@ -71,7 +71,7 @@ public class Exemplars implements Iterable<Exemplar> {
    */
   public Exemplar get(double lowerBound, double upperBound) {
     Exemplar result = null;
-    for (Exemplar exemplar : exemplars) {
+    for (Exemplar exemplar : exemplarList) {
       double value = exemplar.getValue();
       if (value > lowerBound && value <= upperBound && shouldReplace(result, exemplar)) {
         result = exemplar;
@@ -90,7 +90,7 @@ public class Exemplars implements Iterable<Exemplar> {
   /** Find the Exemplar with the newest timestamp. May return {@code null}. */
   public Exemplar getLatest() {
     Exemplar latest = null;
-    for (Exemplar candidate : exemplars) {
+    for (Exemplar candidate : exemplarList) {
       if (candidate == null) {
         continue;
       }
