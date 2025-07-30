@@ -89,20 +89,20 @@ class GaugeSnapshotTest {
   void testTotalSuffixPresent() {
     CounterSnapshot.Builder builder = CounterSnapshot.builder();
     builder.name("test_total");
-    assertThatExceptionOfType(IllegalArgumentException.class).isThrownBy(() -> builder.build());
+    assertThatExceptionOfType(IllegalArgumentException.class).isThrownBy(builder::build);
   }
 
   @Test
   void testTotalSuffixPresentDot() {
     CounterSnapshot.Builder builder = CounterSnapshot.builder();
     builder.name("test.total");
-    assertThatExceptionOfType(IllegalArgumentException.class).isThrownBy(() -> builder.build());
+    assertThatExceptionOfType(IllegalArgumentException.class).isThrownBy(builder::build);
   }
 
   @Test
   void testValueMissing() {
     CounterDataPointSnapshot.Builder builder = CounterDataPointSnapshot.builder();
-    assertThatExceptionOfType(IllegalArgumentException.class).isThrownBy(() -> builder.build());
+    assertThatExceptionOfType(IllegalArgumentException.class).isThrownBy(builder::build);
   }
 
   @Test
