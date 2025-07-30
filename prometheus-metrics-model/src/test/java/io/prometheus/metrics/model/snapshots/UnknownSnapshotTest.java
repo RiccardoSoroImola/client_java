@@ -64,14 +64,14 @@ class UnknownSnapshotTest {
   @Test
   void testNameMissing() {
     UnknownSnapshot.Builder builder = UnknownSnapshot.builder();
-    assertThatExceptionOfType(IllegalArgumentException.class).isThrownBy(() -> builder.build());
+    assertThatExceptionOfType(IllegalArgumentException.class).isThrownBy(builder::build);
   }
 
   @Test
   void testValueMissing() {
     UnknownSnapshot.UnknownDataPointSnapshot.Builder builder =
         UnknownSnapshot.UnknownDataPointSnapshot.builder();
-    assertThatExceptionOfType(IllegalArgumentException.class).isThrownBy(() -> builder.build());
+    assertThatExceptionOfType(IllegalArgumentException.class).isThrownBy(builder::build);
   }
 
   @Test
