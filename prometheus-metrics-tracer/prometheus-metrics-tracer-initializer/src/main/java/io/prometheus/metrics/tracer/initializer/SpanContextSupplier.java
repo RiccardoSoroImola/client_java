@@ -7,6 +7,10 @@ import java.util.concurrent.atomic.AtomicReference;
 
 public class SpanContextSupplier {
 
+  private SpanContextSupplier() {
+    throw new IllegalStateException("Utility class");
+  }
+
   private static final AtomicReference<SpanContext> spanContextRef =
       new AtomicReference<SpanContext>();
 
