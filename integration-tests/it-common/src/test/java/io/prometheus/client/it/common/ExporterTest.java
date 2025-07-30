@@ -147,7 +147,7 @@ public abstract class ExporterTest {
       List<Metrics.MetricFamily> metrics = new ArrayList<>();
       InputStream in = new ByteArrayInputStream(body);
       while (in.available() > 0) {
-        metrics.add(Metrics.MetricFamily.parseDelimitedFrom(in));
+        metrics.add(Metrics.MetricFamily.parser().parseDelimitedFrom(in));
       }
       return metrics;
     }
