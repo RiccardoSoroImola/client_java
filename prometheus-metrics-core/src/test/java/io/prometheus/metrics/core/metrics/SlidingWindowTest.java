@@ -43,7 +43,7 @@ class SlidingWindowTest {
   private final long timeBetweenRotateMillis = maxAgeSeconds * 1000 / ageBuckets + 2;
 
   @BeforeEach
-  public void setUp() {
+  void setUp() {
     startTime = System.currentTimeMillis();
     currentTimeMillis.set(startTime);
     ringBuffer =
