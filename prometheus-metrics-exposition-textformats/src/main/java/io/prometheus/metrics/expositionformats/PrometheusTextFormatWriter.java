@@ -132,19 +132,24 @@ public class PrometheusTextFormatWriter implements ExpositionFormatWriter {
       }
     }
     if (writeCreatedTimestamps) {
-      for (MetricSnapshot snapshot : metricSnapshots) {
-        if (!snapshot.getDataPoints().isEmpty()) {
-          if (snapshot instanceof CounterSnapshot) {
-            writeCreated(writer, snapshot);
-          } else if (snapshot instanceof HistogramSnapshot) {
-            writeCreated(writer, snapshot);
-          } else if (snapshot instanceof SummarySnapshot) {
-            writeCreated(writer, snapshot);
-          }
-        }
-      }
+      processCreatedTimestamps(writer, metricSnapshots);
     }
     writer.flush();
+  }
+
+  private void processCreatedTimestamps(Writer writer, MetricSnapshots metricSnapshots)
+      throws IOException {
+    for (MetricSnapshot snapshot : metricSnapshots) {
+      if (!snapshot.getDataPoints().isEmpty() && shouldWriteCreated(snapshot)) {
+        writeCreated(writer, snapshot);
+      }
+    }
+  }
+
+  private boolean shouldWriteCreated(MetricSnapshot snapshot) {
+    return snapshot instanceof CounterSnapshot
+        || snapshot instanceof HistogramSnapshot
+        || snapshot instanceof SummarySnapshot;
   }
 
   public void writeCreated(Writer writer, MetricSnapshot snapshot) throws IOException {
