@@ -104,7 +104,7 @@ public final class MetricMetadata {
               + ".sanitizeMetricName(name) to avoid this error.");
     }
     if (hasUnit()) {
-      if (!name.endsWith("_" + unit) && !name.endsWith("." + unit)) {
+      if (!isValidUnitSuffix(name, unit)) {
         throw new IllegalArgumentException(
             "'"
                 + name
@@ -117,5 +117,9 @@ public final class MetricMetadata {
                 + ".sanitizeMetricName(name, unit) to avoid this error.");
       }
     }
+  }
+
+  private boolean isValidUnitSuffix(String name, Unit unit) {
+    return name.endsWith("_" + unit) || name.endsWith("." + unit);
   }
 }
