@@ -66,30 +66,8 @@ public class PrometheusRegistry {
 
   public MetricSnapshots scrape(PrometheusScrapeRequest scrapeRequest) {
     MetricSnapshots.Builder result = MetricSnapshots.builder();
-    for (Collector collector : collectors) {
-      MetricSnapshot snapshot =
-          scrapeRequest == null ? collector.collect() : collector.collect(scrapeRequest);
-      if (snapshot != null) {
-        if (result.containsMetricName(snapshot.getMetadata().getName())) {
-          throw new IllegalStateException(
-              snapshot.getMetadata().getPrometheusName() + ": duplicate metric name.");
-        }
-        result.metricSnapshot(snapshot);
-      }
-    }
-    for (MultiCollector collector : multiCollectors) {
-      MetricSnapshots snapshots =
-          scrapeRequest == null ? collector.collect() : collector.collect(scrapeRequest);
-      for (MetricSnapshot snapshot : snapshots) {
-        if (snapshot != null) {
-          if (result.containsMetricName(snapshot.getMetadata().getName())) {
-            throw new IllegalStateException(
-                snapshot.getMetadata().getPrometheusName() + ": duplicate metric name.");
-          }
-          result.metricSnapshot(snapshot);
-        }
-      }
-    }
+    processCollectors(collectors, (name) -> true, scrapeRequest, result);
+    processMultiCollectors(multiCollectors, (name) -> true, scrapeRequest, result);
     return result.build();
   }
 
@@ -124,6 +102,10 @@ public class PrometheusRegistry {
                 ? collector.collect(includedNames)
                 : collector.collect(includedNames, scrapeRequest);
         if (snapshot != null) {
+          if (result.containsMetricName(snapshot.getMetadata().getName())) {
+            throw new IllegalStateException(
+                snapshot.getMetadata().getPrometheusName() + ": duplicate metric name.");
+          }
           result.metricSnapshot(snapshot);
         }
       }
@@ -144,6 +126,10 @@ public class PrometheusRegistry {
                 : collector.collect(includedNames, scrapeRequest);
         for (MetricSnapshot snapshot : snapshots) {
           if (snapshot != null) {
+            if (result.containsMetricName(snapshot.getMetadata().getName())) {
+              throw new IllegalStateException(
+                  snapshot.getMetadata().getPrometheusName() + ": duplicate metric name.");
+            }
             result.metricSnapshot(snapshot);
           }
         }
