@@ -21,6 +21,7 @@ class Util {
     return null;
   }
 
+  @javax.annotation.Nullable
   static Boolean loadBoolean(String name, Map<Object, Object> properties)
       throws PrometheusPropertiesException {
     String property = getProperty(name, properties);
