@@ -440,24 +440,34 @@ public class PushGateway {
 
     private URL makeUrl(ExporterPushgatewayProperties properties)
         throws UnsupportedEncodingException, MalformedURLException {
-      String url = getScheme(properties) + "://" + getAddress(properties) + "/metrics/";
+      StringBuilder urlBuilder =
+          new StringBuilder(getScheme(properties) + "://" + getAddress(properties) + "/metrics/");
       String job = getJob(properties);
       if (job.contains("/")) {
-        url += "job@base64/" + base64url(job);
+        urlBuilder.append("job@base64/").append(base64url(job));
       } else {
-        url += "job/" + URLEncoder.encode(job, "UTF-8");
+        urlBuilder.append("job/").append(URLEncoder.encode(job, "UTF-8"));
       }
       if (groupingKey != null) {
         for (Map.Entry<String, String> entry : groupingKey.entrySet()) {
           if (entry.getValue().isEmpty()) {
-            url += "/" + entry.getKey() + "@base64/=";
+            urlBuilder.append("/").append(entry.getKey()).append("@base64/=");
           } else if (entry.getValue().contains("/")) {
-            url += "/" + entry.getKey() + "@base64/" + base64url(entry.getValue());
+            urlBuilder
+                .append("/")
+                .append(entry.getKey())
+                .append("@base64/")
+                .append(base64url(entry.getValue()));
           } else {
-            url += "/" + entry.getKey() + "/" + URLEncoder.encode(entry.getValue(), "UTF-8");
+            urlBuilder
+                .append("/")
+                .append(entry.getKey())
+                .append("/")
+                .append(URLEncoder.encode(entry.getValue(), "UTF-8"));
           }
         }
       }
+      String url = urlBuilder.toString();
       return URI.create(url).normalize().toURL();
     }
 
