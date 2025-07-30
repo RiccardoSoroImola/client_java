@@ -29,11 +29,11 @@ public abstract class DataPointSnapshot {
           "Scrape timestamp cannot be negative. "
               + "Use 0 to indicate that the Prometheus server should set the scrape timestamp.");
     }
-    if (hasCreatedTimestamp() && hasScrapeTimestamp()) {
-      if (scrapeTimestampMillis < createdTimestampMillis) {
-        throw new IllegalArgumentException(
-            "The scrape timestamp cannot be before the created timestamp");
-      }
+    if (hasCreatedTimestamp()
+        && hasScrapeTimestamp()
+        && scrapeTimestampMillis < createdTimestampMillis) {
+      throw new IllegalArgumentException(
+          "The scrape timestamp cannot be before the created timestamp");
     }
   }
 
