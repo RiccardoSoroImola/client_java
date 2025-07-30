@@ -15,6 +15,9 @@ class PropertyMapper {
   private static final String METRICS_INTERVAL = "otel.metric.export.interval";
   private static final String METRICS_TIMEOUT = "otel.exporter.otlp.metrics.timeout";
   private static final String SERVICE_NAME = "otel.service.name";
+  private static final String OTLP_ENDPOINT_KEY = "otel.exporter.otlp.endpoint";
+  private static final String OTLP_PROTOCOL_KEY = "otel.exporter.otlp.protocol";
+  private static final String OTLP_METRICS_SUFFIX = "otlp.metrics";
 
   Map<String, String> configLowPriority = new HashMap<>();
   Map<String, String> configHighPriority = new HashMap<>();
@@ -39,7 +42,7 @@ class PropertyMapper {
       // the low priority config should not be used for the metrics settings, so that both general
       // and metrics settings
       // can be used to override the values
-      configLowPriority.put(otelKey.replace("otlp.metrics", "otlp"), builderValue);
+      configLowPriority.put(otelKey.replace(OTLP_METRICS_SUFFIX, "otlp"), builderValue);
     }
     if (propertyValue != null) {
       configHighPriority.put(otelKey, propertyValue);
@@ -69,7 +72,7 @@ class PropertyMapper {
     transformEndpointPath(
         result,
         c,
-        METRICS_ENDPOINT,
+        OTLP_ENDPOINT_KEY,
         endpoint -> {
           if (!endpoint.endsWith("v1/metrics")) {
             if (!endpoint.endsWith("/")) {
@@ -106,7 +109,7 @@ class PropertyMapper {
     }
     String protocol = c.getString(METRICS_PROTOCOL);
     if (protocol == null) {
-      protocol = c.getString("otel.exporter.otlp.protocol");
+      protocol = c.getString(OTLP_PROTOCOL_KEY);
     }
 
     if (!"grpc".equals(protocol)) { // http/protobuf
