@@ -29,7 +29,7 @@ class JvmThreadsMetricsTest {
   private final ThreadInfo mockThreadInfoRunnable2 = Mockito.mock(ThreadInfo.class);
 
   @BeforeEach
-  public void setUp() {
+  void setUp() {
     when(mockThreadsBean.getThreadCount()).thenReturn(300);
     when(mockThreadsBean.getDaemonThreadCount()).thenReturn(200);
     when(mockThreadsBean.getPeakThreadCount()).thenReturn(301);
@@ -48,7 +48,7 @@ class JvmThreadsMetricsTest {
   }
 
   @Test
-  public void testGoodCase() throws IOException {
+  void testGoodCase() throws IOException {
     PrometheusRegistry registry = new PrometheusRegistry();
     JvmThreadsMetrics.builder().threadBean(mockThreadsBean).isNativeImage(false).register(registry);
     MetricSnapshots snapshots = registry.scrape();
@@ -89,7 +89,7 @@ jvm_threads_state{state="WAITING"} 0.0
   }
 
   @Test
-  public void testIgnoredMetricNotScraped() {
+  void testIgnoredMetricNotScraped() {
     MetricNameFilter filter =
         MetricNameFilter.builder().nameMustNotBeEqualTo("jvm_threads_deadlocked").build();
 
@@ -102,7 +102,7 @@ jvm_threads_state{state="WAITING"} 0.0
   }
 
   @Test
-  public void testInvalidThreadIds() {
+  void testInvalidThreadIds() {
     try {
       String javaVersion = System.getProperty("java.version"); // Example: "21.0.2"
       String majorJavaVersion = javaVersion.replaceAll("\\..*", ""); // Example: "21"
