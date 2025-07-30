@@ -45,7 +45,8 @@ class MetricSnapshotTest {
 
   @Test
   void testNullData() {
+    MetricMetadata metadata = new MetricMetadata("test");
     assertThatExceptionOfType(NullPointerException.class)
-        .isThrownBy(() -> new CounterSnapshot(new MetricMetadata("test"), null));
+        .isThrownBy(() -> new CounterSnapshot(metadata, null));
   }
 }
