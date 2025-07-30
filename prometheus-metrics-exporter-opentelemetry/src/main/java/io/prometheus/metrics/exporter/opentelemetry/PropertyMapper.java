@@ -10,6 +10,7 @@ import java.util.function.UnaryOperator;
 class PropertyMapper {
 
   private static final String METRICS_ENDPOINT = "otel.exporter.otlp.metrics.endpoint";
+  private static final String METRICS_PROTOCOL = "otel.exporter.otlp.metrics.protocol";
   Map<String, String> configLowPriority = new HashMap<>();
   Map<String, String> configHighPriority = new HashMap<>();
 
@@ -17,8 +18,7 @@ class PropertyMapper {
       ExporterOpenTelemetryProperties properties, OpenTelemetryExporter.Builder builder)
       throws PrometheusPropertiesException {
     return new PropertyMapper()
-        .addString(
-            builder.protocol, properties.getProtocol(), "otel.exporter.otlp.metrics.protocol")
+        .addString(builder.protocol, properties.getProtocol(), METRICS_PROTOCOL)
         .addString(builder.endpoint, properties.getEndpoint(), METRICS_ENDPOINT)
         .addString(
             mapToOtelString(builder.headers),
@@ -99,7 +99,7 @@ class PropertyMapper {
     if (endpoint == null) {
       return;
     }
-    String protocol = c.getString("otel.exporter.otlp.metrics.protocol");
+    String protocol = c.getString(METRICS_PROTOCOL);
     if (protocol == null) {
       protocol = c.getString("otel.exporter.otlp.protocol");
     }
