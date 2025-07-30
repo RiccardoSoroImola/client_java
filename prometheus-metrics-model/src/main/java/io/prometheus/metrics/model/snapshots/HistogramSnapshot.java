@@ -369,6 +369,27 @@ public final class HistogramSnapshot extends MetricSnapshot {
       return new Builder();
     }
 
+    public static class NativeHistogramParams {
+      public final int schema;
+      public final long zeroCount;
+      public final double zeroThreshold;
+      public final NativeHistogramBuckets positiveBuckets;
+      public final NativeHistogramBuckets negativeBuckets;
+
+      public NativeHistogramParams(
+          int schema,
+          long zeroCount,
+          double zeroThreshold,
+          NativeHistogramBuckets positiveBuckets,
+          NativeHistogramBuckets negativeBuckets) {
+        this.schema = schema;
+        this.zeroCount = zeroCount;
+        this.zeroThreshold = zeroThreshold;
+        this.positiveBuckets = positiveBuckets;
+        this.negativeBuckets = negativeBuckets;
+      }
+    }
+
     public static class Builder extends DistributionDataPointSnapshot.Builder<Builder> {
 
       private ClassicHistogramBuckets classicHistogramBuckets = ClassicHistogramBuckets.EMPTY;
@@ -422,13 +443,20 @@ public final class HistogramSnapshot extends MetricSnapshot {
           throw new IllegalArgumentException(
               "One of nativeSchema and classicHistogramBuckets is required.");
         }
+        NativeHistogramParams nativeParams =
+            new NativeHistogramParams(
+                nativeSchema,
+                nativeZeroCount,
+                nativeZeroThreshold,
+                nativeBucketsForPositiveValues,
+                nativeBucketsForNegativeValues);
         return new HistogramDataPointSnapshot(
             classicHistogramBuckets,
-            nativeSchema,
-            nativeZeroCount,
-            nativeZeroThreshold,
-            nativeBucketsForPositiveValues,
-            nativeBucketsForNegativeValues,
+            nativeParams.schema,
+            nativeParams.zeroCount,
+            nativeParams.zeroThreshold,
+            nativeParams.positiveBuckets,
+            nativeParams.negativeBuckets,
             sum,
             labels,
             exemplars,
