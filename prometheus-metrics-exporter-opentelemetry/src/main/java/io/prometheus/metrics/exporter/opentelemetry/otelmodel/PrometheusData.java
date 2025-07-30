@@ -25,7 +25,7 @@ abstract class PrometheusData<T extends PointData> implements Data<T> {
 
   private final MetricDataType type;
 
-  public PrometheusData(MetricDataType type) {
+  protected PrometheusData(MetricDataType type) {
     this.type = type;
   }
 
