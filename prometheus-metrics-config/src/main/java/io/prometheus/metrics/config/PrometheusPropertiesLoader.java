@@ -75,11 +75,8 @@ public class PrometheusPropertiesLoader {
       Matcher matcher = pattern.matcher(propertyName);
       if (matcher.find()) {
         String metricName = matcher.group(1).replace(".", "_");
-        if (!result.containsKey(metricName)) {
-          result.put(
-              metricName,
-              MetricsProperties.load("io.prometheus.metrics." + metricName, properties));
-        }
+        result.computeIfAbsent(
+            metricName, key -> MetricsProperties.load("io.prometheus.metrics." + key, properties));
       }
     }
     return result;
