@@ -13,6 +13,10 @@ import java.util.concurrent.TimeUnit;
  */
 public class Scheduler {
 
+  private Scheduler() {
+    throw new IllegalStateException("Utility class");
+  }
+
   private static class DaemonThreadFactory implements ThreadFactory {
     private static int threadNum;
 
