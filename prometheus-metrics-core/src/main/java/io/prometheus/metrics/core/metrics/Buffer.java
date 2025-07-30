@@ -71,7 +71,7 @@ class Buffer {
       // Signal that the buffer is active.
       Long expectedCount = observationCount.getAndAdd(BUFFER_ACTIVE_BIT);
 
-      while (!complete.apply(expectedCount)) {
+      while (!complete.apply(expectedCount).booleanValue()) {
         // Wait until all in-flight threads have added their observations to the histogram /
         // summary.
         // we can't use a condition here, because the other thread doesn't have a lock as it's on
