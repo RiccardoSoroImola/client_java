@@ -10,6 +10,10 @@ class PrometheusInstrumentationScope {
   private static final String INSTRUMENTATION_SCOPE_NAME_KEY = "instrumentationScope.name";
   private static final String INSTRUMENTATION_SCOPE_VERSION_KEY = "instrumentationScope.version";
 
+  private PrometheusInstrumentationScope() {
+    throw new IllegalStateException("Utility class");
+  }
+
   public static InstrumentationScopeInfo loadInstrumentationScopeInfo() {
     return loadInstrumentationScopeInfo(
         INSTRUMENTATION_SCOPE_PROPERTIES_FILE,
