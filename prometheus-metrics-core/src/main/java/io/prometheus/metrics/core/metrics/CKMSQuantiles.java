@@ -47,7 +47,7 @@ final class CKMSQuantiles {
    * Compress is called every compressInterval inserts. Note that the buffer is flushed whenever
    * get() is called, so we cannot just wait until the buffer is full before we call compress.
    */
-  private static final int compressInterval = 128;
+  private static final int COMPRESS_INTERVAL = 128;
 
   private int insertsSinceLastCompress = 0;
 
@@ -57,7 +57,7 @@ final class CKMSQuantiles {
    * respected in flush(), so if you want to compress more often than calling flush() that won't
    * work.
    */
-  private final double[] buffer = new double[compressInterval];
+  private final double[] buffer = new double[COMPRESS_INTERVAL];
 
   private int bufferPos = 0;
 
@@ -76,7 +76,7 @@ final class CKMSQuantiles {
       flush();
     }
 
-    if (++insertsSinceLastCompress == compressInterval) {
+    if (++insertsSinceLastCompress == COMPRESS_INTERVAL) {
       compress();
       insertsSinceLastCompress = 0;
     }
