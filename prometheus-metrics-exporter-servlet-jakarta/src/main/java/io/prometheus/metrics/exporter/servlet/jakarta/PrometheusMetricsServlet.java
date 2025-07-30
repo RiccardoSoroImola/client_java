@@ -37,8 +37,15 @@ public class PrometheusMetricsServlet extends HttpServlet implements java.io.Ser
   }
 
   @Override
-  protected void doGet(HttpServletRequest request, HttpServletResponse response)
-      throws IOException {
-    handler.handleRequest(new HttpExchangeAdapter(request, response));
+  protected void doGet(HttpServletRequest request, HttpServletResponse response) {
+    try {
+      handler.handleRequest(new HttpExchangeAdapter(request, response));
+    } catch (IOException e) {
+      try {
+        response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, "Internal Server Error");
+      } catch (IOException ex) {
+        // If sending error also fails, log it or handle as needed
+      }
+    }
   }
 }
