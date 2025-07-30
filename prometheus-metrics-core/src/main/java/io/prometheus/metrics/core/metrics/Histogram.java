@@ -189,7 +189,7 @@ public class Histogram extends StatefulMetric<DistributionDataPoint, Histogram.D
     private final LongAdder nativeZeroCount = new LongAdder();
     private final LongAdder count = new LongAdder();
     private final DoubleAdder sum = new DoubleAdder();
-    private volatile int nativeSchema =
+    private volatile int dataPointNativeSchema =
         nativeInitialSchema; // integer in [-4, 8] or CLASSIC_HISTOGRAM
     private volatile double nativeZeroThreshold = Histogram.this.nativeMinZeroThreshold;
     private volatile long createdTimeMillis = System.currentTimeMillis();
@@ -281,7 +281,7 @@ public class Histogram extends StatefulMetric<DistributionDataPoint, Histogram.D
             if (classicUpperBounds.length == 0) {
               // native only
               return new HistogramSnapshot.HistogramDataPointSnapshot(
-                  nativeSchema,
+                  dataPointNativeSchema,
                   nativeZeroCount.sum(),
                   nativeZeroThreshold,
                   toBucketList(nativeBucketsForPositiveValues),
@@ -302,7 +302,7 @@ public class Histogram extends StatefulMetric<DistributionDataPoint, Histogram.D
               // hybrid: classic and native
               return new HistogramSnapshot.HistogramDataPointSnapshot(
                   ClassicHistogramBuckets.of(classicUpperBounds, classicBuckets),
-                  nativeSchema,
+                  dataPointNativeSchema,
                   nativeZeroCount.sum(),
                   nativeZeroThreshold,
                   toBucketList(nativeBucketsForPositiveValues),
@@ -363,16 +363,16 @@ public class Histogram extends StatefulMetric<DistributionDataPoint, Histogram.D
       }
       // end of frexp()
 
-      if (nativeSchema >= 1) {
-        return findIndex(NATIVE_BOUNDS[nativeSchema - 1], frac)
-            + (exp - 1) * NATIVE_BOUNDS[nativeSchema - 1].length;
+      if (dataPointNativeSchema >= 1) {
+        return findIndex(NATIVE_BOUNDS[dataPointNativeSchema - 1], frac)
+            + (exp - 1) * NATIVE_BOUNDS[dataPointNativeSchema - 1].length;
       } else {
         int bucketIndex = exp;
         if (frac == 0.5) {
           bucketIndex--;
         }
-        int offset = (1 << -nativeSchema) - 1;
-        bucketIndex = (bucketIndex + offset) >> -nativeSchema;
+        int offset = (1 << -dataPointNativeSchema) - 1;
+        bucketIndex = (bucketIndex + offset) >> -dataPointNativeSchema;
         return bucketIndex;
       }
     }
@@ -407,7 +407,7 @@ public class Histogram extends StatefulMetric<DistributionDataPoint, Histogram.D
      */
     private void maybeResetOrScaleDown(double value, boolean nativeBucketCreated) {
       AtomicBoolean wasReset = new AtomicBoolean(false);
-      if (resetDurationExpired && nativeSchema < nativeInitialSchema) {
+      if (resetDurationExpired && dataPointNativeSchema < nativeInitialSchema) {
         // If nativeSchema < initialNativeSchema the histogram has been scaled down.
         // So if resetDurationExpired we will reset it to restore the original native schema.
         buffer.run(
@@ -433,7 +433,7 @@ public class Histogram extends StatefulMetric<DistributionDataPoint, Histogram.D
     }
 
     private void maybeScaleDown(AtomicBoolean wasReset) {
-      if (nativeMaxBuckets == 0 || nativeSchema == -4) {
+      if (nativeMaxBuckets == 0 || dataPointNativeSchema == -4) {
         return;
       }
       int numberOfBuckets =
@@ -449,7 +449,7 @@ public class Histogram extends StatefulMetric<DistributionDataPoint, Histogram.D
             // have limited it in the meantime.
             int numBuckets =
                 nativeBucketsForPositiveValues.size() + nativeBucketsForNegativeValues.size();
-            if (numBuckets <= nativeMaxBuckets || nativeSchema == -4) {
+            if (numBuckets <= nativeMaxBuckets || dataPointNativeSchema == -4) {
               return null;
             }
             if (maybeReset()) {
@@ -481,7 +481,7 @@ public class Histogram extends StatefulMetric<DistributionDataPoint, Histogram.D
         classicBucket.reset();
       }
       nativeZeroThreshold = nativeMinZeroThreshold;
-      nativeSchema = Histogram.this.nativeInitialSchema;
+      dataPointNativeSchema = Histogram.this.nativeInitialSchema;
       createdTimeMillis = System.currentTimeMillis();
       if (exemplarSampler != null) {
         exemplarSampler.reset();
@@ -504,7 +504,7 @@ public class Histogram extends StatefulMetric<DistributionDataPoint, Histogram.D
       if (smallestIndex == Integer.MAX_VALUE) {
         return false;
       }
-      double newZeroThreshold = nativeBucketIndexToUpperBound(nativeSchema, smallestIndex);
+      double newZeroThreshold = nativeBucketIndexToUpperBound(dataPointNativeSchema, smallestIndex);
       if (newZeroThreshold > nativeMaxZeroThreshold) {
         return false;
       }
@@ -574,7 +574,7 @@ public class Histogram extends StatefulMetric<DistributionDataPoint, Histogram.D
     private void doubleBucketWidth() {
       doubleBucketWidth(nativeBucketsForPositiveValues);
       doubleBucketWidth(nativeBucketsForNegativeValues);
-      nativeSchema--;
+      dataPointNativeSchema--;
     }
 
     private void doubleBucketWidth(Map<Integer, LongAdder> buckets) {
