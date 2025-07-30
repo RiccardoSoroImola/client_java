@@ -281,9 +281,9 @@ my_application_namedTimer1_count 0
 
   @Test
   void responseWhenRegistryIsEmpty() {
-    var registry = new PrometheusRegistry();
-    registry.register(DropwizardExports.builder().dropwizardRegistry(metricRegistry).build());
-    assertThat(convertToOpenMetricsFormat(registry))
+    var registryLocal = new PrometheusRegistry();
+    registryLocal.register(DropwizardExports.builder().dropwizardRegistry(metricRegistry).build());
+    assertThat(convertToOpenMetricsFormat(registryLocal))
         .isEqualTo(
             """
 # EOF
@@ -294,9 +294,9 @@ my_application_namedTimer1_count 0
   void collectInvalidMetricFails() {
     metricRegistry.counter("my.application.namedCounter1").inc(-10);
     metricRegistry.counter("my.application.namedCounter2").inc(10);
-    var registry = new PrometheusRegistry();
-    DropwizardExports.builder().dropwizardRegistry(metricRegistry).register(registry);
-    assertThatThrownBy(() -> convertToOpenMetricsFormat(registry))
+    var registryLocal = new PrometheusRegistry();
+    DropwizardExports.builder().dropwizardRegistry(metricRegistry).register(registryLocal);
+    assertThatThrownBy(() -> convertToOpenMetricsFormat(registryLocal))
         .isInstanceOf(IllegalArgumentException.class);
   }
 
@@ -304,7 +304,7 @@ my_application_namedTimer1_count 0
   void collectInvalidMetricPassesWhenExceptionIsIgnored() {
     metricRegistry.counter("my.application.namedCounter1").inc(-10);
     metricRegistry.counter("my.application.namedCounter2").inc(10);
-    var registry = new PrometheusRegistry();
+    var registryLocal = new PrometheusRegistry();
 
     final StringBuilder buf = new StringBuilder();
     InvalidMetricHandler invalidMetricHandler =
@@ -316,8 +316,8 @@ my_application_namedTimer1_count 0
     DropwizardExports.builder()
         .dropwizardRegistry(metricRegistry)
         .invalidMetricHandler(invalidMetricHandler)
-        .register(registry);
-    assertThat(convertToOpenMetricsFormat(registry))
+        .register(registryLocal);
+    assertThat(convertToOpenMetricsFormat(registryLocal))
         .isEqualTo(
             """
 # TYPE my_application_namedCounter2 counter
