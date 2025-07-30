@@ -35,9 +35,9 @@ class PrometheusMetricData<T extends PrometheusData<?>> implements MetricData {
   private String getNameWithoutUnit(MetricMetadata metricMetadata) {
     String metricName = metricMetadata.getName();
     if (metricMetadata.getUnit() != null) {
-      String unit = metricMetadata.getUnit().toString();
-      if (metricName.endsWith(unit)) {
-        metricName = metricName.substring(0, metricName.length() - unit.length());
+      String metricUnit = metricMetadata.getUnit().toString();
+      if (metricName.endsWith(metricUnit)) {
+        metricName = metricName.substring(0, metricName.length() - metricUnit.length());
       }
       while (metricName.endsWith("_")) {
         metricName = metricName.substring(0, metricName.length() - 1);
