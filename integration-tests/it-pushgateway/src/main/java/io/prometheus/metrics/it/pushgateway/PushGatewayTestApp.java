@@ -92,7 +92,7 @@ class PushGatewayTestApp {
           connection.setHostnameVerifier(HttpsURLConnection.getDefaultHostnameVerifier());
           return connection;
         } catch (NoSuchAlgorithmException | KeyManagementException e) {
-          throw new RuntimeException(e);
+          throw new IOException(e);
         }
       };
 
