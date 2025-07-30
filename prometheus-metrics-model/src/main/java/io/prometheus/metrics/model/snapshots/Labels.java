@@ -250,29 +250,18 @@ public final class Labels implements Comparable<Labels>, Iterable<Label> {
     String[] valueArray = new String[nameArray.length];
     int thisPos = 0;
     int otherPos = 0;
-    while (thisPos + otherPos < nameArray.length) {
-      if (thisPos >= this.names.length) {
-        nameArray[thisPos + otherPos] = other.names[otherPos];
-        valueArray[thisPos + otherPos] = other.values[otherPos];
-        if (prometheusNamesArray != nameArray) {
-          prometheusNamesArray[thisPos + otherPos] = other.prometheusNames[otherPos];
-        }
-        otherPos++;
-      } else if (otherPos >= other.names.length) {
+
+    // Merge the two sorted arrays
+    while (thisPos < this.names.length && otherPos < other.names.length) {
+      int cmp = this.prometheusNames[thisPos].compareTo(other.prometheusNames[otherPos]);
+      if (cmp < 0) {
         nameArray[thisPos + otherPos] = this.names[thisPos];
         valueArray[thisPos + otherPos] = this.values[thisPos];
         if (prometheusNamesArray != nameArray) {
           prometheusNamesArray[thisPos + otherPos] = this.prometheusNames[thisPos];
         }
         thisPos++;
-      } else if (this.prometheusNames[thisPos].compareTo(other.prometheusNames[otherPos]) < 0) {
-        nameArray[thisPos + otherPos] = this.names[thisPos];
-        valueArray[thisPos + otherPos] = this.values[thisPos];
-        if (prometheusNamesArray != nameArray) {
-          prometheusNamesArray[thisPos + otherPos] = this.prometheusNames[thisPos];
-        }
-        thisPos++;
-      } else if (this.prometheusNames[thisPos].compareTo(other.prometheusNames[otherPos]) > 0) {
+      } else if (cmp > 0) {
         nameArray[thisPos + otherPos] = other.names[otherPos];
         valueArray[thisPos + otherPos] = other.values[otherPos];
         if (prometheusNamesArray != nameArray) {
@@ -283,6 +272,27 @@ public final class Labels implements Comparable<Labels>, Iterable<Label> {
         throw new IllegalArgumentException("Duplicate label name: '" + this.names[thisPos] + "'.");
       }
     }
+
+    // Add remaining elements from this
+    while (thisPos < this.names.length) {
+      nameArray[thisPos + otherPos] = this.names[thisPos];
+      valueArray[thisPos + otherPos] = this.values[thisPos];
+      if (prometheusNamesArray != nameArray) {
+        prometheusNamesArray[thisPos + otherPos] = this.prometheusNames[thisPos];
+      }
+      thisPos++;
+    }
+
+    // Add remaining elements from other
+    while (otherPos < other.names.length) {
+      nameArray[thisPos + otherPos] = other.names[otherPos];
+      valueArray[thisPos + otherPos] = other.values[otherPos];
+      if (prometheusNamesArray != nameArray) {
+        prometheusNamesArray[thisPos + otherPos] = other.prometheusNames[otherPos];
+      }
+      otherPos++;
+    }
+
     return new Labels(nameArray, prometheusNamesArray, valueArray);
   }
 
