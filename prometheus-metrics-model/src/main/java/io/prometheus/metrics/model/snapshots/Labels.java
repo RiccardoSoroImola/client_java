@@ -16,9 +16,9 @@ public final class Labels implements Comparable<Labels>, Iterable<Label> {
   public static final Labels EMPTY;
 
   static {
-    String[] names = new String[] {};
-    String[] values = new String[] {};
-    EMPTY = new Labels(names, names, values);
+    String[] nameArray = new String[] {};
+    String[] valueArray = new String[] {};
+    EMPTY = new Labels(nameArray, nameArray, valueArray);
   }
 
   // prometheusNames is the same as names, but dots are replaced with underscores.
@@ -58,15 +58,15 @@ public final class Labels implements Comparable<Labels>, Iterable<Label> {
     if (keyValuePairs.length == 0) {
       return EMPTY;
     }
-    String[] names = new String[keyValuePairs.length / 2];
-    String[] values = new String[keyValuePairs.length / 2];
+    String[] nameList = new String[keyValuePairs.length / 2];
+    String[] valueList = new String[keyValuePairs.length / 2];
     for (int i = 0; 2 * i < keyValuePairs.length; i++) {
-      names[i] = keyValuePairs[2 * i];
-      values[i] = keyValuePairs[2 * i + 1];
+      nameList[i] = keyValuePairs[2 * i];
+      valueList[i] = keyValuePairs[2 * i + 1];
     }
-    String[] prometheusNames = makePrometheusNames(names);
-    sortAndValidate(names, prometheusNames, values);
-    return new Labels(names, prometheusNames, values);
+    String[] prometheusNames = makePrometheusNames(nameList);
+    sortAndValidate(nameList, prometheusNames, valueList);
+    return new Labels(nameList, prometheusNames, valueList);
   }
 
   // package private for testing
@@ -117,16 +117,16 @@ public final class Labels implements Comparable<Labels>, Iterable<Label> {
   }
 
   static String[] makePrometheusNames(String[] names) {
-    String[] prometheusNames = names;
+    String[] prometheusNamesArray = names;
     for (int i = 0; i < names.length; i++) {
       if (names[i].contains(".")) {
-        if (prometheusNames == names) {
-          prometheusNames = Arrays.copyOf(names, names.length);
+        if (prometheusNamesArray == names) {
+          prometheusNamesArray = Arrays.copyOf(names, names.length);
         }
-        prometheusNames[i] = PrometheusNaming.prometheusName(names[i]);
+        prometheusNamesArray[i] = PrometheusNaming.prometheusName(names[i]);
       }
     }
-    return prometheusNames;
+    return prometheusNamesArray;
   }
 
   /**
@@ -242,64 +242,64 @@ public final class Labels implements Comparable<Labels>, Iterable<Label> {
     if (other.isEmpty()) {
       return this;
     }
-    String[] names = new String[this.names.length + other.names.length];
-    String[] prometheusNames = names;
+    String[] nameArray = new String[this.names.length + other.names.length];
+    String[] prometheusNamesArray = nameArray;
     if (this.names != this.prometheusNames || other.names != other.prometheusNames) {
-      prometheusNames = new String[names.length];
+      prometheusNamesArray = new String[nameArray.length];
     }
-    String[] values = new String[names.length];
+    String[] valueArray = new String[nameArray.length];
     int thisPos = 0;
     int otherPos = 0;
-    while (thisPos + otherPos < names.length) {
+    while (thisPos + otherPos < nameArray.length) {
       if (thisPos >= this.names.length) {
-        names[thisPos + otherPos] = other.names[otherPos];
-        values[thisPos + otherPos] = other.values[otherPos];
-        if (prometheusNames != names) {
-          prometheusNames[thisPos + otherPos] = other.prometheusNames[otherPos];
+        nameArray[thisPos + otherPos] = other.names[otherPos];
+        valueArray[thisPos + otherPos] = other.values[otherPos];
+        if (prometheusNamesArray != nameArray) {
+          prometheusNamesArray[thisPos + otherPos] = other.prometheusNames[otherPos];
         }
         otherPos++;
       } else if (otherPos >= other.names.length) {
-        names[thisPos + otherPos] = this.names[thisPos];
-        values[thisPos + otherPos] = this.values[thisPos];
-        if (prometheusNames != names) {
-          prometheusNames[thisPos + otherPos] = this.prometheusNames[thisPos];
+        nameArray[thisPos + otherPos] = this.names[thisPos];
+        valueArray[thisPos + otherPos] = this.values[thisPos];
+        if (prometheusNamesArray != nameArray) {
+          prometheusNamesArray[thisPos + otherPos] = this.prometheusNames[thisPos];
         }
         thisPos++;
       } else if (this.prometheusNames[thisPos].compareTo(other.prometheusNames[otherPos]) < 0) {
-        names[thisPos + otherPos] = this.names[thisPos];
-        values[thisPos + otherPos] = this.values[thisPos];
-        if (prometheusNames != names) {
-          prometheusNames[thisPos + otherPos] = this.prometheusNames[thisPos];
+        nameArray[thisPos + otherPos] = this.names[thisPos];
+        valueArray[thisPos + otherPos] = this.values[thisPos];
+        if (prometheusNamesArray != nameArray) {
+          prometheusNamesArray[thisPos + otherPos] = this.prometheusNames[thisPos];
         }
         thisPos++;
       } else if (this.prometheusNames[thisPos].compareTo(other.prometheusNames[otherPos]) > 0) {
-        names[thisPos + otherPos] = other.names[otherPos];
-        values[thisPos + otherPos] = other.values[otherPos];
-        if (prometheusNames != names) {
-          prometheusNames[thisPos + otherPos] = other.prometheusNames[otherPos];
+        nameArray[thisPos + otherPos] = other.names[otherPos];
+        valueArray[thisPos + otherPos] = other.values[otherPos];
+        if (prometheusNamesArray != nameArray) {
+          prometheusNamesArray[thisPos + otherPos] = other.prometheusNames[otherPos];
         }
         otherPos++;
       } else {
         throw new IllegalArgumentException("Duplicate label name: '" + this.names[thisPos] + "'.");
       }
     }
-    return new Labels(names, prometheusNames, values);
+    return new Labels(nameArray, prometheusNamesArray, valueArray);
   }
 
   /**
    * Create a new Labels instance containing the labels of this and the labels passed as names and
    * values. The new label names must not already be contained in this Labels instance.
    */
-  public Labels merge(String[] names, String[] values) {
+  public Labels merge(String[] nameArray, String[] valueArray) {
     if (this.equals(EMPTY)) {
-      return Labels.of(names, values);
+      return Labels.of(nameArray, valueArray);
     }
-    String[] mergedNames = new String[this.names.length + names.length];
-    String[] mergedValues = new String[this.values.length + values.length];
+    String[] mergedNames = new String[this.names.length + nameArray.length];
+    String[] mergedValues = new String[this.values.length + valueArray.length];
     System.arraycopy(this.names, 0, mergedNames, 0, this.names.length);
     System.arraycopy(this.values, 0, mergedValues, 0, this.values.length);
-    System.arraycopy(names, 0, mergedNames, this.names.length, names.length);
-    System.arraycopy(values, 0, mergedValues, this.values.length, values.length);
+    System.arraycopy(nameArray, 0, mergedNames, this.names.length, nameArray.length);
+    System.arraycopy(valueArray, 0, mergedValues, this.values.length, valueArray.length);
     String[] prometheusNames = makePrometheusNames(mergedNames);
     sortAndValidate(mergedNames, prometheusNames, mergedValues);
     return new Labels(mergedNames, prometheusNames, mergedValues);
