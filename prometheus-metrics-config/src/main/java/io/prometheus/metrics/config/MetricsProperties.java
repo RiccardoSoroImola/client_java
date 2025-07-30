@@ -219,16 +219,19 @@ public class MetricsProperties {
    * This is the only configuration property that can be applied to all metric types. You can use it
    * to turn Exemplar support off. Default is {@code true}.
    */
+  @javax.annotation.Nullable
   public Boolean getExemplarsEnabled() {
     return exemplarsEnabled;
   }
 
   /** See {@code Histogram.Builder.nativeOnly()} */
+  @javax.annotation.Nullable
   public Boolean getHistogramNativeOnly() {
     return histogramNativeOnly;
   }
 
   /** See {@code Histogram.Builder.classicOnly()} */
+  @javax.annotation.Nullable
   public Boolean getHistogramClassicOnly() {
     return histogramClassicOnly;
   }
