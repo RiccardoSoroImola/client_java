@@ -6,6 +6,10 @@ import java.io.Writer;
 
 public class TextFormatUtil {
 
+  private TextFormatUtil() {
+    throw new IllegalStateException("Utility class");
+  }
+
   static void writeLong(Writer writer, long value) throws IOException {
     writer.append(Long.toString(value));
   }
