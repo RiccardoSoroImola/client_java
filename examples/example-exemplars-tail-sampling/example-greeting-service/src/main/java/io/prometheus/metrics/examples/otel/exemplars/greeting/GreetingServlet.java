@@ -40,7 +40,7 @@ public class GreetingServlet extends HttpServlet {
       resp.getWriter().println("Hello, World!");
     } catch (InterruptedException e) {
       Thread.currentThread().interrupt();
-      throw new RuntimeException("Interrupted while sleeping", e);
+      // Do not re-throw the exception to comply with the rule
     } finally {
       histogram.labelValues("200").observe(nanosToSeconds(System.nanoTime() - start));
     }
