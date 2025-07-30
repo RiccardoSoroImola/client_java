@@ -214,11 +214,11 @@ public class JvmThreadsMetrics {
     }
 
     public void register(PrometheusRegistry registry) {
-      ThreadMXBean threadBean =
+      ThreadMXBean threadBeanLocal =
           this.threadBean != null ? this.threadBean : ManagementFactory.getThreadMXBean();
-      boolean isNativeImage =
+      boolean isNativeImageLocal =
           this.isNativeImage != null ? this.isNativeImage : NativeImageChecker.isGraalVmNativeImage;
-      new JvmThreadsMetrics(isNativeImage, threadBean, config).register(registry);
+      new JvmThreadsMetrics(isNativeImageLocal, threadBeanLocal, config).register(registry);
     }
   }
 }
