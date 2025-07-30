@@ -95,6 +95,13 @@ public class MetricsProperties {
   }
 
   private void validate(String prefix) throws PrometheusPropertiesException {
+    validateHistogramConfig(prefix);
+    validateSummaryConfig(prefix);
+    validateHistogramFlagsConflict(prefix);
+    validateZeroThresholds(prefix);
+  }
+
+  private void validateHistogramConfig(String prefix) throws PrometheusPropertiesException {
     Util.assertValue(
         histogramNativeInitialSchema,
         s -> s >= -4 && s <= 8,
@@ -133,32 +140,9 @@ public class MetricsProperties {
         "Expecting value > 0.",
         prefix,
         SUMMARY_NUMBER_OF_AGE_BUCKETS);
+  }
 
-    if (Boolean.TRUE.equals(histogramNativeOnly) && Boolean.TRUE.equals(histogramClassicOnly)) {
-      throw new PrometheusPropertiesException(
-          prefix
-              + "."
-              + HISTOGRAM_NATIVE_ONLY
-              + " and "
-              + prefix
-              + "."
-              + HISTOGRAM_CLASSIC_ONLY
-              + " cannot both be true");
-    }
-
-    if (histogramNativeMinZeroThreshold != null && histogramNativeMaxZeroThreshold != null) {
-      if (histogramNativeMinZeroThreshold > histogramNativeMaxZeroThreshold) {
-        throw new PrometheusPropertiesException(
-            prefix
-                + "."
-                + HISTOGRAM_NATIVE_MIN_ZERO_THRESHOLD
-                + " cannot be greater than "
-                + prefix
-                + "."
-                + HISTOGRAM_NATIVE_MAX_ZERO_THRESHOLD);
-      }
-    }
-
+  private void validateSummaryConfig(String prefix) throws PrometheusPropertiesException {
     if (summaryQuantiles != null) {
       for (double quantile : summaryQuantiles) {
         if (quantile < 0 || quantile > 1) {
@@ -196,6 +180,35 @@ public class MetricsProperties {
           throw new PrometheusPropertiesException(
               prefix + "." + SUMMARY_QUANTILE_ERRORS + ": Expecting 0.0 <= error <= 1.0");
         }
+      }
+    }
+  }
+
+  private void validateHistogramFlagsConflict(String prefix) throws PrometheusPropertiesException {
+    if (Boolean.TRUE.equals(histogramNativeOnly) && Boolean.TRUE.equals(histogramClassicOnly)) {
+      throw new PrometheusPropertiesException(
+          prefix
+              + "."
+              + HISTOGRAM_NATIVE_ONLY
+              + " and "
+              + prefix
+              + "."
+              + HISTOGRAM_CLASSIC_ONLY
+              + " cannot both be true");
+    }
+  }
+
+  private void validateZeroThresholds(String prefix) throws PrometheusPropertiesException {
+    if (histogramNativeMinZeroThreshold != null && histogramNativeMaxZeroThreshold != null) {
+      if (histogramNativeMinZeroThreshold > histogramNativeMaxZeroThreshold) {
+        throw new PrometheusPropertiesException(
+            prefix
+                + "."
+                + HISTOGRAM_NATIVE_MIN_ZERO_THRESHOLD
+                + " cannot be greater than "
+                + prefix
+                + "."
+                + HISTOGRAM_NATIVE_MAX_ZERO_THRESHOLD);
       }
     }
   }
