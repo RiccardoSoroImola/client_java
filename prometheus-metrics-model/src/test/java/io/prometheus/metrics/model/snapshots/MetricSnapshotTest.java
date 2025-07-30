@@ -28,7 +28,7 @@ class MetricSnapshotTest {
                     .value(3.0)
                     .build());
     assertThatExceptionOfType(DuplicateLabelsException.class)
-        .isThrownBy(() -> builder.build())
+        .isThrownBy(builder::build)
         .satisfies(
             e -> {
               assertThat(e.getMetadata().getName()).isEqualTo("events");
