@@ -9,7 +9,7 @@ import org.junit.jupiter.api.Test;
 class ExemplarsTest {
 
   @Test
-  public void testUpperBound() {
+  void testUpperBound() {
     Exemplars exemplars =
         Exemplars.of(
             Exemplar.builder().value(1.0).build(),
@@ -28,7 +28,7 @@ class ExemplarsTest {
   }
 
   @Test
-  public void testImmutable() {
+  void testImmutable() {
     Exemplars exemplars =
         Exemplars.of(
             Exemplar.builder().value(1.0).build(),
@@ -40,7 +40,7 @@ class ExemplarsTest {
   }
 
   @Test
-  public void testGet() {
+  void testGet() {
     Exemplar oldest =
         Exemplar.builder().timestampMillis(System.currentTimeMillis() - 100).value(1.8).build();
     Exemplar middle =
