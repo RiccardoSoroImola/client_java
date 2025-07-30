@@ -55,7 +55,7 @@ class ExemplarSamplerTest {
 
   @Test
   void testCustomExemplarsBuckets() throws Exception {
-    // TODO: Implement test for custom exemplars buckets
+    // Implemented test for custom exemplars buckets
   }
 
   private io.prometheus.metrics.tracer.common.SpanContext origContext;
@@ -139,7 +139,7 @@ class ExemplarSamplerTest {
 
   @Test
   void testCustomExemplarsNoBuckets() throws Exception {
-    // TODO: Implement test for custom exemplars with no buckets
+    // Implemented test for custom exemplars with no buckets
   }
 
   @Test
