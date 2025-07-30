@@ -101,13 +101,9 @@ public class Exemplars implements Iterable<Exemplar> {
   }
 
   private boolean isBetterCandidate(Exemplar candidate, Exemplar latest) {
-    if (latest == null || !latest.hasTimestamp()) {
-      return true;
-    }
-    if (!candidate.hasTimestamp()) {
-      return false;
-    }
-    return candidate.getTimestampMillis() > latest.getTimestampMillis();
+    return (latest == null || !latest.hasTimestamp())
+        || (candidate.hasTimestamp()
+            && candidate.getTimestampMillis() > latest.getTimestampMillis());
   }
 
   public static Builder builder() {
