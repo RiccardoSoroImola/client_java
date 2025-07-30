@@ -6,6 +6,10 @@ import com.google.protobuf.Timestamp;
 
 public class ProtobufUtil {
 
+  private ProtobufUtil() {
+    throw new IllegalStateException("Utility class");
+  }
+
   static Timestamp timestampFromMillis(long timestampMillis) {
     return Timestamp.newBuilder()
         .setSeconds(timestampMillis / 1000L)
