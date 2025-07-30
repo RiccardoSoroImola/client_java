@@ -31,7 +31,7 @@ public class GreetingServlet extends HttpServlet {
   }
 
   @Override
-  protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws IOException {
+  protected void doGet(HttpServletRequest req, HttpServletResponse resp) {
     long start = System.nanoTime();
     try {
       Thread.sleep((long) Math.abs((random.nextGaussian() + 1.0) * 100.0));
@@ -41,6 +41,14 @@ public class GreetingServlet extends HttpServlet {
     } catch (InterruptedException e) {
       Thread.currentThread().interrupt();
       // Do not re-throw the exception to comply with the rule
+    } catch (IOException e) {
+      // Handle IOException to prevent it from being thrown from the servlet method
+      resp.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
+      try {
+        resp.getWriter().write("Internal Server Error");
+      } catch (IOException ex) {
+        // Ignore if writing error message fails
+      }
     } finally {
       histogram.labelValues("200").observe(nanosToSeconds(System.nanoTime() - start));
     }
