@@ -26,7 +26,7 @@ public abstract class ExporterTest {
   private final GenericContainer<?> sampleAppContainer;
   protected final String sampleApp;
 
-  public ExporterTest(String sampleApp) throws IOException {
+  public ExporterTest(String sampleApp) {
     this.sampleApp = sampleApp;
     this.sampleAppContainer =
         new GenericContainer<>("openjdk:17")
@@ -51,7 +51,7 @@ public abstract class ExporterTest {
   }
 
   @AfterEach
-  public void tearDown() throws IOException {
+  public void tearDown() {
     sampleAppContainer.stop();
   }
 
