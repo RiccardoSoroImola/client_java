@@ -11,8 +11,7 @@ public class SpanContextSupplier {
     throw new IllegalStateException("Utility class");
   }
 
-  private static final AtomicReference<SpanContext> spanContextRef =
-      new AtomicReference<SpanContext>();
+  private static final AtomicReference<SpanContext> spanContextRef = new AtomicReference<>();
 
   public static void setSpanContext(SpanContext spanContext) {
     spanContextRef.set(spanContext);
