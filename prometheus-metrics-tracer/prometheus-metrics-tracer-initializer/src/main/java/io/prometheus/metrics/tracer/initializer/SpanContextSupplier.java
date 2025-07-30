@@ -27,19 +27,15 @@ public class SpanContextSupplier {
       if (OpenTelemetrySpanContext.isAvailable()) {
         spanContextRef.set(new OpenTelemetrySpanContext());
       }
-    } catch (NoClassDefFoundError ignored) {
+    } catch (NoClassDefFoundError | UnsupportedClassVersionError ignored) {
       // tracer_otel dependency not found
-    } catch (UnsupportedClassVersionError ignored) {
-      // OpenTelemetry requires Java 8, but client_java might run on Java 6.
     }
     try {
       if (OpenTelemetryAgentSpanContext.isAvailable()) {
         spanContextRef.set(new OpenTelemetryAgentSpanContext());
       }
-    } catch (NoClassDefFoundError ignored) {
+    } catch (NoClassDefFoundError | UnsupportedClassVersionError ignored) {
       // tracer_otel_agent dependency not found
-    } catch (UnsupportedClassVersionError ignored) {
-      // OpenTelemetry requires Java 8, but client_java might run on Java 6.
     }
   }
 }
