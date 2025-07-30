@@ -19,7 +19,9 @@ class CounterDataPointTest {
           }
 
           @Override
-          public void incWithExemplar(double amount, Labels labels) {}
+          public void incWithExemplar(double amount, Labels labels) {
+            // Intentionally blank as not used in this test case
+          }
 
           @Override
           public long getLongValue() {
