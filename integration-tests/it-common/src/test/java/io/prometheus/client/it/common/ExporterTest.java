@@ -9,7 +9,6 @@ import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.HttpURLConnection;
-import java.net.URISyntaxException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -27,7 +26,7 @@ public abstract class ExporterTest {
   private final GenericContainer<?> sampleAppContainer;
   protected final String sampleApp;
 
-  public ExporterTest(String sampleApp) throws IOException, URISyntaxException {
+  public ExporterTest(String sampleApp) throws IOException {
     this.sampleApp = sampleApp;
     this.sampleAppContainer =
         new GenericContainer<>("openjdk:17")
