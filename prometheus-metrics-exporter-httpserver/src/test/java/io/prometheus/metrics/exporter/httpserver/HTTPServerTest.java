@@ -124,16 +124,11 @@ class HTTPServerTest {
 
   @Test
   void config() throws NoSuchAlgorithmException, IOException {
+    HTTPServer.Builder builder = HTTPServer.builder().port(0);
+    builder.hostname("localhost");
+    builder.inetAddress(InetAddress.getByName("localhost"));
     assertThatExceptionOfType(IllegalStateException.class)
-        .isThrownBy(
-            () -> {
-              HTTPServer.Builder builder =
-                  HTTPServer.builder()
-                      .port(0)
-                      .hostname("localhost")
-                      .inetAddress(InetAddress.getByName("localhost"));
-              builder.buildAndStart();
-            })
+        .isThrownBy(() -> builder.buildAndStart())
         .withMessage("cannot configure 'inetAddress' and 'hostname' at the same time");
 
     // ssl doesn't work without in tests
