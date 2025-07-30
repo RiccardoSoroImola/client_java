@@ -20,8 +20,10 @@ class JvmMetricsTest {
     PrometheusRegistry registry = new PrometheusRegistry();
     assertThat(registry.scrape().size()).isZero();
     JvmMetrics.builder().register(registry);
-    assertThat(registry.scrape().size()).isGreaterThan(0);
+    int afterFirst = registry.scrape().size();
+    assertThat(afterFirst).isGreaterThan(0);
     JvmMetrics.builder().register(registry);
+    assertThat(registry.scrape().size()).isEqualTo(afterFirst);
   }
 
   @Test
@@ -30,11 +32,15 @@ class JvmMetricsTest {
     JvmMemoryPoolAllocationMetrics.builder(PrometheusProperties.get())
         .withGarbageCollectorBeans(ManagementFactory.getGarbageCollectorMXBeans())
         .register();
+    assertThat(PrometheusRegistry.defaultRegistry.scrape().size()).isGreaterThan(0);
   }
 
   @Test
   void testJvmMetrics() {
     JvmMetrics.builder(PrometheusProperties.get()).register();
+    int afterFirst = PrometheusRegistry.defaultRegistry.scrape().size();
+    assertThat(afterFirst).isGreaterThan(0);
     JvmMetrics.builder().register();
+    assertThat(PrometheusRegistry.defaultRegistry.scrape().size()).isEqualTo(afterFirst);
   }
 }
