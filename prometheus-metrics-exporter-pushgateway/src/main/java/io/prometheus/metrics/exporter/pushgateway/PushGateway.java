@@ -281,7 +281,7 @@ public class PushGateway {
     /** Default is {@link Format#PROMETHEUS_PROTOBUF}. */
     public Builder format(Format formatParam) {
       if (formatParam == null) {
-        throw new NullPointerException();
+        throw new NullPointerException("formatParam must not be null");
       }
       this.format = formatParam;
       return this;
@@ -294,7 +294,7 @@ public class PushGateway {
      */
     public Builder address(String addressParam) {
       if (addressParam == null) {
-        throw new NullPointerException();
+        throw new NullPointerException("addressParam must not be null");
       }
       this.address = addressParam;
       return this;
@@ -303,7 +303,7 @@ public class PushGateway {
     /** Username and password for HTTP basic auth when pushing to the Pushgateway. */
     public Builder basicAuth(String user, String password) {
       if (user == null || password == null) {
-        throw new NullPointerException();
+        throw new NullPointerException("user and password must not be null");
       }
       byte[] credentialsBytes = (user + ":" + password).getBytes(StandardCharsets.UTF_8);
       String encoded = Base64.getEncoder().encodeToString(credentialsBytes);
@@ -314,7 +314,7 @@ public class PushGateway {
     /** Bearer token authorization when pushing to the Pushgateway. */
     public Builder bearerToken(String token) {
       if (token == null) {
-        throw new NullPointerException();
+        throw new NullPointerException("token must not be null");
       }
       requestHeaders.put("Authorization", String.format("Bearer %s", token));
       return this;
@@ -326,7 +326,7 @@ public class PushGateway {
      */
     public Builder scheme(Scheme schemeParam) {
       if (schemeParam == null) {
-        throw new NullPointerException();
+        throw new NullPointerException("schemeParam must not be null");
       }
       this.scheme = schemeParam;
       return this;
@@ -340,7 +340,7 @@ public class PushGateway {
      */
     public Builder connectionFactory(HttpConnectionFactory connectionFactoryParam) {
       if (connectionFactoryParam == null) {
-        throw new NullPointerException();
+        throw new NullPointerException("connectionFactoryParam must not be null");
       }
       this.connectionFactory = connectionFactoryParam;
       return this;
@@ -353,7 +353,7 @@ public class PushGateway {
      */
     public Builder job(String jobParam) {
       if (jobParam == null) {
-        throw new NullPointerException();
+        throw new NullPointerException("jobParam must not be null");
       }
       this.job = jobParam;
       return this;
@@ -365,7 +365,7 @@ public class PushGateway {
      */
     public Builder groupingKey(String name, String value) {
       if (name == null || value == null) {
-        throw new NullPointerException();
+        throw new NullPointerException("name and value must not be null");
       }
       groupingKey.put(name, value);
       return this;
@@ -379,7 +379,7 @@ public class PushGateway {
     /** Push metrics from this registry instead of {@link PrometheusRegistry#defaultRegistry}. */
     public Builder registry(PrometheusRegistry registryParam) {
       if (registryParam == null) {
-        throw new NullPointerException();
+        throw new NullPointerException("registryParam must not be null");
       }
       this.registry = registryParam;
       return this;
