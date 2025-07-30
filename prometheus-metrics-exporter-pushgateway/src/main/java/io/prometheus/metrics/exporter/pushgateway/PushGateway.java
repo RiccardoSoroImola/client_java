@@ -192,7 +192,7 @@ public class PushGateway {
     doRequest(null, "DELETE");
   }
 
-  private void doRequest(PrometheusRegistry registry, String method) throws IOException {
+  private void doRequest(PrometheusRegistry registryParam, String method) throws IOException {
     try {
       HttpURLConnection connection = connectionFactory.create(url);
       requestHeaders.forEach(connection::setRequestProperty);
@@ -209,7 +209,7 @@ public class PushGateway {
       try {
         if (!method.equals("DELETE")) {
           OutputStream outputStream = connection.getOutputStream();
-          writer.write(outputStream, registry.scrape());
+          writer.write(outputStream, registryParam.scrape());
           outputStream.flush();
           outputStream.close();
         }
