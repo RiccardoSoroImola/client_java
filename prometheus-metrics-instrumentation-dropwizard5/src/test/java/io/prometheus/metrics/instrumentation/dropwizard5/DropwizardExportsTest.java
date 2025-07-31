@@ -220,7 +220,7 @@ meter_total 2.0
   }
 
   @Test
-  void testTimer() throws InterruptedException {
+  void testTimer() {
     final MetricRegistry testMetricRegistry = new MetricRegistry();
     DropwizardExports exports = new DropwizardExports(testMetricRegistry);
     Timer t = testMetricRegistry.timer("timer");
