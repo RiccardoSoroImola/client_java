@@ -118,14 +118,14 @@ public final class Labels implements Comparable<Labels>, Iterable<Label> {
     return new Labels(namesCopy, prometheusNamesLocal, valuesCopy);
   }
 
-  static String[] makePrometheusNames(String[] names) {
-    String[] prometheusNamesArray = names;
-    for (int i = 0; i < names.length; i++) {
-      if (names[i].contains(".")) {
-        if (prometheusNamesArray == names) {
-          prometheusNamesArray = Arrays.copyOf(names, names.length);
+  static String[] makePrometheusNames(String[] inputNames) {
+    String[] prometheusNamesArray = inputNames;
+    for (int i = 0; i < inputNames.length; i++) {
+      if (inputNames[i].contains(".")) {
+        if (prometheusNamesArray == inputNames) {
+          prometheusNamesArray = Arrays.copyOf(inputNames, inputNames.length);
         }
-        prometheusNamesArray[i] = PrometheusNaming.prometheusName(names[i]);
+        prometheusNamesArray[i] = PrometheusNaming.prometheusName(inputNames[i]);
       }
     }
     return prometheusNamesArray;
