@@ -37,20 +37,17 @@ public class ExporterOpenTelemetryProperties {
       Map<String, String> headers,
       String interval,
       String timeout,
-      String serviceName,
-      String serviceNamespace,
-      String serviceInstanceId,
-      String serviceVersion,
+      ServiceInfo serviceInfo,
       Map<String, String> resourceAttributes) {
     this.protocolValue = protocol;
     this.endpointValue = endpoint;
     this.headersMap = headers;
     this.intervalValue = interval;
     this.timeoutValue = timeout;
-    this.serviceNameValue = serviceName;
-    this.serviceNamespaceValue = serviceNamespace;
-    this.serviceInstanceIdValue = serviceInstanceId;
-    this.serviceVersionValue = serviceVersion;
+    this.serviceNameValue = serviceInfo.getServiceName();
+    this.serviceNamespaceValue = serviceInfo.getServiceNamespace();
+    this.serviceInstanceIdValue = serviceInfo.getServiceInstanceId();
+    this.serviceVersionValue = serviceInfo.getServiceVersion();
     this.resourceAttributesMap = resourceAttributes;
   }
 
@@ -117,10 +114,7 @@ public class ExporterOpenTelemetryProperties {
         headers,
         interval,
         timeout,
-        serviceName,
-        serviceNamespace,
-        serviceInstanceId,
-        serviceVersion,
+        new ServiceInfo(serviceName, serviceNamespace, serviceInstanceId, serviceVersion),
         resourceAttributes);
   }
 
@@ -211,11 +205,43 @@ public class ExporterOpenTelemetryProperties {
           headersMap,
           intervalValue,
           timeoutValue,
-          serviceNameValue,
-          serviceNamespaceValue,
-          serviceInstanceIdValue,
-          serviceVersionValue,
+          new ServiceInfo(
+              serviceNameValue, serviceNamespaceValue, serviceInstanceIdValue, serviceVersionValue),
           resourceAttributesMap);
+    }
+  }
+
+  public static class ServiceInfo {
+    private final String serviceName;
+    private final String serviceNamespace;
+    private final String serviceInstanceId;
+    private final String serviceVersion;
+
+    public ServiceInfo(
+        String serviceName,
+        String serviceNamespace,
+        String serviceInstanceId,
+        String serviceVersion) {
+      this.serviceName = serviceName;
+      this.serviceNamespace = serviceNamespace;
+      this.serviceInstanceId = serviceInstanceId;
+      this.serviceVersion = serviceVersion;
+    }
+
+    public String getServiceName() {
+      return serviceName;
+    }
+
+    public String getServiceNamespace() {
+      return serviceNamespace;
+    }
+
+    public String getServiceInstanceId() {
+      return serviceInstanceId;
+    }
+
+    public String getServiceVersion() {
+      return serviceVersion;
     }
   }
 }
