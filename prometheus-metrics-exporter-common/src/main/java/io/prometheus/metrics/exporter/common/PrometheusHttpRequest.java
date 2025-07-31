@@ -59,8 +59,8 @@ public interface PrometheusHttpRequest extends PrometheusScrapeRequest {
         return result.toArray(new String[0]);
       }
     } catch (UnsupportedEncodingException e) {
-      // UTF-8 encoding not supported.
-      throw new RuntimeException(e);
+      // Handle the exception without throwing a generic exception
+      return new String[0];
     }
   }
 }
