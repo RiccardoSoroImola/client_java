@@ -99,15 +99,9 @@ public abstract class ExporterTest {
       } catch (Exception e) {
         exception = e;
         try {
-          // Replaced Thread.sleep(100) with Awaitility
-          org.awaitility.Awaitility.await()
-              .atMost(100, TimeUnit.MILLISECONDS)
-              .until(
-                  () -> {
-                    // This is a placeholder for the actual condition to wait for
-                    return true;
-                  });
-        } catch (Exception ignored) {
+          // Replaced Awaitility with Thread.sleep to avoid deprecated usage
+          Thread.sleep(100);
+        } catch (InterruptedException ignored) {
           // ignore
         }
       }
