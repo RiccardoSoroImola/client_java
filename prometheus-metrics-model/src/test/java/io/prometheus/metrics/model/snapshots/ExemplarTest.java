@@ -40,7 +40,8 @@ class ExemplarTest {
     assertThatExceptionOfType(IllegalStateException.class)
         .isThrownBy(
             () -> {
-              Exemplar.builder().build();
+              Exemplar.Builder builder = Exemplar.builder();
+              builder.build();
             });
   }
 
