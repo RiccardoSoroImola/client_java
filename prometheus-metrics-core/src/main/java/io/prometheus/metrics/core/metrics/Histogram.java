@@ -408,7 +408,7 @@ public class Histogram extends StatefulMetric<DistributionDataPoint, Histogram.D
     private void maybeResetOrScaleDown(double value, boolean nativeBucketCreated) {
       AtomicBoolean wasReset = new AtomicBoolean(false);
       if (resetDurationExpired && dataPointNativeSchema < nativeInitialSchema) {
-        // If nativeSchema < initialNativeSchema the histogram has been scaled down.
+        // If nativeSchema < initialSchema the histogram has been scaled down.
         // So if resetDurationExpired we will reset it to restore the original native schema.
         buffer.run(
             expectedCount -> count.sum() == expectedCount,
@@ -866,14 +866,12 @@ public class Histogram extends StatefulMetric<DistributionDataPoint, Histogram.D
      *     </tr>
      * </table>
      */
-    public Builder nativeInitialSchema(int nativeSchema) {
-      if (nativeSchema < -4 || nativeSchema > 8) {
+    public Builder nativeInitialSchema(int schema) {
+      if (schema < -4 || schema > 8) {
         throw new IllegalArgumentException(
-            "Unsupported native histogram schema "
-                + nativeSchema
-                + ": expecting -4 <= schema <= 8.");
+            "Unsupported native histogram schema " + schema + ": expecting -4 <= schema <= 8.");
       }
-      this.nativeInitialSchema = nativeSchema;
+      this.nativeInitialSchema = schema;
       return this;
     }
 
@@ -887,12 +885,12 @@ public class Histogram extends StatefulMetric<DistributionDataPoint, Histogram.D
      *
      * <p>Default is {@link Builder#DEFAULT_NATIVE_MAX_NUMBER_OF_BUCKETS}.
      */
-    public Builder nativeMaxZeroThreshold(double nativeMaxZeroThreshold) {
-      if (nativeMaxZeroThreshold < 0) {
+    public Builder nativeMaxZeroThreshold(double maxZeroThreshold) {
+      if (maxZeroThreshold < 0) {
         throw new IllegalArgumentException(
-            "Illegal native max zero threshold " + nativeMaxZeroThreshold + ": must be >= 0");
+            "Illegal native max zero threshold " + maxZeroThreshold + ": must be >= 0");
       }
-      this.nativeMaxZeroThreshold = nativeMaxZeroThreshold;
+      this.nativeMaxZeroThreshold = maxZeroThreshold;
       return this;
     }
 
@@ -906,12 +904,12 @@ public class Histogram extends StatefulMetric<DistributionDataPoint, Histogram.D
      *
      * <p>Default is {@link Builder#DEFAULT_NATIVE_MIN_ZERO_THRESHOLD}.
      */
-    public Builder nativeMinZeroThreshold(double nativeMinZeroThreshold) {
-      if (nativeMinZeroThreshold < 0) {
+    public Builder nativeMinZeroThreshold(double minZeroThreshold) {
+      if (minZeroThreshold < 0) {
         throw new IllegalArgumentException(
-            "Illegal native min zero threshold " + nativeMinZeroThreshold + ": must be >= 0");
+            "Illegal native min zero threshold " + minZeroThreshold + ": must be >= 0");
       }
-      this.nativeMinZeroThreshold = nativeMinZeroThreshold;
+      this.nativeMinZeroThreshold = minZeroThreshold;
       return this;
     }
 
@@ -924,8 +922,8 @@ public class Histogram extends StatefulMetric<DistributionDataPoint, Histogram.D
      *
      * <p>Default is {@link Builder#DEFAULT_NATIVE_MAX_NUMBER_OF_BUCKETS}.
      */
-    public Builder nativeMaxNumberOfBuckets(int nativeMaxBuckets) {
-      this.nativeMaxNumberOfBuckets = nativeMaxBuckets;
+    public Builder nativeMaxNumberOfBuckets(int maxBuckets) {
+      this.nativeMaxNumberOfBuckets = maxBuckets;
       return this;
     }
 
