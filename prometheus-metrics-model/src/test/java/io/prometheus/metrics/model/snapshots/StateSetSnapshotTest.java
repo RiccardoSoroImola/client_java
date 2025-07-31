@@ -154,17 +154,18 @@ class StateSetSnapshotTest {
   void testLabelsUnique() {
     assertThatExceptionOfType(IllegalArgumentException.class)
         .isThrownBy(
-            () ->
-                StateSetSnapshot.builder()
-                    .name("flags")
-                    .dataPoint(
-                        StateSetSnapshot.StateSetDataPointSnapshot.builder()
-                            .state("feature", true)
-                            .build())
-                    .dataPoint(
-                        StateSetSnapshot.StateSetDataPointSnapshot.builder()
-                            .state("feature", true)
-                            .build())
-                    .build());
+            () -> {
+              StateSetSnapshot.Builder builder = StateSetSnapshot.builder();
+              builder.name("flags");
+              builder.dataPoint(
+                  StateSetSnapshot.StateSetDataPointSnapshot.builder()
+                      .state("feature", true)
+                      .build());
+              builder.dataPoint(
+                  StateSetSnapshot.StateSetDataPointSnapshot.builder()
+                      .state("feature", true)
+                      .build());
+              builder.build();
+            });
   }
 }
