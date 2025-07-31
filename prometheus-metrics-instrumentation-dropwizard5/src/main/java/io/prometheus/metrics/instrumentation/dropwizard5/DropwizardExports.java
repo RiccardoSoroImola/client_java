@@ -111,7 +111,7 @@ public class DropwizardExports implements MultiCollector {
   MetricSnapshot fromCounter(String dropwizardName, Counter counter) {
     MetricMetadata metadata = getMetricMetaData(dropwizardName, counter);
     CounterSnapshot.CounterDataPointSnapshot.Builder dataPointBuilder =
-        CounterSnapshot.CounterDataPointSnapshot.builder().value((double) counter.getCount());
+        CounterSnapshot.CounterDataPointSnapshot.builder().value(counter.getCount());
     labelMapper.ifPresent(
         mapper ->
             dataPointBuilder.labels(
