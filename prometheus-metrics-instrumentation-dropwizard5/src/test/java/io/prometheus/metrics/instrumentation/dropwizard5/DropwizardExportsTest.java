@@ -14,6 +14,7 @@ import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.util.concurrent.TimeUnit;
+import org.awaitility.Awaitility;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -224,7 +225,18 @@ meter_total 2.0
     DropwizardExports exports = new DropwizardExports(testMetricRegistry);
     Timer t = testMetricRegistry.timer("timer");
     Timer.Context time = t.time();
-    Thread.sleep(100L);
+    Awaitility.await()
+        .atMost(2, TimeUnit.SECONDS)
+        .until(
+            () -> {
+              SummarySnapshot.SummaryDataPointSnapshot dataPointSnapshot =
+                  (SummarySnapshot.SummaryDataPointSnapshot)
+                      exports.collect().stream()
+                          .flatMap(i -> i.getDataPoints().stream())
+                          .findFirst()
+                          .get();
+              return dataPointSnapshot.getQuantiles().size() > 1;
+            });
     long timeSpentNanos = time.stop();
     double timeSpentMillis = TimeUnit.NANOSECONDS.toMillis(timeSpentNanos);
     System.out.println(timeSpentMillis);
