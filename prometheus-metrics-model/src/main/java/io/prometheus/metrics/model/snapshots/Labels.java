@@ -74,20 +74,21 @@ public final class Labels implements Comparable<Labels>, Iterable<Label> {
    * Create a new Labels instance. You can either create Labels with one of the static {@code
    * Labels.of(...)} methods, or you can use the {@link Labels#builder()}.
    *
-   * @param names label names. {@link PrometheusNaming#isValidLabelName(String)} must be true for
+   * @param nameList label names. {@link PrometheusNaming#isValidLabelName(String)} must be true for
    *     each name. Use {@link PrometheusNaming#sanitizeLabelName(String)} to convert arbitrary
    *     strings to valid label names. Label names must be unique (no duplicate label names).
-   * @param values label values. {@code names.size()} must be equal to {@code values.size()}.
+   * @param valueList label values. {@code nameList.size()} must be equal to {@code
+   *     valueList.size()}.
    */
-  public static Labels of(List<String> names, List<String> values) {
-    if (names.size() != values.size()) {
+  public static Labels of(List<String> nameList, List<String> valueList) {
+    if (nameList.size() != valueList.size()) {
       throw new IllegalArgumentException("Names and values must have the same size.");
     }
-    if (names.isEmpty()) {
+    if (nameList.isEmpty()) {
       return EMPTY;
     }
-    String[] namesCopy = names.toArray(new String[0]);
-    String[] valuesCopy = values.toArray(new String[0]);
+    String[] namesCopy = nameList.toArray(new String[0]);
+    String[] valuesCopy = valueList.toArray(new String[0]);
     String[] prometheusNames = makePrometheusNames(namesCopy);
     sortAndValidate(namesCopy, prometheusNames, valuesCopy);
     return new Labels(namesCopy, prometheusNames, valuesCopy);
@@ -97,20 +98,21 @@ public final class Labels implements Comparable<Labels>, Iterable<Label> {
    * Create a new Labels instance. You can either create Labels with one of the static {@code
    * Labels.of(...)} methods, or you can use the {@link Labels#builder()}.
    *
-   * @param names label names. {@link PrometheusNaming#isValidLabelName(String)} must be true for
-   *     each name. Use {@link PrometheusNaming#sanitizeLabelName(String)} to convert arbitrary
+   * @param nameArray label names. {@link PrometheusNaming#isValidLabelName(String)} must be true
+   *     for each name. Use {@link PrometheusNaming#sanitizeLabelName(String)} to convert arbitrary
    *     strings to valid label names. Label names must be unique (no duplicate label names).
-   * @param values label values. {@code names.length} must be equal to {@code values.length}.
+   * @param valueArray label values. {@code nameArray.length} must be equal to {@code
+   *     valueArray.length}.
    */
-  public static Labels of(String[] names, String[] values) {
-    if (names.length != values.length) {
+  public static Labels of(String[] nameArray, String[] valueArray) {
+    if (nameArray.length != valueArray.length) {
       throw new IllegalArgumentException("Names and values must have the same length.");
     }
-    if (names.length == 0) {
+    if (nameArray.length == 0) {
       return EMPTY;
     }
-    String[] namesCopy = Arrays.copyOf(names, names.length);
-    String[] valuesCopy = Arrays.copyOf(values, values.length);
+    String[] namesCopy = Arrays.copyOf(nameArray, nameArray.length);
+    String[] valuesCopy = Arrays.copyOf(valueArray, valueArray.length);
     String[] prometheusNames = makePrometheusNames(namesCopy);
     sortAndValidate(namesCopy, prometheusNames, valuesCopy);
     return new Labels(namesCopy, prometheusNames, valuesCopy);
