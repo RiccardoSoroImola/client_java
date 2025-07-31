@@ -89,12 +89,12 @@ public abstract class ExporterTest {
           return new Response(
               con.getResponseCode(),
               con.getHeaderFields(),
-              IOUtils.toByteArray(con.getInputStream(), 4096));
+              IOUtils.toByteArray(con.getInputStream()));
         } else {
           return new Response(
               con.getResponseCode(),
               con.getHeaderFields(),
-              IOUtils.toByteArray(con.getErrorStream(), 4096));
+              IOUtils.toByteArray(con.getErrorStream()));
         }
       } catch (Exception e) {
         exception = e;
@@ -147,7 +147,7 @@ public abstract class ExporterTest {
 
     public String gzipBody() throws IOException {
       return new String(
-          IOUtils.toByteArray(new GZIPInputStream(new ByteArrayInputStream(body)), 4096), UTF_8);
+          IOUtils.toByteArray(new GZIPInputStream(new ByteArrayInputStream(body))), UTF_8);
     }
 
     public List<Metrics.MetricFamily> protoBody() throws IOException {
