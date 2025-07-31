@@ -74,6 +74,7 @@ public class MetricsProperties {
     validate(configPropertyPrefix);
   }
 
+  @javax.annotation.Nullable
   private Boolean isHistogramClassicOnly(HistogramConfig histogramConfig) {
     if (histogramConfig.histogramClassicOnly == null
         && histogramConfig.histogramNativeOnly == null) {
@@ -85,6 +86,7 @@ public class MetricsProperties {
     return !histogramConfig.histogramNativeOnly;
   }
 
+  @javax.annotation.Nullable
   private Boolean isHistogramNativeOnly(HistogramConfig histogramConfig) {
     if (histogramConfig.histogramClassicOnly == null
         && histogramConfig.histogramNativeOnly == null) {
