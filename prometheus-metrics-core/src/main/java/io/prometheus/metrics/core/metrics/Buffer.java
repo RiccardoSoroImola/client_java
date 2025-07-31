@@ -5,8 +5,8 @@ import java.util.Arrays;
 import java.util.concurrent.atomic.AtomicLong;
 import java.util.concurrent.locks.Condition;
 import java.util.concurrent.locks.ReentrantLock;
-import java.util.function.Consumer;
-import java.util.function.Function;
+import java.util.function.DoubleConsumer;
+import java.util.function.Predicate;
 import java.util.function.Supplier;
 
 /**
@@ -59,9 +59,7 @@ class Buffer {
 
   @SuppressWarnings("ThreadPriorityCheck")
   <T extends DataPointSnapshot> T run(
-      Function<Long, Boolean> complete,
-      Supplier<T> createResult,
-      Consumer<Double> observeFunction) {
+      Predicate<Long> complete, Supplier<T> createResult, DoubleConsumer observeFunction) {
     double[] buffer;
     int bufferSize;
     T result;
@@ -71,7 +69,7 @@ class Buffer {
       // Signal that the buffer is active.
       Long expectedCount = observationCount.getAndAdd(BUFFER_ACTIVE_BIT);
 
-      while (!complete.apply(expectedCount).booleanValue()) {
+      while (!complete.test(expectedCount)) {
         // Wait until all in-flight threads have added their observations to the histogram /
         // summary.
         // we can't use a condition here, because the other thread doesn't have a lock as it's on
