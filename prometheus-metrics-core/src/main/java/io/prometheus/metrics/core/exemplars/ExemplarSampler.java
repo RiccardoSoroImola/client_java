@@ -63,29 +63,23 @@ public class ExemplarSampler {
     // this may run in parallel with observe()
     long now = System.currentTimeMillis();
     List<Exemplar> result = new ArrayList<>(exemplars.length);
-    for (int i = 0; i < customExemplars.length; i++) {
-      Exemplar exemplar = customExemplars[i];
-      if (exemplar != null) {
-        boolean expired = isExemplarExpired(exemplar, now, config.getMaxRetentionPeriodMillis());
-        if (expired) {
-          customExemplars[i] = null;
-        } else {
-          result.add(exemplar);
-        }
-      }
-    }
-    for (int i = 0; i < exemplars.length && result.size() < exemplars.length; i++) {
-      Exemplar exemplar = exemplars[i];
-      if (exemplar != null) {
-        boolean expired = isExemplarExpired(exemplar, now, config.getMaxRetentionPeriodMillis());
-        if (expired) {
-          exemplars[i] = null;
-        } else {
-          result.add(exemplar);
-        }
-      }
-    }
+    processExemplars(customExemplars, now, result);
+    processExemplars(exemplars, now, result);
     return Exemplars.of(result);
+  }
+
+  private void processExemplars(Exemplar[] exemplarsArray, long now, List<Exemplar> result) {
+    for (int i = 0; i < exemplarsArray.length && result.size() < exemplars.length; i++) {
+      Exemplar exemplar = exemplarsArray[i];
+      if (exemplar != null) {
+        boolean expired = isExemplarExpired(exemplar, now, config.getMaxRetentionPeriodMillis());
+        if (expired) {
+          exemplarsArray[i] = null;
+        } else {
+          result.add(exemplar);
+        }
+      }
+    }
   }
 
   private boolean isExemplarExpired(Exemplar exemplar, long now, long maxRetention) {
