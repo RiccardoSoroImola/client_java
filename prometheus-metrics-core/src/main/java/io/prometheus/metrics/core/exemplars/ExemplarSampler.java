@@ -146,8 +146,7 @@ public class ExemplarSampler {
     for (int i = 0; i < upperBounds.length; i++) {
       if (value <= upperBounds[i]) {
         Exemplar previous = exemplars[i];
-        if (previous == null
-            || now - previous.getTimestampMillis() > config.getMinRetentionPeriodMillis()) {
+        if (shouldReplaceExemplar(previous, now)) {
           return updateExemplar(i, value, now);
         } else {
           return 0;
@@ -155,6 +154,11 @@ public class ExemplarSampler {
       }
     }
     return 0; // will never happen, as upperBounds contains +Inf
+  }
+
+  private boolean shouldReplaceExemplar(Exemplar previous, long now) {
+    return previous == null
+        || now - previous.getTimestampMillis() > config.getMinRetentionPeriodMillis();
   }
 
   private long doObserveWithoutUpperBounds(double value) {
@@ -230,8 +234,7 @@ public class ExemplarSampler {
     for (int i = 0; i < upperBounds.length; i++) {
       if (value <= upperBounds[i]) {
         Exemplar previous = customExemplars[i];
-        if (previous == null
-            || now - previous.getTimestampMillis() > config.getMinRetentionPeriodMillis()) {
+        if (shouldReplaceExemplar(previous, now)) {
           return updateCustomExemplar(i, value, labels, now);
         } else {
           return 0;
