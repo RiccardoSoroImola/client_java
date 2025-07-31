@@ -80,6 +80,9 @@ public class PushGateway {
   private static final String RESPONSE_CODE_MESSAGE = "Response code from ";
   private static final String FAILED_TO_PUSH_MESSAGE =
       "Failed to push metrics to the Prometheus Pushgateway on ";
+  private static final String HTTP_METHOD_PUT = "PUT";
+  private static final String HTTP_METHOD_POST = "POST";
+  private static final String HTTP_METHOD_DELETE = "DELETE";
 
   private final URL url;
   private final ExpositionFormatWriter writer;
@@ -124,7 +127,7 @@ public class PushGateway {
    * <p>This uses the PUT HTTP method.
    */
   public void push() throws IOException {
-    doRequest(registry, "PUT");
+    doRequest(registry, HTTP_METHOD_PUT);
   }
 
   /**
@@ -137,7 +140,7 @@ public class PushGateway {
   public void push(Collector collector) throws IOException {
     PrometheusRegistry localRegistry = new PrometheusRegistry();
     localRegistry.register(collector);
-    doRequest(localRegistry, "PUT");
+    doRequest(localRegistry, HTTP_METHOD_PUT);
   }
 
   /**
@@ -148,7 +151,7 @@ public class PushGateway {
   public void push(MultiCollector collector) throws IOException {
     PrometheusRegistry localRegistry = new PrometheusRegistry();
     localRegistry.register(collector);
-    doRequest(localRegistry, "PUT");
+    doRequest(localRegistry, HTTP_METHOD_PUT);
   }
 
   /**
@@ -158,7 +161,7 @@ public class PushGateway {
    * <p>This uses the POST HTTP method.
    */
   public void pushAdd() throws IOException {
-    doRequest(registry, "POST");
+    doRequest(registry, HTTP_METHOD_POST);
   }
 
   /**
@@ -169,7 +172,7 @@ public class PushGateway {
   public void pushAdd(Collector collector) throws IOException {
     PrometheusRegistry localRegistry = new PrometheusRegistry();
     localRegistry.register(collector);
-    doRequest(localRegistry, "POST");
+    doRequest(localRegistry, HTTP_METHOD_POST);
   }
 
   /**
@@ -180,7 +183,7 @@ public class PushGateway {
   public void pushAdd(MultiCollector collector) throws IOException {
     PrometheusRegistry localRegistry = new PrometheusRegistry();
     localRegistry.register(collector);
-    doRequest(localRegistry, "POST");
+    doRequest(localRegistry, HTTP_METHOD_POST);
   }
 
   /**
@@ -189,7 +192,7 @@ public class PushGateway {
    * <p>This uses the DELETE HTTP method.
    */
   public void delete() throws IOException {
-    doRequest(null, "DELETE");
+    doRequest(null, HTTP_METHOD_DELETE);
   }
 
   private void doRequest(PrometheusRegistry registryParam, String method) throws IOException {
@@ -197,7 +200,7 @@ public class PushGateway {
       HttpURLConnection connection = connectionFactory.create(url);
       requestHeaders.forEach(connection::setRequestProperty);
       connection.setRequestProperty("Content-Type", writer.getContentType());
-      if (!method.equals("DELETE")) {
+      if (!method.equals(HTTP_METHOD_DELETE)) {
         connection.setDoOutput(true);
       }
       connection.setRequestMethod(method);
@@ -207,7 +210,7 @@ public class PushGateway {
       connection.connect();
 
       try {
-        if (!method.equals("DELETE")) {
+        if (!method.equals(HTTP_METHOD_DELETE)) {
           OutputStream outputStream = connection.getOutputStream();
           writer.write(outputStream, registryParam.scrape());
           outputStream.flush();
