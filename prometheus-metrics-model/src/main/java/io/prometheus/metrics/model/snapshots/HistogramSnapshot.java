@@ -80,11 +80,8 @@ public final class HistogramSnapshot extends MetricSnapshot {
         long createdTimestampMillis) {
       this(
           classicBuckets,
-          CLASSIC_HISTOGRAM,
-          0,
-          0,
-          NativeHistogramBuckets.EMPTY,
-          NativeHistogramBuckets.EMPTY,
+          new NativeHistogramParams(
+              CLASSIC_HISTOGRAM, 0, 0, NativeHistogramBuckets.EMPTY, NativeHistogramBuckets.EMPTY),
           sum,
           labels,
           exemplars,
@@ -129,11 +126,12 @@ public final class HistogramSnapshot extends MetricSnapshot {
         long createdTimestampMillis) {
       this(
           ClassicHistogramBuckets.EMPTY,
-          nativeSchema,
-          nativeZeroCount,
-          nativeZeroThreshold,
-          nativeBucketsForPositiveValues,
-          nativeBucketsForNegativeValues,
+          new NativeHistogramParams(
+              nativeSchema,
+              nativeZeroCount,
+              nativeZeroThreshold,
+              nativeBucketsForPositiveValues,
+              nativeBucketsForNegativeValues),
           sum,
           labels,
           exemplars,
@@ -180,11 +178,12 @@ public final class HistogramSnapshot extends MetricSnapshot {
         long createdTimestampMillis) {
       this(
           classicBuckets,
-          nativeSchema,
-          nativeZeroCount,
-          nativeZeroThreshold,
-          nativeBucketsForPositiveValues,
-          nativeBucketsForNegativeValues,
+          new NativeHistogramParams(
+              nativeSchema,
+              nativeZeroCount,
+              nativeZeroThreshold,
+              nativeBucketsForPositiveValues,
+              nativeBucketsForNegativeValues),
           sum,
           labels,
           exemplars,
@@ -199,11 +198,7 @@ public final class HistogramSnapshot extends MetricSnapshot {
      */
     public HistogramDataPointSnapshot(
         ClassicHistogramBuckets classicBuckets,
-        int nativeSchema,
-        long nativeZeroCount,
-        double nativeZeroThreshold,
-        NativeHistogramBuckets nativeBucketsForPositiveValues,
-        NativeHistogramBuckets nativeBucketsForNegativeValues,
+        NativeHistogramParams nativeParams,
         double sum,
         Labels labels,
         Exemplars exemplars,
@@ -212,27 +207,28 @@ public final class HistogramSnapshot extends MetricSnapshot {
       super(
           calculateCount(
               classicBuckets,
-              nativeSchema,
-              nativeZeroCount,
-              nativeBucketsForPositiveValues,
-              nativeBucketsForNegativeValues),
+              nativeParams.schema,
+              nativeParams.zeroCount,
+              nativeParams.positiveBuckets,
+              nativeParams.negativeBuckets),
           sum,
           exemplars,
           labels,
           createdTimestampMillis,
           scrapeTimestampMillis);
       this.classicBuckets = classicBuckets;
-      this.nativeSchema = nativeSchema;
-      this.nativeZeroCount = nativeSchema == CLASSIC_HISTOGRAM ? 0 : nativeZeroCount;
-      this.nativeZeroThreshold = nativeSchema == CLASSIC_HISTOGRAM ? 0 : nativeZeroThreshold;
+      this.nativeSchema = nativeParams.schema;
+      this.nativeZeroCount = nativeParams.schema == CLASSIC_HISTOGRAM ? 0 : nativeParams.zeroCount;
+      this.nativeZeroThreshold =
+          nativeParams.schema == CLASSIC_HISTOGRAM ? 0 : nativeParams.zeroThreshold;
       this.nativeBucketsForPositiveValues =
-          nativeSchema == CLASSIC_HISTOGRAM
+          nativeParams.schema == CLASSIC_HISTOGRAM
               ? NativeHistogramBuckets.EMPTY
-              : nativeBucketsForPositiveValues;
+              : nativeParams.positiveBuckets;
       this.nativeBucketsForNegativeValues =
-          nativeSchema == CLASSIC_HISTOGRAM
+          nativeParams.schema == CLASSIC_HISTOGRAM
               ? NativeHistogramBuckets.EMPTY
-              : nativeBucketsForNegativeValues;
+              : nativeParams.negativeBuckets;
       validate();
     }
 
@@ -452,11 +448,7 @@ public final class HistogramSnapshot extends MetricSnapshot {
                 nativeBucketsForNegativeValues);
         return new HistogramDataPointSnapshot(
             classicHistogramBuckets,
-            nativeParams.schema,
-            nativeParams.zeroCount,
-            nativeParams.zeroThreshold,
-            nativeParams.positiveBuckets,
-            nativeParams.negativeBuckets,
+            nativeParams,
             sum,
             labels,
             exemplars,
