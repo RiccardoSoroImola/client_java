@@ -159,28 +159,11 @@ public class SimpleclientCollector implements MultiCollector {
     Map<Labels, HistogramSnapshot.HistogramDataPointSnapshot.Builder> dataPoints = new HashMap<>();
     Map<Labels, Map<Double, Long>> cumulativeBuckets = new HashMap<>();
     Map<Labels, Exemplars.Builder> exemplars = new HashMap<>();
+
     for (Collector.MetricFamilySamples.Sample sample : samples.samples) {
-      Labels labels = labelsWithout(sample, "le");
-      dataPoints.computeIfAbsent(
-          labels, l -> HistogramSnapshot.HistogramDataPointSnapshot.builder().labels(labels));
-      cumulativeBuckets.computeIfAbsent(labels, l -> new HashMap<>());
-      exemplars.computeIfAbsent(labels, l -> Exemplars.builder());
-      if (sample.name.endsWith("_sum")) {
-        dataPoints.get(labels).sum(sample.value);
-      }
-      if (sample.name.endsWith("_bucket")) {
-        addBucket(cumulativeBuckets.get(labels), sample);
-      }
-      if (sample.name.endsWith("_created")) {
-        dataPoints.get(labels).createdTimestampMillis((long) Unit.secondsToMillis(sample.value));
-      }
-      if (sample.exemplar != null) {
-        exemplars.get(labels).exemplar(convertExemplar(sample.exemplar));
-      }
-      if (sample.timestampMs != null) {
-        dataPoints.get(labels).scrapeTimestampMillis(sample.timestampMs);
-      }
+      processHistogramSample(sample, dataPoints, cumulativeBuckets, exemplars);
     }
+
     for (Labels labels : dataPoints.keySet()) {
       histogram.dataPoint(
           dataPoints
@@ -192,6 +175,34 @@ public class SimpleclientCollector implements MultiCollector {
     return histogram.build();
   }
 
+  private void processHistogramSample(
+      Collector.MetricFamilySamples.Sample sample,
+      Map<Labels, HistogramSnapshot.HistogramDataPointSnapshot.Builder> dataPoints,
+      Map<Labels, Map<Double, Long>> cumulativeBuckets,
+      Map<Labels, Exemplars.Builder> exemplars) {
+    Labels labels = labelsWithout(sample, "le");
+    dataPoints.computeIfAbsent(
+        labels, l -> HistogramSnapshot.HistogramDataPointSnapshot.builder().labels(labels));
+    cumulativeBuckets.computeIfAbsent(labels, l -> new HashMap<>());
+    exemplars.computeIfAbsent(labels, l -> Exemplars.builder());
+
+    if (sample.name.endsWith("_sum")) {
+      dataPoints.get(labels).sum(sample.value);
+    }
+    if (sample.name.endsWith("_bucket")) {
+      addBucket(cumulativeBuckets.get(labels), sample);
+    }
+    if (sample.name.endsWith("_created")) {
+      dataPoints.get(labels).createdTimestampMillis((long) Unit.secondsToMillis(sample.value));
+    }
+    if (sample.exemplar != null) {
+      exemplars.get(labels).exemplar(convertExemplar(sample.exemplar));
+    }
+    if (sample.timestampMs != null) {
+      dataPoints.get(labels).scrapeTimestampMillis(sample.timestampMs);
+    }
+  }
+
   private MetricSnapshot convertSummary(Collector.MetricFamilySamples samples) {
     SummarySnapshot.Builder summary =
         SummarySnapshot.builder()
@@ -201,36 +212,11 @@ public class SimpleclientCollector implements MultiCollector {
     Map<Labels, SummarySnapshot.SummaryDataPointSnapshot.Builder> dataPoints = new HashMap<>();
     Map<Labels, Quantiles.Builder> quantiles = new HashMap<>();
     Map<Labels, Exemplars.Builder> exemplars = new HashMap<>();
+
     for (Collector.MetricFamilySamples.Sample sample : samples.samples) {
-      Labels labels = labelsWithout(sample, "quantile");
-      dataPoints.computeIfAbsent(
-          labels, l -> SummarySnapshot.SummaryDataPointSnapshot.builder().labels(labels));
-      quantiles.computeIfAbsent(labels, l -> Quantiles.builder());
-      exemplars.computeIfAbsent(labels, l -> Exemplars.builder());
-      if (sample.name.endsWith("_sum")) {
-        dataPoints.get(labels).sum(sample.value);
-      } else if (sample.name.endsWith("_count")) {
-        dataPoints.get(labels).count((long) sample.value);
-      } else if (sample.name.endsWith("_created")) {
-        dataPoints.get(labels).createdTimestampMillis((long) Unit.secondsToMillis(sample.value));
-      } else {
-        for (int i = 0; i < sample.labelNames.size(); i++) {
-          if (sample.labelNames.get(i).equals("quantile")) {
-            quantiles
-                .get(labels)
-                .quantile(
-                    new Quantile(Double.parseDouble(sample.labelValues.get(i)), sample.value));
-            break;
-          }
-        }
-      }
-      if (sample.exemplar != null) {
-        exemplars.get(labels).exemplar(convertExemplar(sample.exemplar));
-      }
-      if (sample.timestampMs != null) {
-        dataPoints.get(labels).scrapeTimestampMillis(sample.timestampMs);
-      }
+      processSummarySample(sample, dataPoints, quantiles, exemplars);
     }
+
     for (Labels labels : dataPoints.keySet()) {
       summary.dataPoint(
           dataPoints
@@ -240,6 +226,41 @@ public class SimpleclientCollector implements MultiCollector {
               .build());
     }
     return summary.build();
+  }
+
+  private void processSummarySample(
+      Collector.MetricFamilySamples.Sample sample,
+      Map<Labels, SummarySnapshot.SummaryDataPointSnapshot.Builder> dataPoints,
+      Map<Labels, Quantiles.Builder> quantiles,
+      Map<Labels, Exemplars.Builder> exemplars) {
+    Labels labels = labelsWithout(sample, "quantile");
+    dataPoints.computeIfAbsent(
+        labels, l -> SummarySnapshot.SummaryDataPointSnapshot.builder().labels(labels));
+    quantiles.computeIfAbsent(labels, l -> Quantiles.builder());
+    exemplars.computeIfAbsent(labels, l -> Exemplars.builder());
+
+    if (sample.name.endsWith("_sum")) {
+      dataPoints.get(labels).sum(sample.value);
+    } else if (sample.name.endsWith("_count")) {
+      dataPoints.get(labels).count((long) sample.value);
+    } else if (sample.name.endsWith("_created")) {
+      dataPoints.get(labels).createdTimestampMillis((long) Unit.secondsToMillis(sample.value));
+    } else {
+      for (int i = 0; i < sample.labelNames.size(); i++) {
+        if (sample.labelNames.get(i).equals("quantile")) {
+          quantiles
+              .get(labels)
+              .quantile(new Quantile(Double.parseDouble(sample.labelValues.get(i)), sample.value));
+          break;
+        }
+      }
+    }
+    if (sample.exemplar != null) {
+      exemplars.get(labels).exemplar(convertExemplar(sample.exemplar));
+    }
+    if (sample.timestampMs != null) {
+      dataPoints.get(labels).scrapeTimestampMillis(sample.timestampMs);
+    }
   }
 
   private MetricSnapshot convertStateSet(Collector.MetricFamilySamples samples) {
