@@ -89,12 +89,12 @@ public abstract class ExporterTest {
           return new Response(
               con.getResponseCode(),
               con.getHeaderFields(),
-              IOUtils.toByteArray(con.getInputStream(), 4096));
+              IOUtils.toByteArray(con.getInputStream()));
         } else {
           return new Response(
               con.getResponseCode(),
               con.getHeaderFields(),
-              IOUtils.toByteArray(con.getErrorStream(), 4096));
+              IOUtils.toByteArray(con.getErrorStream()));
         }
       } catch (Exception e) {
         exception = e;
