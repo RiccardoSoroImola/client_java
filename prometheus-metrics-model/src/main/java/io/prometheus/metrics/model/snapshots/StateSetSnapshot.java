@@ -20,10 +20,10 @@ public final class StateSetSnapshot extends MetricSnapshot {
    */
   public StateSetSnapshot(MetricMetadata metadata, Collection<StateSetDataPointSnapshot> data) {
     super(metadata, data);
-    validate();
+    validateStateSet();
   }
 
-  private void validate() {
+  private void validateStateSet() {
     if (getMetadata().hasUnit()) {
       throw new IllegalArgumentException("An state set metric cannot have a unit.");
     }
@@ -79,7 +79,7 @@ public final class StateSetSnapshot extends MetricSnapshot {
       sort(namesCopy, valuesCopy);
       this.names = namesCopy;
       this.values = valuesCopy;
-      validate();
+      validateDataPoint();
     }
 
     public int size() {
@@ -94,7 +94,7 @@ public final class StateSetSnapshot extends MetricSnapshot {
       return values[i];
     }
 
-    private void validate() {
+    private void validateDataPoint() {
       for (int i = 0; i < names.length; i++) {
         if (names[i].isEmpty()) {
           throw new IllegalArgumentException("Empty string as state name");
