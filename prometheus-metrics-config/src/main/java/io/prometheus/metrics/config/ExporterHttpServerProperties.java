@@ -7,14 +7,14 @@ public class ExporterHttpServerProperties {
 
   private static final String PORT = "port";
   private static final String PREFIX = "io.prometheus.exporter.httpServer";
-  private final Integer port;
+  private final Integer portValue;
 
-  private ExporterHttpServerProperties(Integer port) {
-    this.port = port;
+  private ExporterHttpServerProperties(Integer portValue) {
+    this.portValue = portValue;
   }
 
   public Integer getPort() {
-    return port;
+    return portValue;
   }
 
   /**
@@ -23,9 +23,9 @@ public class ExporterHttpServerProperties {
    */
   static ExporterHttpServerProperties load(Map<Object, Object> properties)
       throws PrometheusPropertiesException {
-    Integer port = Util.loadInteger(PREFIX + "." + PORT, properties);
-    Util.assertValue(port, t -> t > 0, "Expecting value > 0.", PREFIX, PORT);
-    return new ExporterHttpServerProperties(port);
+    Integer portValue = Util.loadInteger(PREFIX + "." + PORT, properties);
+    Util.assertValue(portValue, t -> t > 0, "Expecting value > 0.", PREFIX, PORT);
+    return new ExporterHttpServerProperties(portValue);
   }
 
   public static Builder builder() {
