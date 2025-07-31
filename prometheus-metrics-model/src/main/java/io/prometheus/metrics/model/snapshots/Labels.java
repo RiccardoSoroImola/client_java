@@ -64,9 +64,9 @@ public final class Labels implements Comparable<Labels>, Iterable<Label> {
       nameList[i] = keyValuePairs[2 * i];
       valueList[i] = keyValuePairs[2 * i + 1];
     }
-    String[] prometheusNames = makePrometheusNames(nameList);
-    sortAndValidate(nameList, prometheusNames, valueList);
-    return new Labels(nameList, prometheusNames, valueList);
+    String[] prometheusNamesLocal = makePrometheusNames(nameList);
+    sortAndValidate(nameList, prometheusNamesLocal, valueList);
+    return new Labels(nameList, prometheusNamesLocal, valueList);
   }
 
   // package private for testing
@@ -89,9 +89,9 @@ public final class Labels implements Comparable<Labels>, Iterable<Label> {
     }
     String[] namesCopy = nameList.toArray(new String[0]);
     String[] valuesCopy = valueList.toArray(new String[0]);
-    String[] prometheusNames = makePrometheusNames(namesCopy);
-    sortAndValidate(namesCopy, prometheusNames, valuesCopy);
-    return new Labels(namesCopy, prometheusNames, valuesCopy);
+    String[] prometheusNamesLocal = makePrometheusNames(namesCopy);
+    sortAndValidate(namesCopy, prometheusNamesLocal, valuesCopy);
+    return new Labels(namesCopy, prometheusNamesLocal, valuesCopy);
   }
 
   /**
@@ -113,9 +113,9 @@ public final class Labels implements Comparable<Labels>, Iterable<Label> {
     }
     String[] namesCopy = Arrays.copyOf(nameArray, nameArray.length);
     String[] valuesCopy = Arrays.copyOf(valueArray, valueArray.length);
-    String[] prometheusNames = makePrometheusNames(namesCopy);
-    sortAndValidate(namesCopy, prometheusNames, valuesCopy);
-    return new Labels(namesCopy, prometheusNames, valuesCopy);
+    String[] prometheusNamesLocal = makePrometheusNames(namesCopy);
+    sortAndValidate(namesCopy, prometheusNamesLocal, valuesCopy);
+    return new Labels(namesCopy, prometheusNamesLocal, valuesCopy);
   }
 
   static String[] makePrometheusNames(String[] names) {
