@@ -56,6 +56,13 @@ public class SimpleclientCollector implements MultiCollector {
 
   private final CollectorRegistry simpleclientRegistry;
 
+  private static final String CREATED_SUFFIX = "_created";
+  private static final String SUM_SUFFIX = "_sum";
+  private static final String BUCKET_SUFFIX = "_bucket";
+  private static final String COUNT_SUFFIX = "_count";
+  private static final String LE_LABEL = "le";
+  private static final String QUANTILE_LABEL = "quantile";
+
   private SimpleclientCollector(CollectorRegistry simpleclientRegistry) {
     this.simpleclientRegistry = simpleclientRegistry;
   }
@@ -113,7 +120,7 @@ public class SimpleclientCollector implements MultiCollector {
       CounterSnapshot.CounterDataPointSnapshot.Builder dataPoint =
           dataPoints.computeIfAbsent(
               labels, l -> CounterSnapshot.CounterDataPointSnapshot.builder().labels(labels));
-      if (sample.name.endsWith("_created")) {
+      if (sample.name.endsWith(CREATED_SUFFIX)) {
         dataPoint.createdTimestampMillis((long) Unit.secondsToMillis(sample.value));
       } else {
         dataPoint.value(sample.value).exemplar(convertExemplar(sample.exemplar));
@@ -180,20 +187,20 @@ public class SimpleclientCollector implements MultiCollector {
       Map<Labels, HistogramSnapshot.HistogramDataPointSnapshot.Builder> dataPoints,
       Map<Labels, Map<Double, Long>> cumulativeBuckets,
       Map<Labels, Exemplars.Builder> exemplars) {
-    Labels labels = labelsWithout(sample, "le");
+    Labels labels = labelsWithout(sample, LE_LABEL);
     dataPoints.computeIfAbsent(
         labels, l -> HistogramSnapshot.HistogramDataPointSnapshot.builder().labels(labels));
     cumulativeBuckets.computeIfAbsent(labels, l -> new HashMap<>());
     exemplars.computeIfAbsent(labels, l -> Exemplars.builder());
 
-    if (sample.name.endsWith("_sum")) {
+    if (sample.name.endsWith(CREATED_SUFFIX)) {
+      dataPoints.get(labels).createdTimestampMillis((long) Unit.secondsToMillis(sample.value));
+    }
+    if (sample.name.endsWith(SUM_SUFFIX)) {
       dataPoints.get(labels).sum(sample.value);
     }
-    if (sample.name.endsWith("_bucket")) {
+    if (sample.name.endsWith(BUCKET_SUFFIX)) {
       addBucket(cumulativeBuckets.get(labels), sample);
-    }
-    if (sample.name.endsWith("_created")) {
-      dataPoints.get(labels).createdTimestampMillis((long) Unit.secondsToMillis(sample.value));
     }
     if (sample.exemplar != null) {
       exemplars.get(labels).exemplar(convertExemplar(sample.exemplar));
@@ -233,21 +240,22 @@ public class SimpleclientCollector implements MultiCollector {
       Map<Labels, SummarySnapshot.SummaryDataPointSnapshot.Builder> dataPoints,
       Map<Labels, Quantiles.Builder> quantiles,
       Map<Labels, Exemplars.Builder> exemplars) {
-    Labels labels = labelsWithout(sample, "quantile");
+    Labels labels = labelsWithout(sample, QUANTILE_LABEL);
     dataPoints.computeIfAbsent(
         labels, l -> SummarySnapshot.SummaryDataPointSnapshot.builder().labels(labels));
     quantiles.computeIfAbsent(labels, l -> Quantiles.builder());
     exemplars.computeIfAbsent(labels, l -> Exemplars.builder());
 
-    if (sample.name.endsWith("_sum")) {
-      dataPoints.get(labels).sum(sample.value);
-    } else if (sample.name.endsWith("_count")) {
-      dataPoints.get(labels).count((long) sample.value);
-    } else if (sample.name.endsWith("_created")) {
+    if (sample.name.endsWith(CREATED_SUFFIX)) {
       dataPoints.get(labels).createdTimestampMillis((long) Unit.secondsToMillis(sample.value));
+    }
+    if (sample.name.endsWith(SUM_SUFFIX)) {
+      dataPoints.get(labels).sum(sample.value);
+    } else if (sample.name.endsWith(COUNT_SUFFIX)) {
+      dataPoints.get(labels).count((long) sample.value);
     } else {
       for (int i = 0; i < sample.labelNames.size(); i++) {
-        if (sample.labelNames.get(i).equals("quantile")) {
+        if (sample.labelNames.get(i).equals(QUANTILE_LABEL)) {
           quantiles
               .get(labels)
               .quantile(new Quantile(Double.parseDouble(sample.labelValues.get(i)), sample.value));
@@ -336,7 +344,7 @@ public class SimpleclientCollector implements MultiCollector {
 
   private void addBucket(Map<Double, Long> buckets, Collector.MetricFamilySamples.Sample sample) {
     for (int i = 0; i < sample.labelNames.size(); i++) {
-      if (sample.labelNames.get(i).equals("le")) {
+      if (sample.labelNames.get(i).equals(LE_LABEL)) {
         double upperBound;
         switch (sample.labelValues.get(i)) {
           case "+Inf":
