@@ -37,12 +37,8 @@ class ExemplarTest {
 
   @Test
   void testValueMissing() {
-    assertThatExceptionOfType(IllegalStateException.class)
-        .isThrownBy(
-            () -> {
-              Exemplar.Builder builder = Exemplar.builder();
-              builder.build();
-            });
+    Exemplar.Builder builder = Exemplar.builder();
+    assertThatExceptionOfType(IllegalStateException.class).isThrownBy(() -> builder.build());
   }
 
   @Test
