@@ -185,19 +185,22 @@ public class OpenMetricsTextFormatWriter implements ExpositionFormatWriter {
             "le",
             buckets.getUpperBound(i));
         writeLong(writer, cumulativeCount);
-        Exemplar exemplar;
-        if (i == 0) {
-          exemplar = exemplars.get(Double.NEGATIVE_INFINITY, buckets.getUpperBound(i));
-        } else {
-          exemplar = exemplars.get(buckets.getUpperBound(i - 1), buckets.getUpperBound(i));
-        }
+        Exemplar exemplar = getExemplarForBucket(exemplars, i, buckets);
         writeScrapeTimestampAndExemplar(writer, data, exemplar);
       }
-      // In OpenMetrics format, histogram _count and _sum are either both present or both absent.
       if (data.hasCount() && data.hasSum()) {
         writeCountAndSum(writer, metadata, data, countSuffix, sumSuffix, exemplars);
       }
       writeCreated(writer, metadata, data);
+    }
+  }
+
+  private Exemplar getExemplarForBucket(
+      Exemplars exemplars, int i, ClassicHistogramBuckets buckets) {
+    if (i == 0) {
+      return exemplars.get(Double.NEGATIVE_INFINITY, buckets.getUpperBound(i));
+    } else {
+      return exemplars.get(buckets.getUpperBound(i - 1), buckets.getUpperBound(i));
     }
   }
 
@@ -223,11 +226,6 @@ public class OpenMetricsTextFormatWriter implements ExpositionFormatWriter {
         metadataWritten = true;
       }
       Exemplars exemplars = data.getExemplars();
-      // Exemplars for summaries are new, and there's no best practice yet which Exemplars to choose
-      // for which
-      // time series. We select exemplars[0] for _count, exemplars[1] for _sum, and exemplars[2...]
-      // for the
-      // quantiles, all indexes modulo exemplars.length.
       int exemplarIndex = 1;
       for (Quantile quantile : data.getQuantiles()) {
         writeNameAndLabels(
@@ -245,7 +243,6 @@ public class OpenMetricsTextFormatWriter implements ExpositionFormatWriter {
           writeScrapeTimestampAndExemplar(writer, data, null);
         }
       }
-      // Unlike histograms, summaries can have only a count or only a sum according to OpenMetrics.
       writeCountAndSum(writer, metadata, data, "_count", "_sum", exemplars);
       writeCreated(writer, metadata, data);
     }
@@ -266,32 +263,39 @@ public class OpenMetricsTextFormatWriter implements ExpositionFormatWriter {
     writeMetadata(writer, "stateset", metadata);
     for (StateSetSnapshot.StateSetDataPointSnapshot data : snapshot.getDataPoints()) {
       for (int i = 0; i < data.size(); i++) {
-        writer.write(metadata.getPrometheusName());
-        writer.write('{');
-        for (int j = 0; j < data.getLabels().size(); j++) {
-          if (j > 0) {
-            writer.write(",");
-          }
-          writer.write(data.getLabels().getPrometheusName(j));
-          writer.write("=\"");
-          writeEscapedLabelValue(writer, data.getLabels().getValue(j));
-          writer.write("\"");
-        }
-        if (!data.getLabels().isEmpty()) {
-          writer.write(",");
-        }
-        writer.write(metadata.getPrometheusName());
-        writer.write("=\"");
-        writeEscapedLabelValue(writer, data.getName(i));
-        writer.write("\"} ");
-        if (data.isTrue(i)) {
-          writer.write("1");
-        } else {
-          writer.write("0");
-        }
+        writeStateSetMetric(
+            writer,
+            metadata.getPrometheusName(),
+            data.getLabels(),
+            data.getName(i),
+            data.isTrue(i));
         writeScrapeTimestampAndExemplar(writer, data, null);
       }
     }
+  }
+
+  private void writeStateSetMetric(
+      Writer writer, String name, Labels labels, String valueName, boolean isTrue)
+      throws IOException {
+    writer.write(name);
+    writer.write('{');
+    for (int j = 0; j < labels.size(); j++) {
+      if (j > 0) {
+        writer.write(",");
+      }
+      writer.write(labels.getPrometheusName(j));
+      writer.write("=\"");
+      writeEscapedLabelValue(writer, labels.getValue(j));
+      writer.write("\"");
+    }
+    if (!labels.isEmpty()) {
+      writer.write(",");
+    }
+    writer.write(name);
+    writer.write("=\"");
+    writeEscapedLabelValue(writer, valueName);
+    writer.write("\"} ");
+    writer.write(isTrue ? "1" : "0");
   }
 
   private void writeUnknown(Writer writer, UnknownSnapshot snapshot) throws IOException {
