@@ -331,15 +331,7 @@ public class PrometheusTextFormatWriter implements ExpositionFormatWriter {
       for (int i = 0; i < data.size(); i++) {
         writer.write(metadata.getPrometheusName());
         writer.write('{');
-        for (int j = 0; j < data.getLabels().size(); j++) {
-          if (j > 0) {
-            writer.write(",");
-          }
-          writer.write(data.getLabels().getPrometheusName(j));
-          writer.write("=\"");
-          writeEscapedLabelValue(writer, data.getLabels().getValue(j));
-          writer.write("\"");
-        }
+        writeLabelsPart(writer, data.getLabels());
         if (!data.getLabels().isEmpty()) {
           writer.write(",");
         }
@@ -354,6 +346,18 @@ public class PrometheusTextFormatWriter implements ExpositionFormatWriter {
         }
         writeScrapeTimestampAndNewline(writer, data);
       }
+    }
+  }
+
+  private void writeLabelsPart(Writer writer, Labels labels) throws IOException {
+    for (int j = 0; j < labels.size(); j++) {
+      if (j > 0) {
+        writer.write(",");
+      }
+      writer.write(labels.getPrometheusName(j));
+      writer.write("=\"");
+      writeEscapedLabelValue(writer, labels.getValue(j));
+      writer.write("\"");
     }
   }
 
