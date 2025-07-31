@@ -4,6 +4,8 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatExceptionOfType;
 
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.CsvSource;
 
 class UnitTest {
 
@@ -12,34 +14,11 @@ class UnitTest {
     assertThatExceptionOfType(IllegalArgumentException.class).isThrownBy(() -> new Unit(" "));
   }
 
-  @Test
-  void testEquals1() {
-    Unit unit1 = Unit.BYTES;
-    Unit unit2 = new Unit("bytes");
-
-    assertThat(unit1).isEqualTo(unit2);
-  }
-
-  @Test
-  void testEquals2() {
-    Unit unit1 = new Unit("bytes ");
-    Unit unit2 = new Unit("bytes");
-
-    assertThat(unit1).isEqualTo(unit2);
-  }
-
-  @Test
-  void testEquals3() {
-    Unit unit1 = new Unit(" bytes");
-    Unit unit2 = new Unit("bytes");
-
-    assertThat(unit1).isEqualTo(unit2);
-  }
-
-  @Test
-  void testEquals4() {
-    Unit unit1 = new Unit(" bytes ");
-    Unit unit2 = new Unit("bytes");
+  @ParameterizedTest
+  @CsvSource({"bytes, bytes", "bytes , bytes", " bytes, bytes", " bytes , bytes"})
+  void testEquals(String input1, String input2) {
+    Unit unit1 = new Unit(input1);
+    Unit unit2 = new Unit(input2);
 
     assertThat(unit1).isEqualTo(unit2);
   }
