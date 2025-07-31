@@ -145,11 +145,8 @@ public class OpenMetricsTextFormatWriter implements ExpositionFormatWriter {
     for (GaugeSnapshot.GaugeDataPointSnapshot data : snapshot.getDataPoints()) {
       writeNameAndLabels(writer, metadata.getPrometheusName(), null, data.getLabels());
       writeDouble(writer, data.getValue());
-      if (exemplarsOnAllMetricTypesEnabled) {
-        writeScrapeTimestampAndExemplar(writer, data, data.getExemplar());
-      } else {
-        writeScrapeTimestampAndExemplar(writer, data, null);
-      }
+      writeScrapeTimestampAndExemplar(
+          writer, data, exemplarsOnAllMetricTypesEnabled ? data.getExemplar() : null);
     }
   }
 
@@ -304,11 +301,8 @@ public class OpenMetricsTextFormatWriter implements ExpositionFormatWriter {
     for (UnknownSnapshot.UnknownDataPointSnapshot data : snapshot.getDataPoints()) {
       writeNameAndLabels(writer, metadata.getPrometheusName(), null, data.getLabels());
       writeDouble(writer, data.getValue());
-      if (exemplarsOnAllMetricTypesEnabled) {
-        writeScrapeTimestampAndExemplar(writer, data, data.getExemplar());
-      } else {
-        writeScrapeTimestampAndExemplar(writer, data, null);
-      }
+      writeScrapeTimestampAndExemplar(
+          writer, data, exemplarsOnAllMetricTypesEnabled ? data.getExemplar() : null);
     }
   }
 
@@ -323,11 +317,8 @@ public class OpenMetricsTextFormatWriter implements ExpositionFormatWriter {
     if (data.hasCount()) {
       writeNameAndLabels(writer, metadata.getPrometheusName(), countSuffix, data.getLabels());
       writeLong(writer, data.getCount());
-      if (exemplarsOnAllMetricTypesEnabled) {
-        writeScrapeTimestampAndExemplar(writer, data, exemplars.getLatest());
-      } else {
-        writeScrapeTimestampAndExemplar(writer, data, null);
-      }
+      writeScrapeTimestampAndExemplar(
+          writer, data, exemplarsOnAllMetricTypesEnabled ? exemplars.getLatest() : null);
     }
     if (data.hasSum()) {
       writeNameAndLabels(writer, metadata.getPrometheusName(), sumSuffix, data.getLabels());
