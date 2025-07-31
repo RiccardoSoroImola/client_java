@@ -149,6 +149,9 @@ public class JvmMemoryMetrics {
   private static final String HELP_JVM_MEMORY_POOL_COLLECTION_INIT_BYTES =
       "Initial after last collection bytes of a given JVM memory pool.";
 
+  private static final String AREA_LABEL = "area";
+  private static final String POOL_LABEL = "pool";
+
   private final PrometheusProperties config;
   private final MemoryMXBean memoryBean;
   private final List<MemoryPoolMXBean> poolBeans;
@@ -174,7 +177,7 @@ public class JvmMemoryMetrics {
         .name(JVM_MEMORY_USED_BYTES)
         .help(HELP_JVM_MEMORY_USED_BYTES)
         .unit(Unit.BYTES)
-        .labelNames("area")
+        .labelNames(AREA_LABEL)
         .callback(
             callback -> {
               callback.call(memoryBean.getHeapMemoryUsage().getUsed(), "heap");
@@ -186,7 +189,7 @@ public class JvmMemoryMetrics {
         .name(JVM_MEMORY_COMMITTED_BYTES)
         .help(HELP_JVM_MEMORY_COMMITTED_BYTES)
         .unit(Unit.BYTES)
-        .labelNames("area")
+        .labelNames(AREA_LABEL)
         .callback(
             callback -> {
               callback.call(memoryBean.getHeapMemoryUsage().getCommitted(), "heap");
@@ -198,7 +201,7 @@ public class JvmMemoryMetrics {
         .name(JVM_MEMORY_MAX_BYTES)
         .help(HELP_JVM_MEMORY_MAX_BYTES)
         .unit(Unit.BYTES)
-        .labelNames("area")
+        .labelNames(AREA_LABEL)
         .callback(
             callback -> {
               callback.call(memoryBean.getHeapMemoryUsage().getMax(), "heap");
@@ -210,7 +213,7 @@ public class JvmMemoryMetrics {
         .name(JVM_MEMORY_INIT_BYTES)
         .help(HELP_JVM_MEMORY_INIT_BYTES)
         .unit(Unit.BYTES)
-        .labelNames("area")
+        .labelNames(AREA_LABEL)
         .callback(
             callback -> {
               callback.call(memoryBean.getHeapMemoryUsage().getInit(), "heap");
@@ -222,7 +225,7 @@ public class JvmMemoryMetrics {
         .name(JVM_MEMORY_POOL_USED_BYTES)
         .help(HELP_JVM_MEMORY_POOL_USED_BYTES)
         .unit(Unit.BYTES)
-        .labelNames("pool")
+        .labelNames(POOL_LABEL)
         .callback(makeCallback(poolBeans, MemoryPoolMXBean::getUsage, MemoryUsage::getUsed))
         .register(registry);
 
@@ -230,7 +233,7 @@ public class JvmMemoryMetrics {
         .name(JVM_MEMORY_POOL_COMMITTED_BYTES)
         .help(HELP_JVM_MEMORY_POOL_COMMITTED_BYTES)
         .unit(Unit.BYTES)
-        .labelNames("pool")
+        .labelNames(POOL_LABEL)
         .callback(makeCallback(poolBeans, MemoryPoolMXBean::getUsage, MemoryUsage::getCommitted))
         .register(registry);
 
@@ -238,7 +241,7 @@ public class JvmMemoryMetrics {
         .name(JVM_MEMORY_POOL_MAX_BYTES)
         .help(HELP_JVM_MEMORY_POOL_MAX_BYTES)
         .unit(Unit.BYTES)
-        .labelNames("pool")
+        .labelNames(POOL_LABEL)
         .callback(makeCallback(poolBeans, MemoryPoolMXBean::getUsage, MemoryUsage::getMax))
         .register(registry);
 
@@ -246,7 +249,7 @@ public class JvmMemoryMetrics {
         .name(JVM_MEMORY_POOL_INIT_BYTES)
         .help(HELP_JVM_MEMORY_POOL_INIT_BYTES)
         .unit(Unit.BYTES)
-        .labelNames("pool")
+        .labelNames(POOL_LABEL)
         .callback(makeCallback(poolBeans, MemoryPoolMXBean::getUsage, MemoryUsage::getInit))
         .register(registry);
 
@@ -254,7 +257,7 @@ public class JvmMemoryMetrics {
         .name(JVM_MEMORY_POOL_COLLECTION_USED_BYTES)
         .help(HELP_JVM_MEMORY_POOL_COLLECTION_USED_BYTES)
         .unit(Unit.BYTES)
-        .labelNames("pool")
+        .labelNames(POOL_LABEL)
         .callback(
             makeCallback(poolBeans, MemoryPoolMXBean::getCollectionUsage, MemoryUsage::getUsed))
         .register(registry);
@@ -263,7 +266,7 @@ public class JvmMemoryMetrics {
         .name(JVM_MEMORY_POOL_COLLECTION_COMMITTED_BYTES)
         .help(HELP_JVM_MEMORY_POOL_COLLECTION_COMMITTED_BYTES)
         .unit(Unit.BYTES)
-        .labelNames("pool")
+        .labelNames(POOL_LABEL)
         .callback(
             makeCallback(
                 poolBeans, MemoryPoolMXBean::getCollectionUsage, MemoryUsage::getCommitted))
@@ -273,7 +276,7 @@ public class JvmMemoryMetrics {
         .name(JVM_MEMORY_POOL_COLLECTION_MAX_BYTES)
         .help(HELP_JVM_MEMORY_POOL_COLLECTION_MAX_BYTES)
         .unit(Unit.BYTES)
-        .labelNames("pool")
+        .labelNames(POOL_LABEL)
         .callback(
             makeCallback(poolBeans, MemoryPoolMXBean::getCollectionUsage, MemoryUsage::getMax))
         .register(registry);
@@ -282,7 +285,7 @@ public class JvmMemoryMetrics {
         .name(JVM_MEMORY_POOL_COLLECTION_INIT_BYTES)
         .help(HELP_JVM_MEMORY_POOL_COLLECTION_INIT_BYTES)
         .unit(Unit.BYTES)
-        .labelNames("pool")
+        .labelNames(POOL_LABEL)
         .callback(
             makeCallback(poolBeans, MemoryPoolMXBean::getCollectionUsage, MemoryUsage::getInit))
         .register(registry);
