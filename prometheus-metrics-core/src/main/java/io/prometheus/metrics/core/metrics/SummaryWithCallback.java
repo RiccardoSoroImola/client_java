@@ -54,11 +54,10 @@ public class SummaryWithCallback extends CallbackMetric {
   public SummarySnapshot collect() {
     List<SummarySnapshot.SummaryDataPointSnapshot> dataPoints = new ArrayList<>();
     callback.accept(
-        (count, sum, quantiles, labelValues) -> {
-          dataPoints.add(
-              new SummarySnapshot.SummaryDataPointSnapshot(
-                  count, sum, quantiles, makeLabels(labelValues), Exemplars.EMPTY, 0L));
-        });
+        (count, sum, quantiles, labelValues) ->
+            dataPoints.add(
+                new SummarySnapshot.SummaryDataPointSnapshot(
+                    count, sum, quantiles, makeLabels(labelValues), Exemplars.EMPTY, 0L)));
     return new SummarySnapshot(getMetadata(), dataPoints);
   }
 
