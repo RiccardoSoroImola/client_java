@@ -112,14 +112,12 @@ class StateSetSnapshotTest {
 
   @Test
   void testDuplicateState() {
-    assertThatExceptionOfType(IllegalArgumentException.class)
-        .isThrownBy(
-            () ->
-                StateSetSnapshot.StateSetDataPointSnapshot.builder()
-                    .state("a", true)
-                    .state("b", true)
-                    .state("a", true)
-                    .build());
+    StateSetSnapshot.StateSetDataPointSnapshot.Builder builder =
+        StateSetSnapshot.StateSetDataPointSnapshot.builder();
+    builder.state("a", true);
+    builder.state("b", true);
+    builder.state("a", true);
+    assertThatExceptionOfType(IllegalArgumentException.class).isThrownBy(() -> builder.build());
   }
 
   @Test
@@ -152,20 +150,12 @@ class StateSetSnapshotTest {
 
   @Test
   void testLabelsUnique() {
-    assertThatExceptionOfType(IllegalArgumentException.class)
-        .isThrownBy(
-            () -> {
-              StateSetSnapshot.Builder builder = StateSetSnapshot.builder();
-              builder.name("flags");
-              builder.dataPoint(
-                  StateSetSnapshot.StateSetDataPointSnapshot.builder()
-                      .state("feature", true)
-                      .build());
-              builder.dataPoint(
-                  StateSetSnapshot.StateSetDataPointSnapshot.builder()
-                      .state("feature", true)
-                      .build());
-              builder.build();
-            });
+    StateSetSnapshot.Builder builder = StateSetSnapshot.builder();
+    builder.name("flags");
+    builder.dataPoint(
+        StateSetSnapshot.StateSetDataPointSnapshot.builder().state("feature", true).build());
+    builder.dataPoint(
+        StateSetSnapshot.StateSetDataPointSnapshot.builder().state("feature", true).build());
+    assertThatExceptionOfType(IllegalArgumentException.class).isThrownBy(() -> builder.build());
   }
 }
