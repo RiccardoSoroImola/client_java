@@ -467,8 +467,8 @@ public class PushGateway {
           }
         }
       }
-      String url = urlBuilder.toString();
-      return URI.create(url).normalize().toURL();
+      String constructedUrl = urlBuilder.toString();
+      return URI.create(constructedUrl).normalize().toURL();
     }
 
     private String base64url(String v) {
