@@ -99,19 +99,29 @@ class Util {
     if (property != null) {
       String[] pairs = property.split(",");
       for (String pair : pairs) {
-        if (pair.contains("=")) {
-          String[] keyValue = pair.split("=", 2);
-          if (keyValue.length == 2) {
-            String key = keyValue[0].trim();
-            String value = keyValue[1].trim();
-            if (!key.isEmpty() && !value.isEmpty()) {
-              result.putIfAbsent(key, value);
-            }
-          }
+        Map.Entry<String, String> entry = parseKeyValuePair(pair);
+        if (entry != null) {
+          result.putIfAbsent(entry.getKey(), entry.getValue());
         }
       }
     }
     return result;
+  }
+
+  private static Map.Entry<String, String> parseKeyValuePair(String pair) {
+    if (!pair.contains("=")) {
+      return null;
+    }
+    String[] keyValue = pair.split("=", 2);
+    if (keyValue.length != 2) {
+      return null;
+    }
+    String key = keyValue[0].trim();
+    String value = keyValue[1].trim();
+    if (key.isEmpty() || value.isEmpty()) {
+      return null;
+    }
+    return new java.util.AbstractMap.SimpleEntry<>(key, value);
   }
 
   static Integer loadInteger(String name, Map<Object, Object> properties)
