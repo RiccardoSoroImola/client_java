@@ -12,7 +12,7 @@ class ExporterPropertiesTest {
   @Test
   void load() {
     ExporterProperties properties =
-        load(
+        ExporterProperties.load(
             new HashMap<>(
                 Map.of(
                     "io.prometheus.exporter.includeCreatedTimestamps", "true",
@@ -38,10 +38,6 @@ class ExporterPropertiesTest {
         .withMessage(
             "io.prometheus.exporter.exemplarsOnAllMetricTypes: Expecting 'true' or 'false'. Found:"
                 + " invalid");
-  }
-
-  private static ExporterProperties load(Map<String, String> map) {
-    return ExporterProperties.load(new HashMap<>(map));
   }
 
   @Test
