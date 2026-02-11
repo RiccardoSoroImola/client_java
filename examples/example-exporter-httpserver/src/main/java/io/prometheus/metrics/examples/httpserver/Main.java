@@ -31,9 +31,14 @@ public class Main {
     System.out.println(
         "HTTPServer listening on port http://localhost:" + server.getPort() + "/metrics");
 
+    int iterations = 0;
     while (true) {
       Thread.sleep(1000);
       counter.inc();
+      iterations++;
+      if (iterations >= Integer.MAX_VALUE) {
+        break;
+      }
     }
   }
 }
